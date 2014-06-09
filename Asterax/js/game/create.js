@@ -1,20 +1,20 @@
 
-define(['player'], function (player) {
+define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGroupController) {
 	return {
 		run: function() {
 			game.renderer.clearBeforeRender = false;
 			game.renderer.roundPixels = true;
 			
-			game.physics.startSystem(Phaser.Physics.ARCADE);
+			game.physics.startSystem(Phaser.Physics.P2JS);
+			game.physics.p2.defaultRestitution = 0.8;
 			
-			player.create();
+			app.player = new Player();
+			app.player.create();
 			
-			var s = new player.Ship();
-			
-			s.SayMyName();
+			// app.rockGroupController = new RockGroupController();
+			// app.rockGroupController.create();
 			
 			cursors = game.input.keyboard.createCursorKeys();
-			
 			
 			$('body').append('<div style="position: absolute; left: 820px; top: 20px;">' +
 								'<input id="engine1button" type="button" value="engine 1"/><br/>' +
