@@ -1,16 +1,15 @@
 
-
-var player;
-var cursors;
-var maxSpeed = 250;
-var turnSpeed = 200;
-var decay = 1;
-var acceleration = 400;
-var bullets;
-
 function update() {
 	
+	app.player.update();
+	app.rockGroupController.update();
 	
+	game.physics.ninja.collide(app.player.ship.ship, app.rockGroupController.rocks);
+	
+	// app.player.ship.body.bounce.set(1);
+	// app.rockGroupController.rocks.forEachAlive(function(r) { r.body.bounce.set(-1); });
+	// 
+	// game.physics.arcade.collide(app.player.ship.ship, app.rockGroupController.rocks);
 }
 
 function moveTowardGreaterNumber(a, b, x)
@@ -20,20 +19,6 @@ function moveTowardGreaterNumber(a, b, x)
 
 function roundPoint(p) {
 	return [Math.round(p.x), Math.round(p.y)];
-}
-
-function setPlayerFrame() {
-	var angle = player.angle < 0 ? player.angle + 360 : player.angle;
-	while (angle >= 360)
-		angle -= 360;
-		
-	var nextFrame = Math.round(angle / 6);
-	if (nextFrame >= 60)
-		nextFrame = 0;
-		
-	player.frame = nextFrame;
-	
-	
 }
 
 function writeDebug2(texts) {
@@ -50,23 +35,35 @@ function writeDebug(texts) {
 	}
 }
 
-function screenWrap (sprite) {
+function screenWrap (sprite, partial) {
 	if (sprite.x < 0)
 	{
-		sprite.x = game.width;
+		if (!partial)
+			sprite.x = game.width;
+		else
+			return new Phaser.Point(game.width, sprite.y);
 	}
 	else if (sprite.x > game.width)
 	{
-		sprite.x = 0;// - sprite.width;
+		if (!partial)
+			sprite.x = 0;// - sprite.width;
+		else
+			return new Phaser.Point(0, sprite.y);
 	}
 
 	if (sprite.y < 0)
 	{
-		sprite.y = game.height;
+		if (!partial)
+			sprite.y = game.height;
+		else
+			return new Phaser.Point(sprite.x, game.height);
 	}
 	else if (sprite.y > game.height)
 	{
-		sprite.y = 0;// - sprite.height;
+		if (!partial)
+			sprite.y = 0;// - sprite.height;
+		else
+			return new Phaser.Point(sprite.x, 0);
 	}
 }
 
