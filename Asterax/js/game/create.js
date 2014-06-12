@@ -5,14 +5,19 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 			game.renderer.clearBeforeRender = false;
 			game.renderer.roundPixels = true;
 			
+			//	Enable p2 physics
 			game.physics.startSystem(Phaser.Physics.P2JS);
+			
+			//  Make things a bit more bouncey
 			game.physics.p2.defaultRestitution = 0.8;
 			
 			app.player = new Player();
 			app.player.create();
 			
-			// app.rockGroupController = new RockGroupController();
-			// app.rockGroupController.create();
+			app.rockGroupController = new RockGroupController();
+			app.rockGroupController.create();
+			
+			game.physics.p2.setBoundsToWorld(false, false, false, false, false);
 			
 			cursors = game.input.keyboard.createCursorKeys();
 			

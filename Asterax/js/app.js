@@ -1,4 +1,4 @@
-var app = {};
+var app = { showPolygons:false };
 var game = {};
 
 
@@ -35,7 +35,18 @@ require(['jq', 'Phaser', 'create', 'main', 'preload', 'update'],
 
 function( jq, Phaser, create ) {
 	
-	game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create: create.run, update: update});
+	game = new Phaser.Game(800, 600, Phaser.AUTO, 'Asterax', {preload: preload, create: create.run, update: update, render: render});
 	
 });
 
+
+function render() {
+	
+}
+
+
+String.prototype.padZero= function(len, c){
+	var s= this, c= c || '0';
+	while(s.length< len) s= c+ s;
+	return s;
+}

@@ -8,5 +8,9 @@ function preload() {
 	game.load.image('rock2', 'images/rocks/lutetia.png', 75, 75);
 	game.load.image('rock3', 'images/rocks/vesta.png', 75, 75);
 	
+	
+	game.load.physics('ship', 'assets/physics/shipSprites.json');
+	game.load.physics('rocks', 'assets/physics/rockSprites.json');
+	
 }
 

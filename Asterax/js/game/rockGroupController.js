@@ -14,8 +14,8 @@ define(['rock'], function() {
 			//setTimeout(function() { window.location.reload() }, 1500);
 			this.rocks = game.add.group();
 			this.rocks.enableBody = true;
-			this.rocks.physicsBodyType = Phaser.Physics.P2JS;
-			game.physics.p2.enable(this.rocks);
+			
+			this.rocks.physicsBodyType = Phaser.Physics.P2JS; // is this line redundant because of the next one??
 			
 			for (var i=0; i < 6; i++) {
 				var name = 'rock' + (i % 4);
@@ -25,9 +25,8 @@ define(['rock'], function() {
 		},
 		
 		update: function() {
-			var rocks = this.rocks;
-			this.rocks.forEachDead(function (r) {
-				
+			this.rocks.forEach(function (r) {
+				game.world.wrap(r.body, Math.round(Math.max(r.width, r.height) / 2), false);
 			});
 		}
 	};
@@ -35,15 +34,17 @@ define(['rock'], function() {
 	return module;
 	
 	function getRandomVelocityForRock() {
-		var x = game.rnd.integerInRange(5, 90);
+		var x = game.rnd.integerInRange(20, 90);
 		var n = 1 - (2 * game.rnd.integerInRange(0, 1)); // 1 or -1
 		return x * n;
 	}
 	
 	function setupNewRock(r, name) {
-		r.anchor.set(0.5);
+		//r.anchor.set(0.5);
 		r.name = name;
-		r.body.velocity = new Phaser.Point(getRandomVelocityForRock(), getRandomVelocityForRock());
+		var velocity = new Phaser.Point(getRandomVelocityForRock(), getRandomVelocityForRock());
+		r.body.velocity.x = velocity.x;
+		r.body.velocity.y = velocity.y;
 		//r.body.velocity = new Phaser.Point(20, 100);
 		//r.body.angularVelocity = getRandomVelocityForRock() * 2; //200;
 		//r.checkWorldBounds = true;
@@ -52,6 +53,12 @@ define(['rock'], function() {
 		r.x2 = game.width / 2;
 		r.y2 = game.height / 2;
 		r.body.gravityScale = 0;
+		r.body.angularDamping = 0;
+		r.body.damping = 0;
+		r.body.mass = 5;
+		r.body.clearShapes();
+		r.body.addPhaserPolygon('rocks', r.name);
+		game.physics.p2.enable(r.body, app.showPolygons);
 		return r;
 	}
 	
