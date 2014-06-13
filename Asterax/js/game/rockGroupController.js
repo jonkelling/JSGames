@@ -45,50 +45,27 @@ define(['rock'], function() {
 		var velocity = new Phaser.Point(getRandomVelocityForRock(), getRandomVelocityForRock());
 		r.body.velocity.x = velocity.x;
 		r.body.velocity.y = velocity.y;
-		//r.body.velocity = new Phaser.Point(20, 100);
-		//r.body.angularVelocity = getRandomVelocityForRock() * 2; //200;
-		//r.checkWorldBounds = true;
+		
+		while (Math.abs(r.body.angularVelocity) < 0.2)
+			// 0.2 is effectively the min rotate speed here
+			r.body.angularVelocity = game.rnd.normal();
+		
 		r.outOfBoundsKill = false;
-		//r.events.onOutOfBounds.add(wrap);
+		
 		r.x2 = game.width / 2;
 		r.y2 = game.height / 2;
 		r.body.gravityScale = 0;
 		r.body.angularDamping = 0;
 		r.body.damping = 0;
-		r.body.mass = 5;
+		r.body.mass = 2;
 		r.body.clearShapes();
 		r.body.addPhaserPolygon('rocks', r.name);
-		game.physics.p2.enable(r.body, app.showPolygons);
+		
+		r.body.setCollisionGroup(app.rocksCollisionGroup);
+		r.body.collides([app.shipCollisionGroup]);
+		
+		r.body.debug = app.showPolygons;
 		return r;
-	}
-	
-	function wrap(r) {
-		var xOut = isOutOfBoundsX(r) && (Math.abs(r.x - r.x2) > r.width);
-		var yOut = isOutOfBoundsY(r) && (Math.abs(r.y - r.y2) > r.height);
-		
-		/*if (write1)
-			write1.push(Math.abs(r.y - r.y2));*/
-		
-		if (xOut) r.x = r.x2 = game.width - r.x;
-		if (yOut) r.y = r.y2 = game.height - r.y;// > 0 ? game.height - r.y : -51.8);
-		
-		/*if (!write1) {
-			writeDebug(write1 = [xOut, yOut, new Date().getTime(), [Math.round(r.x), Math.round(r.y)], [Math.round(r.x2), Math.round(r.y2)], r.body.angularVelocity]);
-		}
-		else {
-			writeDebug(write1);
-			writeDebug2([xOut, yOut, new Date().getTime(), [Math.round(r.x), Math.round(r.y)], [Math.round(r.x2), Math.round(r.y2)], r.body.angularVelocity]);
-		}*/
-		
-		//r.checkWorldBounds = false;
-		//setTimeout(function() { r.checkWorldBounds = true; }, 1000);
-	}
-	
-	function isOutOfBoundsX(r) { return isOutOfBounds(r.x, game.width); }
-	function isOutOfBoundsY(r) { return isOutOfBounds(r.y, game.height); }
-	
-	function isOutOfBounds(position, upperLimit) {
-		return position < 0 || position > upperLimit;
 	}
 	
 });

@@ -8,8 +8,14 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 			//	Enable p2 physics
 			game.physics.startSystem(Phaser.Physics.P2JS);
 			
+			game.physics.p2.setImpactEvents(true);
+			
 			//  Make things a bit more bouncey
 			game.physics.p2.defaultRestitution = 0.8;
+			
+			app.shipCollisionGroup = game.physics.p2.createCollisionGroup();
+			app.rocksCollisionGroup = game.physics.p2.createCollisionGroup();
+			game.physics.p2.updateBoundsCollisionGroup();
 			
 			app.player = new Player();
 			app.player.create();

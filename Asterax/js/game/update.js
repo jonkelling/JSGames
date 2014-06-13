@@ -3,13 +3,6 @@ function update() {
 	
 	app.player.update();
 	app.rockGroupController.update();
-	
-	//game.physics.ninja.collide(app.player.ship.ship, app.rockGroupController.rocks);
-	
-	// app.player.ship.body.bounce.set(1);
-	// app.rockGroupController.rocks.forEachAlive(function(r) { r.body.bounce.set(-1); });
-	// 
-	// game.physics.arcade.collide(app.player.ship.ship, app.rockGroupController.rocks);
 }
 
 function moveTowardGreaterNumber(a, b, x)
