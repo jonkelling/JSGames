@@ -13,8 +13,8 @@ define(['rock'], function() {
 		{
 			//setTimeout(function() { window.location.reload() }, 1500);
 			this.rocks = game.add.group();
-			this.rocks.enableBody = true;
 			
+			this.rocks.enableBody = true;
 			this.rocks.physicsBodyType = Phaser.Physics.P2JS; // is this line redundant because of the next one??
 			
 			for (var i=0; i < 6; i++) {
@@ -62,7 +62,7 @@ define(['rock'], function() {
 		r.body.addPhaserPolygon('rocks', r.name);
 		
 		r.body.setCollisionGroup(app.rocksCollisionGroup);
-		r.body.collides([app.shipCollisionGroup]);
+		r.body.collides([app.shipCollisionGroup, app.bulletsCollisionGroup]);
 		
 		r.body.debug = app.showPolygons;
 		return r;

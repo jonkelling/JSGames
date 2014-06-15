@@ -1,10 +1,16 @@
 
 define(function() {
 	//var ship;
+	var killCount = 0;
+	var killCountDebugTimeout;
+	var killCount2 = 0;
+	var killCountDebugTimeout2;
 	
 	var module = function(aName) {
 		this.name = aName ? aName : "A-Ship";
 		this.ship = null;
+		this.data = {};
+		this.data.immuneToRocks = [];
 	}
 	
 	module.prototype = {
@@ -24,6 +30,7 @@ define(function() {
 			
 			ship.body.setCollisionGroup(app.shipCollisionGroup);
 			ship.body.collides(app.rocksCollisionGroup, hitRock, this);
+			ship.body.onBeginContact.add(hitRock2);
 			
 			this.body = ship.body;
 		},
@@ -34,12 +41,13 @@ define(function() {
 			
 			game.world.wrap(ship.body, Math.round(Math.max(ship.width, ship.height) / 2), false);
 			
-			cursors.left.isDown  ?	ship.body.rotateLeft(70) :
-			cursors.right.isDown ?	ship.body.rotateRight(70) :
-									ship.body.setZeroRotation();
+			app.cursors.left.isDown  ?	ship.body.rotateLeft(70) :
+			app.cursors.right.isDown ?	ship.body.rotateRight(70) :
+										ship.body.setZeroRotation();
 			
+			setShipFrame(ship);
 			
-			if (!cursors.up.isDown)
+			if (!app.cursors.up.isDown)
 			{
 				// ??
 			}
@@ -69,16 +77,12 @@ define(function() {
 			//			"drag:            " + roundPoint(ship.body.drag),
 			//			"new velocity:    " + roundPoint(ship.body.newVelocity),
 			//		]);
-			
-			setShipFrame(ship);
 		}
 	};
 	
 	return module;
 
 	function setShipFrame(ship) {
-		//var ship = this.ship;
-		
 		var angle = ship.angle < 0 ? ship.angle + 360 : ship.angle;
 		while (angle >= 360)
 			angle -= 360;
@@ -96,6 +100,23 @@ define(function() {
 	}
 	
 	function hitRock(s, r) {
-		r.sprite.kill();
+		// r.sprite.kill();
+		killCount++;
+		
+		if (killCountDebugTimeout) {
+			clearTimeout(killCountDebugTimeout);
+			killCountDebugTimeout = null;
+		}
+		killCountDebugTimeout = setTimeout(function() { writeDebug(["kills: " + (killCount)]); }, 50);
+	}
+	
+	function hitRock2(s, r) {
+		killCount2++;
+		
+		if (killCountDebugTimeout2) {
+			clearTimeout(killCountDebugTimeout2);
+			killCountDebugTimeout2 = null;
+		}
+		killCountDebugTimeout2 = setTimeout(function() { writeDebug2(["kills: " + (killCount2)]); }, 50);
 	}
 });

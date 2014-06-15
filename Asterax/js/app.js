@@ -1,9 +1,16 @@
-var app = { showPolygons:false };
+var app = {
+		showPolygons: false,
+		backgroundSpeed: 0.005,
+		defaultMaxLiveBullets: 6,
+		defaultFireRate: 50,
+		defaultBulletLifespan: 1000,
+		defaultBulletSpeed: 200
+};
 var game = {};
 
 
 var player;
-var cursors;
+
 var maxSpeed = 250;
 var turnSpeed = 200;
 var decay = 1;
@@ -19,18 +26,19 @@ requirejs.config({
 	//create:   'inc/create',
 	//update:   'inc/update',
 	jq:       'lib/jquery-2.0.3.min',
-	main:     'game/main',
+	//main:     'game/main',
 	preload:  'game/preload',
 	create:   'game/create',
 	update:   'game/update',
 	player:   'game/player',
 	ship:     'game/ship',
 	rock:     'game/rock',
+	bullets:  'game/bullets',
 	rockGroupController: 'game/rockGroupController'
   },
 });
 
-require(['jq', 'Phaser', 'create', 'main', 'preload', 'update'],
+require(['jq', 'Phaser', 'create', 'preload', 'update'],
 
 
 function( jq, Phaser, create ) {

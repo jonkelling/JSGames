@@ -1,9 +1,20 @@
 
 define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGroupController) {
+	
+	function fireButtonDown() {
+		alert('down');
+	}
+	
+	function fireButtonUp() {
+		alert('up');
+	}
+	
 	return {
 		run: function() {
 			game.renderer.clearBeforeRender = false;
 			game.renderer.roundPixels = true;
+			
+			app.background = game.add.tileSprite(0, 0, 800, 600, 'background');
 			
 			//	Enable p2 physics
 			game.physics.startSystem(Phaser.Physics.P2JS);
@@ -15,7 +26,11 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 			
 			app.shipCollisionGroup = game.physics.p2.createCollisionGroup();
 			app.rocksCollisionGroup = game.physics.p2.createCollisionGroup();
+			app.bulletsCollisionGroup = game.physics.p2.createCollisionGroup();
 			game.physics.p2.updateBoundsCollisionGroup();
+
+			app.cursors = game.input.keyboard.createCursorKeys();
+			app.fireButton = game.input.keyboard.addKey(Phaser.Keyboard.C);
 			
 			app.player = new Player();
 			app.player.create();
@@ -24,8 +39,6 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 			app.rockGroupController.create();
 			
 			game.physics.p2.setBoundsToWorld(false, false, false, false, false);
-			
-			cursors = game.input.keyboard.createCursorKeys();
 			
 			$('body').append('<div style="position: absolute; left: 820px; top: 20px;">' +
 								'<input id="engine1button" type="button" value="engine 1"/><br/>' +

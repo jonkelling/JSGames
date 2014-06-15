@@ -7,6 +7,9 @@ function preload() {
 	game.load.image('rock1', 'images/rocks/badking.png', 75, 75);
 	game.load.image('rock2', 'images/rocks/lutetia.png', 75, 75);
 	game.load.image('rock3', 'images/rocks/vesta.png', 75, 75);
+	game.load.image('bullet', 'images/bullet.png', 11, 11);
+	
+	game.load.image('background', 'images/backgrounds/galaxy-starry-night.jpg');
 	
 	
 	game.load.physics('ship', 'assets/physics/shipSprites.json');

@@ -3,11 +3,17 @@ function update() {
 	
 	app.player.update();
 	app.rockGroupController.update();
-}
-
-function moveTowardGreaterNumber(a, b, x)
-{
 	
+	//  Scroll the background
+	app.background.tilePosition.x += app.backgroundSpeed;
+	
+	// writeDebug([app.player.ship.body.velocity.x, app.player.ship.body.velocity.y]);
+	// try {
+	// 	writeDebug2([app.player.bullets.bullets.getFirstAlive().body.velocity.x, app.player.bullets.bullets.getFirstAlive().body.velocity.y]);
+	// }
+	// catch (ex) {
+	// 	
+	// }
 }
 
 function roundPoint(p) {
@@ -27,36 +33,3 @@ function writeDebug(texts) {
 		game.debug.text(texts[i]+"", 20, 450 + y);
 	}
 }
-
-function screenWrap (sprite, partial) {
-	if (sprite.x < 0)
-	{
-		if (!partial)
-			sprite.x = game.width;
-		else
-			return new Phaser.Point(game.width, sprite.y);
-	}
-	else if (sprite.x > game.width)
-	{
-		if (!partial)
-			sprite.x = 0;// - sprite.width;
-		else
-			return new Phaser.Point(0, sprite.y);
-	}
-
-	if (sprite.y < 0)
-	{
-		if (!partial)
-			sprite.y = game.height;
-		else
-			return new Phaser.Point(sprite.x, game.height);
-	}
-	else if (sprite.y > game.height)
-	{
-		if (!partial)
-			sprite.y = 0;// - sprite.height;
-		else
-			return new Phaser.Point(sprite.x, 0);
-	}
-}
-
