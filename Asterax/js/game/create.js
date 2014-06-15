@@ -28,6 +28,8 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 			app.rocksCollisionGroup = game.physics.p2.createCollisionGroup();
 			app.bulletsCollisionGroup = game.physics.p2.createCollisionGroup();
 			game.physics.p2.updateBoundsCollisionGroup();
+			
+			game.physics.p2.setBoundsToWorld(false, false, false, false, false);
 
 			app.cursors = game.input.keyboard.createCursorKeys();
 			app.fireButton = game.input.keyboard.addKey(Phaser.Keyboard.C);
@@ -37,8 +39,6 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 			
 			app.rockGroupController = new RockGroupController();
 			app.rockGroupController.create();
-			
-			game.physics.p2.setBoundsToWorld(false, false, false, false, false);
 			
 			$('body').append('<div style="position: absolute; left: 820px; top: 20px;">' +
 								'<input id="engine1button" type="button" value="engine 1"/><br/>' +

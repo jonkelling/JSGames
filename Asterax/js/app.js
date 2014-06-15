@@ -4,7 +4,8 @@ var app = {
 		defaultMaxLiveBullets: 6,
 		defaultFireRate: 50,
 		defaultBulletLifespan: 1000,
-		defaultBulletSpeed: 200
+		defaultBulletSpeed: 200,
+		rockSize: {SMALL: 1, MEDIUM: 2, LARGE: 3}
 };
 var game = {};
 
@@ -17,6 +18,7 @@ var decay = 1;
 var acceleration = 400;
 var bullets;
 var rocks;
+var AsteraxSprite;
 
 requirejs.config({
   baseUrl: 'js',
@@ -30,6 +32,7 @@ requirejs.config({
 	preload:  'game/preload',
 	create:   'game/create',
 	update:   'game/update',
+	AsteraxSprite: 'game/asteraxSprite',
 	player:   'game/player',
 	ship:     'game/ship',
 	rock:     'game/rock',
@@ -38,7 +41,7 @@ requirejs.config({
   },
 });
 
-require(['jq', 'Phaser', 'create', 'preload', 'update'],
+require(['jq', 'Phaser', 'create', 'preload', 'update', 'AsteraxSprite'],
 
 
 function( jq, Phaser, create ) {

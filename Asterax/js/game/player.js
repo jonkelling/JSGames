@@ -10,8 +10,11 @@ define(['ship', 'bullets'], function (Ship, Bullets) {
 		
 		create: function()
 		{
-			this.ship = new Ship();
-			this.ship.create();
+			this.shipGroup = game.add.group();
+			this.shipGroup.enableBody = true;
+			this.shipGroup.physicsBodyType = Phaser.Physics.P2JS;
+			this.shipGroup.classType = Ship;
+			this.ship = this.shipGroup.create();
 			
 			this.bullets = new Bullets(this);
 			this.bullets.create();
@@ -37,6 +40,7 @@ define(['ship', 'bullets'], function (Ship, Bullets) {
 	
 	function fireBullet()
 	{
+		app.time = game.time.now;
 		this.bullets.fireBullet();
 	}
 	

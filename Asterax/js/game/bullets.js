@@ -1,4 +1,4 @@
-define(function() {
+define(['Phaser'], function() {
 	
 	var module = function(player) {
 		this.data = {};
@@ -59,12 +59,6 @@ define(function() {
 					nextBullet.body.moveForward(this.speed);
 					nextBullet.body.data.velocity[0] += this.player.ship.body.data.velocity[0];
 					nextBullet.body.data.velocity[1] += this.player.ship.body.data.velocity[1];
-					
-					// var magnitude = nextBullet.body.world.pxmi(-this.speed);
-					// var angle = (nextBullet.body.data.angle) + Math.PI / 2;
-					// 
-					// nextBullet.body.data.velocity[0] += magnitude * Math.cos(angle);
-					// nextBullet.body.data.velocity[1] += magnitude * Math.sin(angle);
 				}
 			}
 		}
@@ -83,6 +77,7 @@ define(function() {
 	function hitRock(b, r)
 	{
 		b.sprite.kill();
+		alert(r.sprite.rockSize);
 	}
 	
 	Object.defineProperty(module.prototype, "maxLiveBullets", {

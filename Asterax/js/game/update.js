@@ -6,14 +6,6 @@ function update() {
 	
 	//  Scroll the background
 	app.background.tilePosition.x += app.backgroundSpeed;
-	
-	// writeDebug([app.player.ship.body.velocity.x, app.player.ship.body.velocity.y]);
-	// try {
-	// 	writeDebug2([app.player.bullets.bullets.getFirstAlive().body.velocity.x, app.player.bullets.bullets.getFirstAlive().body.velocity.y]);
-	// }
-	// catch (ex) {
-	// 	
-	// }
 }
 
 function roundPoint(p) {
