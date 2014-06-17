@@ -14,6 +14,10 @@ define(['Phaser'], function() {
 		this.game.world.wrap(this.body, Math.round(Math.max(this.width, this.height) / 2)-1, false);
 	};
 	
+	// Object.defineProperty(module, "active", function() {
+	// 	
+	// });
+	
 	return module;
 		
 });

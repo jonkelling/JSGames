@@ -10,8 +10,6 @@ var app = {
 var game = {};
 
 
-var player;
-
 var maxSpeed = 250;
 var turnSpeed = 200;
 var decay = 1;
@@ -23,7 +21,7 @@ var AsteraxSprite;
 requirejs.config({
   baseUrl: 'js',
   paths: {
-	Phaser:   'lib/phaser.min',
+	Phaser:   'lib/phaser',
 	//preload:  'inc/preload',
 	//create:   'inc/create',
 	//update:   'inc/update',
@@ -37,6 +35,7 @@ requirejs.config({
 	ship:     'game/ship',
 	rock:     'game/rock',
 	bullets:  'game/bullets',
+	bullet:   'game/bullet',
 	rockGroupController: 'game/rockGroupController'
   },
 });

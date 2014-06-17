@@ -1,12 +1,12 @@
 
 define(['AsteraxSprite'], function(AsteraxSprite) {
 
-	var module = function(game, x, y, name, frame)
+	var module = function(game, x, y, name, rockSize)
 	{
 		AsteraxSprite.call(this, game, x, y, name);
 		
 		this.name = name;
-		this.rockSize = app.rockSize.LARGE;
+		this.rockSize = rockSize;
 		
 		this.canHitShip = true;
 		
@@ -39,6 +39,8 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 
 		this.body.setCollisionGroup(app.rocksCollisionGroup);
 		this.body.collides([app.shipCollisionGroup, app.bulletsCollisionGroup]);
+		
+		this.events.onKilled.add(onKilled, this);
 
 		this.body.debug = app.showPolygons;
 	};
@@ -53,6 +55,34 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		var x = game.rnd.integerInRange(20, 90);
 		var n = 1 - (2 * game.rnd.integerInRange(0, 1)); // 1 or -1
 		return x * n;
+	}
+	
+	function onKilled()
+	{
+		if (this.rockSize == app.rockSize.SMALL)
+		{
+			return;
+		}
+		else
+		{
+			var nextSize = this.rockSize - 1;
+			var group = app.rockGroupController.rocks;
+			
+			if (this.rockSize == app.rockSize.MEDIUM)
+			{
+				var numberOfSmallRocksToCreate = game.rnd.integerInRange(2, 3);
+				for (var i = 0; i <= numberOfSmallRocksToCreate; i++)
+				{
+					group.create(this.x, this.y, "rock_sm" + i, nextSize);
+				}
+			}
+			else if (this.rockSize == app.rockSize.LARGE)
+			{
+				group.create(this.x, this.y, this.name + "_med0", nextSize);
+				group.create(this.x, this.y, this.name + "_med1", nextSize);
+				group.create(this.x, this.y, this.name + "_med2", nextSize);
+			}
+		}
 	}
 
 });

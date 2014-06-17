@@ -1,10 +1,11 @@
-define(['Phaser'], function() {
+define(['bullet'], function(Bullet) {
 	
 	var module = function(player) {
 		this.data = {};
 		this.maxLiveBullets = app.defaultMaxLiveBullets;
 		this.player = player;
 		this.canFire = true;
+		this.stopFire = false;
 		this.fireRate = app.defaultFireRate;
 		this.lifespan = app.defaultBulletLifespan;
 		this.speed = app.defaultBulletSpeed;
@@ -19,19 +20,19 @@ define(['Phaser'], function() {
 			
 			this.bullets.enableBody = true;
 			this.bullets.physicsBodyType = Phaser.Physics.P2JS;
+			this.bullets.classType = Bullet;
 			
 			this.bullets.createMultiple(this.maxLiveBullets, 'bullet');
-			
-			this.bullets.forEach(function(b) {
-				b.body.setCollisionGroup(app.bulletsCollisionGroup);
-				b.body.collides([app.rocksCollisionGroup], hitRock, this);
-				// b.body.onBeginContact.add(hitRock);
-			});
 		},
 		
 		update: function()
 		{
-			
+			this.bullets.callAll('wrap');
+			this.currentBullet = this.bullets.getFirstAlive();
+			if (this.currentBullet && this.currentBullet.body.data.world == null)
+			{
+				writeDebug2([this.currentBullet.body.velocity.x, this.currentBullet.body.velocity.y]);
+			}
 		},
 		
 		fireBullet: function()
@@ -47,7 +48,7 @@ define(['Phaser'], function() {
 					this.canFire = false;
 					game.time.events.add(this.fireRate, setCanFire, this);
 					
-					nextBullet.reset(this.player.ship.ship.x, this.player.ship.ship.y);
+					nextBullet.reset(this.player.ship.x, this.player.ship.y);
 					
 					nextBullet.lifespan = this.lifespan;
 					nextBullet.body.gravityScale = 0;
@@ -55,10 +56,11 @@ define(['Phaser'], function() {
 					nextBullet.body.angularDamping = 0;
 					nextBullet.body.mass = 0.05;
 					
-					nextBullet.body.angle = this.player.ship.ship.body.angle;
+					nextBullet.body.angle = this.player.ship.body.angle;
 					nextBullet.body.moveForward(this.speed);
 					nextBullet.body.data.velocity[0] += this.player.ship.body.data.velocity[0];
 					nextBullet.body.data.velocity[1] += this.player.ship.body.data.velocity[1];
+					this.currentBullet = nextBullet;
 				}
 			}
 		}
@@ -72,12 +74,6 @@ define(['Phaser'], function() {
 	function setCanFire()
 	{
 		this.canFire = true;
-	}
-	
-	function hitRock(b, r)
-	{
-		b.sprite.kill();
-		alert(r.sprite.rockSize);
 	}
 	
 	Object.defineProperty(module.prototype, "maxLiveBullets", {

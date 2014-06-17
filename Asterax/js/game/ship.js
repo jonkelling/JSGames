@@ -29,7 +29,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		
 		this.body.setCollisionGroup(app.shipCollisionGroup);
 		this.body.collides([app.rocksCollisionGroup]);
-		this.body.onBeginContact.add(hitRock);
+		this.body.onBeginContact.add(hitRock, this);
 	};
 	
 	module.prototype.update = function()
@@ -93,7 +93,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		}
 	}
 	
-	function hitRock(rock, ship) {
+	function hitRock(rock) {
 		if (rock.sprite.canHitShip)
 		{
 			rock.sprite.canHitShip = false;

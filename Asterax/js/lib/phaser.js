@@ -73592,7 +73592,7 @@ Phaser.Physics.P2.prototype = {
     * @return {boolean} True if the Body was added successfully, otherwise false.
     */
     addBody: function (body) {
-
+        
         if (body.data.world)
         {
             return false;
@@ -73600,12 +73600,12 @@ Phaser.Physics.P2.prototype = {
         else
         {
             this.world.addBody(body.data);
-
+    
             this.onBodyAdded.dispatch(body);
-
+    
             return true;
         }
-
+    
     },
 
     /**
@@ -75825,7 +75825,12 @@ Phaser.Physics.P2.Body.prototype = {
     * @method Phaser.Physics.P2.Body#addToWorld
     */
     addToWorld: function () {
-
+        
+        if (this.game.physics.p2._toRemove)
+            for (var i = 0; i < this.game.physics.p2._toRemove.length; i++)
+                if (this.game.physics.p2._toRemove[i] === this)
+                    this.game.physics.p2._toRemove[i].splice(i, 1);
+            
         if (this.data.world !== this.game.physics.p2.world)
         {
             this.game.physics.p2.addBody(this);
