@@ -56,8 +56,9 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		this.body.data.velocity[0] = baseVelocity.x;
 		this.body.data.velocity[1] = baseVelocity.y;
 		
-		//this.angle = Math.atan2(baseVelocity.x, baseVelocity.y);
-		this.body.moveForward(getRandomVelocityForRock());
+		this.body.rotation = Math.atan2(baseVelocity.x, baseVelocity.y);
+		this.body.rotation -= 1.57079633;
+		this.body.moveForward(Math.abs(getRandomVelocityForRock()));
 	};
 	
 	return module;
