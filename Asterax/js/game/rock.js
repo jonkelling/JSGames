@@ -11,7 +11,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		this.canHitShip = true;
 		
 		this.create();
-	}
+	};
 
 	module.prototype = Object.create(AsteraxSprite.prototype);
 	module.prototype.constructor = module;
