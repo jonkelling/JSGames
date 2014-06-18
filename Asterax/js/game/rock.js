@@ -18,9 +18,9 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 
 	module.prototype.create = function()
 	{
-		var velocity = new Phaser.Point(getRandomVelocityForRock(), getRandomVelocityForRock());
-		this.body.velocity.x = velocity.x;
-		this.body.velocity.y = velocity.y;
+		var baseVelocity = new Phaser.Point(getRandomVelocityForRock(), getRandomVelocityForRock());
+		this.body.velocity.x = baseVelocity.x;
+		this.body.velocity.y = baseVelocity.y;
 
 		while (Math.abs(this.body.angularVelocity) < 0.2)
 			// 0.2 is effectively the min rotate speed here
@@ -48,7 +48,18 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	module.prototype.update = function()
 	{
 	};
-
+	
+	module.prototype.setRockAngleAndVelocityFromBaseRock = function(baseRock)
+	{
+		var baseVelocity = baseRock.body.velocity;
+		
+		this.body.data.velocity[0] = baseVelocity.x;
+		this.body.data.velocity[1] = baseVelocity.y;
+		
+		//this.angle = Math.atan2(baseVelocity.x, baseVelocity.y);
+		this.body.moveForward(getRandomVelocityForRock());
+	};
+	
 	return module;
 	
 	function getRandomVelocityForRock() {
@@ -70,17 +81,17 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 			
 			if (this.rockSize == app.rockSize.MEDIUM)
 			{
-				var numberOfSmallRocksToCreate = game.rnd.integerInRange(2, 3);
+				var numberOfSmallRocksToCreate = game.rnd.integerInRange(1, 2);
 				for (var i = 0; i <= numberOfSmallRocksToCreate; i++)
 				{
-					group.create(this.x, this.y, "rock_sm" + i, nextSize);
+					group.create(this.x, this.y, "rock_sm" + i, nextSize).setRockAngleAndVelocityFromBaseRock(this);
 				}
 			}
 			else if (this.rockSize == app.rockSize.LARGE)
 			{
-				group.create(this.x, this.y, this.name + "_med0", nextSize);
-				group.create(this.x, this.y, this.name + "_med1", nextSize);
-				group.create(this.x, this.y, this.name + "_med2", nextSize);
+				group.create(this.x, this.y, this.name + "_med0", nextSize).setRockAngleAndVelocityFromBaseRock(this);
+				group.create(this.x, this.y, this.name + "_med1", nextSize).setRockAngleAndVelocityFromBaseRock(this);
+				group.create(this.x, this.y, this.name + "_med2", nextSize).setRockAngleAndVelocityFromBaseRock(this);
 			}
 		}
 	}

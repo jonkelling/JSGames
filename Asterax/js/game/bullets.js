@@ -28,11 +28,6 @@ define(['bullet'], function(Bullet) {
 		update: function()
 		{
 			this.bullets.callAll('wrap');
-			this.currentBullet = this.bullets.getFirstAlive();
-			if (this.currentBullet && this.currentBullet.body.data.world == null)
-			{
-				writeDebug2([this.currentBullet.body.velocity.x, this.currentBullet.body.velocity.y]);
-			}
 		},
 		
 		fireBullet: function()

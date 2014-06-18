@@ -101,7 +101,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 			killCount++;
 			
 			game.time.events.add(Phaser.Timer.HALF, resetRockHit, this, rock.sprite);
-			killCountDebugTimeout = setTimeout(function() { writeDebug(["kills: " + (killCount)]); }, 50);
+			// killCountDebugTimeout = setTimeout(function() { writeDebug(["kills: " + (killCount)]); }, 50);
 		}
 	}
 	
