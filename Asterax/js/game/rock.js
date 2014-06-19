@@ -49,15 +49,15 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	{
 	};
 	
-	module.prototype.setRockAngleAndVelocityFromBaseRock = function(baseRock)
+	module.prototype.setRockAngleAndVelocityFromBaseRock = function(baseRock, sideWaysDirection)
 	{
 		var baseVelocity = baseRock.body.velocity;
 		
-		this.body.data.velocity[0] = baseVelocity.x;
-		this.body.data.velocity[1] = baseVelocity.y;
+		this.body.data.velocity[0] = 0;//baseVelocity.x;
+		this.body.data.velocity[1] = 0;//baseVelocity.y;
 		
-		this.body.rotation = Math.atan2(baseVelocity.x, baseVelocity.y);
-		this.body.rotation -= 1.57079633;
+		this.body.rotation = Math.atan2(baseVelocity.x, baseVelocity.y) * -1;
+ 		this.body.rotation += game.rnd.frac() * sideWaysDirection;
 		this.body.moveForward(Math.abs(getRandomVelocityForRock()));
 	};
 	
@@ -85,14 +85,14 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 				var numberOfSmallRocksToCreate = game.rnd.integerInRange(1, 2);
 				for (var i = 0; i <= numberOfSmallRocksToCreate; i++)
 				{
-					group.create(this.x, this.y, "rock_sm" + i, nextSize).setRockAngleAndVelocityFromBaseRock(this);
+					group.create(this.x, this.y, "rock_sm" + i, nextSize).setRockAngleAndVelocityFromBaseRock(this,  game.rnd.integerInRange(-1, 1));
 				}
 			}
 			else if (this.rockSize == app.rockSize.LARGE)
 			{
-				group.create(this.x, this.y, this.name + "_med0", nextSize).setRockAngleAndVelocityFromBaseRock(this);
-				group.create(this.x, this.y, this.name + "_med1", nextSize).setRockAngleAndVelocityFromBaseRock(this);
-				group.create(this.x, this.y, this.name + "_med2", nextSize).setRockAngleAndVelocityFromBaseRock(this);
+				group.create(this.x, this.y, this.name + "_med0", nextSize).setRockAngleAndVelocityFromBaseRock(this, -1);
+				group.create(this.x, this.y, this.name + "_med1", nextSize).setRockAngleAndVelocityFromBaseRock(this, game.rnd.integerInRange(-1, 1));
+				group.create(this.x, this.y, this.name + "_med2", nextSize).setRockAngleAndVelocityFromBaseRock(this, +1);
 			}
 		}
 	}
