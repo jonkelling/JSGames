@@ -129,15 +129,19 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	
 	function runNewExplosionEmitter(images)
 	{
+		var image = game.cache.getImage(images[0]);
+		
 		var emitter = game.add.emitter(this.x, this.y, 6);
 		
 		emitter.makeParticles(images);
 		emitter.makeParticles();
 		
-		var speed = 70;
-		var scale =	this.rockSize == app.rockSize.LARGE	? 0.4 :
-					this.rockSize == app.rockSize.MEDIUM	? 0.3 :
-					this.rockSize == app.rockSize.SMALL	? 0.1 : 0.1;
+		var speed = 100;
+		// var scale =	this.rockSize == app.rockSize.LARGE	? 0.4 :
+		// 			this.rockSize == app.rockSize.MEDIUM	? 0.3 :
+		// 			this.rockSize == app.rockSize.SMALL	? 0.1 : 0.1;
+		var scale = this.width / image.width;
+		
 		var alpha = 0.0;
 		var duration =	this.rockSize == app.rockSize.LARGE	? 450 :
 						this.rockSize == app.rockSize.MEDIUM	? 350 :
@@ -147,7 +151,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		emitter.maxParticleSpeed.setTo(speed, speed);
 		emitter.setAlpha(1, alpha, duration);
 		emitter.gravity = 0;
-		emitter.setScale(scale, scale*2, scale, scale*2, 100);
+		emitter.setScale(scale, scale*3, scale, scale*3, 100);
 		emitter.start(true, duration, 0, 6);
 	}
 
