@@ -1,0 +1,27 @@
+{
+
+	"rock0": {
+		"origin": [  0, 0  ],
+		"children": [
+			"asteroid_3ds_med0"	,
+			"asteroid_3ds_med1"	,
+			"asteroid_3ds_med2"
+		]
+	}
+	, 
+	"rock0_med0": {
+		"origin": [  9, 1  ],
+		"size": [  27, 29  ]
+	}
+	, 
+	"rock0_med1": {
+		"origin": [  16, 23  ],
+		"size": [  40, 28  ]
+	}
+	, 
+	"rock0_med2": {
+		"origin": [  22, 45  ],
+		"size": [  35, 29  ]
+	}
+
+}

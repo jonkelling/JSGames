@@ -33,6 +33,13 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 
 			app.cursors = game.input.keyboard.createCursorKeys();
 			app.fireButton = game.input.keyboard.addKey(Phaser.Keyboard.C);
+			app.testButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+			
+			app.testButton.onDown.add(function() {
+				var json = game.cache.getJSON('rockpositions');
+				alert(json[json["rock0"].children[2]].origin);
+				alert(json["fdsafdsa"]);
+			});
 			
 			app.player = new Player();
 			app.player.create();

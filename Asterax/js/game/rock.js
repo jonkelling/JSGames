@@ -53,12 +53,15 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	{
 		var baseVelocity = baseRock.body.velocity;
 		
-		this.body.data.velocity[0] = 0;//baseVelocity.x;
-		this.body.data.velocity[1] = 0;//baseVelocity.y;
+		this.body.data.velocity[0] = baseVelocity.x;
+		this.body.data.velocity[1] = baseVelocity.y;
 		
 		this.body.rotation = Math.atan2(baseVelocity.x, baseVelocity.y) * -1;
  		this.body.rotation += game.rnd.frac() * sideWaysDirection;
 		this.body.moveForward(Math.abs(getRandomVelocityForRock()));
+		this.body.rotation = baseRock.body.rotation;
+		
+		return this;
 	};
 	
 	return module;
@@ -71,14 +74,16 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	
 	function onKilled()
 	{
+		runNewExplosionEmitter.call(this, ['white-smoke','fire3']);
+		
 		if (this.rockSize == app.rockSize.SMALL)
 		{
 			return;
 		}
 		else
-		{
+		{	
 			var nextSize = this.rockSize - 1;
-			var group = app.rockGroupController.rocks;
+			var group = app.rockGroupController.rocks;//getNewGroup(app.rockGroupController.rocks);
 			
 			if (this.rockSize == app.rockSize.MEDIUM)
 			{
@@ -90,11 +95,60 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 			}
 			else if (this.rockSize == app.rockSize.LARGE)
 			{
-				group.create(this.x, this.y, this.name + "_med0", nextSize).setRockAngleAndVelocityFromBaseRock(this, -1);
-				group.create(this.x, this.y, this.name + "_med1", nextSize).setRockAngleAndVelocityFromBaseRock(this, game.rnd.integerInRange(-1, 1));
-				group.create(this.x, this.y, this.name + "_med2", nextSize).setRockAngleAndVelocityFromBaseRock(this, +1);
+				var json = game.cache.getJSON("rockpositions");
+				var rockNames = [this.name + "_med0", this.name + "_med1", this.name + "_med2"];
+				var points = [];
+				for (var i = 0; i < rockNames.length; i++) {
+					var jsonEntry = json[rockNames[i]];
+					
+					if (!jsonEntry)
+						points.push(this.position.clone());
+					else
+					{
+						points.push(this.position.clone().add(-this.width/2, -this.height/2));
+						points[i].x += jsonEntry.origin[0] + (jsonEntry.size[0] / 2);
+						points[i].y += jsonEntry.origin[1] + (jsonEntry.size[1] / 2);
+						points[i].rotate(this.x, this.y, points[i].angle(this.position)+Math.PI+this.body.rotation);
+					}
+				}
+				
+				var r0 = group.create(points[0].x, points[0].y, rockNames[0], nextSize).setRockAngleAndVelocityFromBaseRock(this, -1);
+				var r1 = group.create(points[1].x, points[1].y, rockNames[1], nextSize).setRockAngleAndVelocityFromBaseRock(this, game.rnd.integerInRange(-1, 1));
+				var r2 = group.create(points[2].x, points[2].y, rockNames[2], nextSize).setRockAngleAndVelocityFromBaseRock(this, +1);
+				
+				// game.time.events.add(300, runNewExplosionEmitter, r0, ['white-smoke']);
+				// game.time.events.add(400, runNewExplosionEmitter, r1, ['white-smoke']);
+				// game.time.events.add(500, runNewExplosionEmitter, r2, ['white-smoke']);
+				
+				runNewExplosionEmitter.call(r0, ['white-smoke']);
+				runNewExplosionEmitter.call(r1, ['white-smoke']);
+				runNewExplosionEmitter.call(r2, ['white-smoke']);
 			}
 		}
+	}
+	
+	function runNewExplosionEmitter(images)
+	{
+		var emitter = game.add.emitter(this.x, this.y, 6);
+		
+		emitter.makeParticles(images);
+		emitter.makeParticles();
+		
+		var speed = 70;
+		var scale =	this.rockSize == app.rockSize.LARGE	? 0.4 :
+					this.rockSize == app.rockSize.MEDIUM	? 0.3 :
+					this.rockSize == app.rockSize.SMALL	? 0.1 : 0.1;
+		var alpha = 0.0;
+		var duration =	this.rockSize == app.rockSize.LARGE	? 450 :
+						this.rockSize == app.rockSize.MEDIUM	? 350 :
+						this.rockSize == app.rockSize.SMALL	? 250 : 250;
+		
+		emitter.minParticleSpeed.setTo(-speed, -speed);
+		emitter.maxParticleSpeed.setTo(speed, speed);
+		emitter.setAlpha(1, alpha, duration);
+		emitter.gravity = 0;
+		emitter.setScale(scale, scale*2, scale, scale*2, 100);
+		emitter.start(true, duration, 0, 6);
 	}
 
 });

@@ -29,6 +29,16 @@ function preload() {
 	game.load.image('rock_sm2', 'images/rocks/rock_sm2.png', 16, 15);
 	game.load.image('rock_sm3', 'images/rocks/rock_sm3.png', 17, 15);
 	
+	game.load.image('fire1', 'assets/particles/fire1.png');
+	game.load.image('fire2', 'assets/particles/fire2.png');
+	game.load.image('fire3', 'assets/particles/fire3.png');
+	game.load.image('muzzleflash2', 'assets/particles/muzzleflash2.png');
+	game.load.image('muzzleflash3', 'assets/particles/muzzleflash3.png');
+	game.load.image('muzzleflash7', 'assets/particles/muzzleflash7.png');
+	game.load.image('smoke-puff', 'assets/particles/smoke-puff.png');
+	game.load.image('white-smoke', 'assets/particles/white-smoke.png');
+	game.load.image('yellow', 'assets/particles/yellow.png');
+	
 	
 	game.load.image('bullet', 'images/bullet.png', 11, 11);
 	
@@ -37,6 +47,8 @@ function preload() {
 	
 	game.load.physics('ship', 'assets/physics/shipSprites.json');
 	game.load.physics('rocks', 'assets/physics/rockSprites.json');
+	
+	game.load.json('rockpositions', 'assets/rockSpritePositions.json');
 	
 }
 

@@ -18,6 +18,11 @@ define(['Phaser'], function() {
 	// 	
 	// });
 	
+	Object.defineProperty(module.prototype, "left", { get: function() { return this.x - (this.width / 2); } });
+	Object.defineProperty(module.prototype, "top", { get: function() { return this.y - (this.width / 2); } });
+	Object.defineProperty(module.prototype, "right", { get: function() { return this.x + (this.width / 2); } });
+	Object.defineProperty(module.prototype, "bottom", { get: function() { return this.y + (this.width / 2); } });
+	
 	return module;
 		
 });

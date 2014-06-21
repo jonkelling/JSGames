@@ -10,11 +10,7 @@ define(['rock'], function(Rock) {
 		create: function()
 		{
 			//setTimeout(function() { window.location.reload() }, 1500);
-			this.rocks = game.add.group();
-			this.rocks.classType = Rock;
-			
-			this.rocks.enableBody = true;
-			this.rocks.physicsBodyType = Phaser.Physics.P2JS; // is this line redundant because of the next one??
+			this.rocks = getNewGroup();
 			
 			for (var i=0; i < 6; i++) {
 				var name = 'rock' + (i % 4);
@@ -25,6 +21,16 @@ define(['rock'], function(Rock) {
 		update: function() {
 			this.rocks.callAll('wrap');
 		}
+	};
+	
+	function getNewGroup(parent) {
+		var group = parent	?	game.add.group(parent)
+							:	game.add.group();
+		group.classType = Rock;
+		group.enableBody = true;
+		group.physicsBodyType = Phaser.Physics.P2JS;
+		
+		return group;
 	};
 	
 	return module;
