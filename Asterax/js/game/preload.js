@@ -38,6 +38,7 @@ function preload() {
 	game.load.image('smoke-puff', 'assets/particles/smoke-puff.png');
 	game.load.image('white-smoke', 'assets/particles/white-smoke.png');
 	game.load.image('yellow', 'assets/particles/yellow.png');
+	game.load.spritesheet('grayscale', 'assets/particles/grayscale.png', 1, 1);
 	
 	
 	game.load.image('bullet', 'images/bullet.png', 11, 11);

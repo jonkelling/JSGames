@@ -74,7 +74,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	
 	function onKilled()
 	{
-		runNewExplosionEmitter.call(this, ['white-smoke','fire3']);
+		runNewExplosionEmitter2.call(this, ['white-smoke','fire3']);
 		
 		if (this.rockSize == app.rockSize.SMALL)
 		{
@@ -120,9 +120,9 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 				// game.time.events.add(400, runNewExplosionEmitter, r1, ['white-smoke']);
 				// game.time.events.add(500, runNewExplosionEmitter, r2, ['white-smoke']);
 				
-				runNewExplosionEmitter.call(r0, ['white-smoke']);
-				runNewExplosionEmitter.call(r1, ['white-smoke']);
-				runNewExplosionEmitter.call(r2, ['white-smoke']);
+				runNewExplosionEmitter2.call(r0, ['white-smoke']);
+				runNewExplosionEmitter2.call(r1, ['white-smoke']);
+				runNewExplosionEmitter2.call(r2, ['white-smoke']);
 			}
 		}
 	}
@@ -137,9 +137,6 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		emitter.makeParticles();
 		
 		var speed = 100;
-		// var scale =	this.rockSize == app.rockSize.LARGE	? 0.4 :
-		// 			this.rockSize == app.rockSize.MEDIUM	? 0.3 :
-		// 			this.rockSize == app.rockSize.SMALL	? 0.1 : 0.1;
 		var scale = this.width / image.width;
 		
 		var alpha = 0.0;
@@ -153,6 +150,22 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		emitter.gravity = 0;
 		emitter.setScale(scale, scale*3, scale, scale*3, 100);
 		emitter.start(true, duration, 0, 6);
+	}
+	
+	function runNewExplosionEmitter2()
+	{
+		var emitter = game.add.emitter(this.x, this.y, 50);
+		
+		var speed = 100;
+		var duration = 400;
+		
+		emitter.makeParticles('grayscale');
+		emitter.minParticleSpeed.setTo(-speed, -speed);
+		emitter.maxParticleSpeed.setTo(speed, speed);
+		// emitter.setAlpha(1, 0.0, duration)
+		emitter.setScale(200, 200, 200, 200, 10);
+		emitter.gravity = 0;
+		emitter.start(true, duration*5, 250, 10);
 	}
 
 });

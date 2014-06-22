@@ -21,7 +21,7 @@ var AsteraxSprite;
 requirejs.config({
   baseUrl: 'js',
   paths: {
-	Phaser:   'lib/phaser',
+	Phaser:   'lib/phaser.min',
 	//preload:  'inc/preload',
 	//create:   'inc/create',
 	//update:   'inc/update',
