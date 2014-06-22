@@ -43,7 +43,7 @@ function preload() {
 	
 	game.load.image('bullet', 'images/bullet.png', 11, 11);
 	
-	game.load.image('background', 'images/backgrounds/galaxy-starry-night.jpg');
+	//game.load.image('background', 'images/backgrounds/galaxy-starry-night.jpg');
 	
 	
 	game.load.physics('ship', 'assets/physics/shipSprites.json');

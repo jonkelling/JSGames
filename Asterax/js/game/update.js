@@ -5,7 +5,7 @@ function update() {
 	app.rockGroupController.update();
 	
 	//  Scroll the background
-	app.background.tilePosition.x += app.backgroundSpeed;
+	//app.background.tilePosition.x += app.backgroundSpeed;
 }
 
 function roundPoint(p) {
