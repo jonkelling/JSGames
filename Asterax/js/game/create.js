@@ -14,7 +14,7 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 			game.renderer.clearBeforeRender = false;
 			game.renderer.roundPixels = true;
 			
-			//app.background = game.add.tileSprite(0, 0, 800, 600, 'background');
+			app.background = game.add.tileSprite(0, 0, 800, 600, 'background');
 			game.antialias = false;
 			
 			//	Enable p2 physics
