@@ -21,7 +21,7 @@ var AsteraxSprite;
 requirejs.config({
   baseUrl: 'js',
   paths: {
-	Phaser:   'lib/phaser.min',
+	Phaser:   'lib/phaser',
 	//preload:  'inc/preload',
 	//create:   'inc/create',
 	//update:   'inc/update',
@@ -45,7 +45,7 @@ require(['jq', 'Phaser', 'create', 'preload', 'update', 'AsteraxSprite'],
 
 function( jq, Phaser, create ) {
 	
-	game = new Phaser.Game(640, 480, Phaser.CANVAS, 'Asterax', {preload: preload, create: create.run, update: update, render: render});
+	game = new Phaser.Game(800, 600, Phaser.CANVAS, 'Asterax', {preload: preload, create: create.run, update: update, render: render});
 	
 });
 
