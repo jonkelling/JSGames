@@ -45,7 +45,7 @@ require(['jq', 'Phaser', 'create', 'preload', 'update', 'AsteraxSprite'],
 
 function( jq, Phaser, create ) {
 	
-	game = new Phaser.Game(800, 600, Phaser.AUTO, 'Asterax', {preload: preload, create: create.run, update: update, render: render});
+	game = new Phaser.Game(800, 600, Phaser.HEADLESS, 'Asterax', {preload: preload, create: create.run, update: update, render: render});
 	
 });
 
