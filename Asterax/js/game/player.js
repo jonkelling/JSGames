@@ -19,7 +19,7 @@ define(['ship', 'bullets'], function (Ship, Bullets) {
 			this.bullets = new Bullets(this);
 			this.bullets.create();
 			
-			app.fireButton.onDown.add(fireBullet, this);
+			app.fireButton.onDown.add(fireBullet, this); //fire button
 			
 			// this.bullets2 = new Bullets();
 			// this.bullets2.create();

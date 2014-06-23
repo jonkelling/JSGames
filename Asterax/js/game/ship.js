@@ -30,6 +30,12 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		this.body.setCollisionGroup(app.shipCollisionGroup);
 		this.body.collides([app.rocksCollisionGroup]);
 		this.body.onBeginContact.add(hitRock, this);
+		
+		//touchscreen
+		this.touchingScreen = false;
+		game.input.onDown.add(touchInputCheck, this);
+		game.input.onUp.add(touchInputCheck, this);
+		
 	};
 	
 	module.prototype.update = function()
@@ -42,6 +48,10 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		
 		setShipFrame(this);
 		
+		if (this.touchingScreen == true)
+		{
+		    this.body.thrust(acceleration);
+		}
 		if (!app.cursors.up.isDown)
 		{
 			// ??
@@ -108,6 +118,22 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	function resetRockHit(rock)
 	{
 		rock.canHitShip = true;
+	}
+		
+	function touchInputCheck()
+	{
+	   if (game.input.x > game.width / 2)
+	   {
+	       if (this.touchingScreen == true)
+	        {
+	            this.touchingScreen = false;
+	        }
+	    
+	       else if (this.touchingScreen == false)
+	        {
+	            this.touchingScreen = true;
+	        }
+	   }
 	}
 	
 });
