@@ -42,7 +42,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 			game.input.onDown.add(touchInputDown, this);
 			game.input.onUp.add(touchInputUp, this);
 			
-			game.input.touch.touchMoveCallback = function() { alert(); };
+			game.input.touch.touchMoveCallback = function() { };
 		}
 	};
 	
