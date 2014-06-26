@@ -36,7 +36,8 @@ requirejs.config({
 	rock:     'game/rock',
 	bullets:  'game/bullets',
 	bullet:   'game/bullet',
-	rockGroupController: 'game/rockGroupController'
+	rockGroupController: 'game/rockGroupController',
+	gameController: 'lib/gamecontroller'
   },
 });
 
