@@ -4,8 +4,11 @@ function update() {
 	app.player.update();
 	app.rockGroupController.update();
 	
-	//  Scroll the background
-	//app.background.tilePosition.x += app.backgroundSpeed;
+	if (!app.renderForOldDevice)
+	{
+		//  Scroll the background
+		//app.background.tilePosition.x += app.backgroundSpeed;
+	}
 }
 
 function roundPoint(p) {

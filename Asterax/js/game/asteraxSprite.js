@@ -4,7 +4,7 @@ define(['Phaser'], function() {
 	{
 		Phaser.Sprite.call(this, game, x, y, key, frame);
 		game.physics.p2.enable(this, app.showPolygons);
-		this.smoothed = false;
+		this.smoothed = !app.renderForOldDevice;
 	}
 	
 	module.prototype = Object.create(Phaser.Sprite.prototype);

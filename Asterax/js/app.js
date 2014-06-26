@@ -45,7 +45,7 @@ require(['jq', 'Phaser', 'create', 'preload', 'update', 'AsteraxSprite'],
 
 function( jq, Phaser, create ) {
 	
-	game = new Phaser.Game(800, 600, Phaser.CANVAS, 'Asterax', {preload: preload, create: create.run, update: update, render: render});
+	game = new Phaser.Game(800, 600, Phaser.AUTO, 'Asterax', {preload: preload, create: create.run, update: update, render: render});
 	
 });
 
@@ -59,4 +59,12 @@ String.prototype.padZero= function(len, c){
 	var s= this, c= c || '0';
 	while(s.length< len) s= c+ s;
 	return s;
+}
+
+app.velocityFromRotation = function (rotation, speed, point)
+{
+	if (typeof speed === 'undefined') { speed = 60; }
+	point = point || new Phaser.Point();
+	
+	return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
 }

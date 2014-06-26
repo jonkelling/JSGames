@@ -74,7 +74,8 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	
 	function onKilled()
 	{
-		runNewExplosionEmitter2.call(this, ['white-smoke','fire3']);
+		runNewExplosionEmitter.call(this, ['fire3'], {scale:0.4, minAlpha:0.0, speed:50, alphaEase2:Phaser.Easing.Circular.In});
+		runNewExplosionEmitter2.call(this);
 		
 		if (this.rockSize == app.rockSize.SMALL)
 		{
@@ -116,40 +117,48 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 				var r1 = group.create(points[1].x, points[1].y, rockNames[1], nextSize).setRockAngleAndVelocityFromBaseRock(this, game.rnd.integerInRange(-1, 1));
 				var r2 = group.create(points[2].x, points[2].y, rockNames[2], nextSize).setRockAngleAndVelocityFromBaseRock(this, +1);
 				
-				// game.time.events.add(300, runNewExplosionEmitter, r0, ['white-smoke']);
-				// game.time.events.add(400, runNewExplosionEmitter, r1, ['white-smoke']);
-				// game.time.events.add(500, runNewExplosionEmitter, r2, ['white-smoke']);
+				game.time.events.add(0, runNewExplosionEmitter, r0, ['white-smoke'], {scale:1.0, maxAlpha:0.25, lifespan:600, speed:100});
+				game.time.events.add(0, runNewExplosionEmitter, r1, ['white-smoke'], {scale:1.0, maxAlpha:0.25, lifespan:600, speed:100});
+				game.time.events.add(0, runNewExplosionEmitter, r2, ['white-smoke'], {scale:1.0, maxAlpha:0.25, lifespan:600, speed:100});
 				
-				runNewExplosionEmitter2.call(r0, ['white-smoke']);
-				runNewExplosionEmitter2.call(r1, ['white-smoke']);
-				runNewExplosionEmitter2.call(r2, ['white-smoke']);
+				runNewExplosionEmitter2.call(r0, ['smoke-puff', 'white-smoke']);
+				runNewExplosionEmitter2.call(r1, ['smoke-puff', 'white-smoke']);
+				runNewExplosionEmitter2.call(r2, ['smoke-puff', 'white-smoke']);
 			}
 		}
 	}
 	
-	function runNewExplosionEmitter(images)
+	function runNewExplosionEmitter(images, options)
 	{
+		options = options || {};
+		options.scale = options.scale || 1.0;
+		options.maxAlpha = options.maxAlpha || 1.0;
+		options.minAlpha = options.minAlpha || 0.0;
+		options.alphaEase = options.alphaEase || Phaser.Easing.Linear.None;
+		options.quantity = options.quantity || 6;
+		options.lifespan =	options.lifespan ||
+							this.rockSize == app.rockSize.LARGE	? 250 :
+							this.rockSize == app.rockSize.MEDIUM	? 350 :
+							this.rockSize == app.rockSize.SMALL	? 250 : 250;
+		options.speed = options.speed || 100;
+		options.explode = options.explode == undefined ? true : options.explode;
+		options.frequency = options.frequency || 250;
+		
 		var image = game.cache.getImage(images[0]);
 		
-		var emitter = game.add.emitter(this.x, this.y, 6);
+		var emitter = game.add.emitter(this.x, this.y, options.quantity);
 		
 		emitter.makeParticles(images);
 		emitter.makeParticles();
 		
-		var speed = 100;
-		var scale = this.width / image.width;
+		var scale = options.scale * (this.width / image.width);
 		
-		var alpha = 0.0;
-		var duration =	this.rockSize == app.rockSize.LARGE	? 450 :
-						this.rockSize == app.rockSize.MEDIUM	? 350 :
-						this.rockSize == app.rockSize.SMALL	? 250 : 250;
-		
-		emitter.minParticleSpeed.setTo(-speed, -speed);
-		emitter.maxParticleSpeed.setTo(speed, speed);
-		emitter.setAlpha(1, alpha, duration);
+		emitter.minParticleSpeed.setTo(-options.speed, -options.speed);
+		emitter.maxParticleSpeed.setTo(options.speed, options.speed);
+		emitter.setAlpha(options.maxAlpha, options.minAlpha, options.lifespan, options.alphaEase);
 		emitter.gravity = 0;
 		emitter.setScale(scale, scale*3, scale, scale*3, 100);
-		emitter.start(true, duration, 0, 6);
+		emitter.start(options.explode, options.lifespan, options.frequency, options.quantity);
 	}
 	
 	function runNewExplosionEmitter2()
@@ -163,7 +172,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		emitter.minParticleSpeed.setTo(-speed, -speed);
 		emitter.maxParticleSpeed.setTo(speed, speed);
 		// emitter.setAlpha(1, 0.0, duration)
-		emitter.setScale(200, 200, 200, 200, 10);
+		emitter.setScale(200, 200, 200, 200, 100);
 		emitter.gravity = 0;
 		emitter.start(true, duration*5, 250, 10);
 	}

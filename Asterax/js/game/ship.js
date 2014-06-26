@@ -31,16 +31,28 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		this.body.collides([app.rocksCollisionGroup]);
 		this.body.onBeginContact.add(hitRock, this);
 		
+		this.speed = 0;
+		this.maxSpeed = 17;
+		this.prevVelocity = new Phaser.Point();
+		
 		//touchscreen
 		this.touchingScreen = false;
-		game.input.onDown.add(touchInputCheck, this);
-		game.input.onUp.add(touchInputCheck, this);
-		
+		if (game.device.touch)
+		{
+			game.input.onDown.add(touchInputDown, this);
+			game.input.onUp.add(touchInputUp, this);
+			
+			game.input.touch.touchMoveCallback = function() { alert(); };
+		}
 	};
 	
 	module.prototype.update = function()
 	{
 		this.wrap();
+		
+		var isTurning = 
+			app.cursors.left.isDown ||
+			app.cursors.right.isDown;
 		
 		app.cursors.left.isDown  ?	this.body.rotateLeft(70) :
 		app.cursors.right.isDown ?	this.body.rotateRight(70) :
@@ -48,29 +60,38 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		
 		setShipFrame(this);
 		
-		if (this.touchingScreen == true)
-		{
-		    this.body.thrust(acceleration);
-		}
-		if (!app.cursors.up.isDown)
-		{
-			// ??
-		}
-		else
-		{
-			this.body.thrust(acceleration);
-		}
 		
-		if (false && this.body.speed > maxSpeed) {
-			
-			// var q = maxSpeed / Math.sqrt(Math.pow(this.body.velocity.x, 2) + Math.pow(this.body.velocity.y, 2));
-			//writeDebug2([
-			//		maxSpeed,
-			//		Math.sqrt(Math.pow(this.body.velocity.x, 2) + Math.pow(this.body.velocity.y, 2)),
-			//		q+""
-			//	]);
-			// this.body.velocity.x *= q;
-			// this.body.velocity.y *= q;
+		
+		if (app.cursors.up.isDown || this.touchingScreen == true)
+		{
+			if (this.speed > this.maxSpeed)
+			{
+				var angleFromVelocity = new Phaser.Point().angle(new Phaser.Point(this.body.velocity.x, this.body.velocity.y).rperp(), true);
+				if (Math.abs(this.body.angle - angleFromVelocity) > 2.5)
+				{
+					thrust.call(this, acceleration);
+					var q = this.maxSpeed / Math.sqrt(Math.pow(this.body.velocity.x, 2) + Math.pow(this.body.velocity.y, 2));
+					this.body.data.velocity[0] *= q;
+					this.body.data.velocity[1] *= q;
+				}
+				else if (!isTurning)
+				{
+					var newVelocity = app.velocityFromRotation(this.rotation, this.maxSpeed).perp();
+					this.body.data.velocity[0] = newVelocity.x;
+					this.body.data.velocity[1] = newVelocity.y;
+				}
+				// writeDebug([
+				// 		this.maxSpeed,
+				// 		Math.sqrt(Math.pow(this.body.velocity.x, 2) + Math.pow(this.body.velocity.y, 2)),
+				// 		q+"",
+				// 		"angle:  " + this.body.angle,
+				// 		"angle2: " + new Phaser.Point().angle(new Phaser.Point(this.body.velocity.x, this.body.velocity.y).rperp(), true),
+				// 	]);
+			}
+			else
+			{
+				thrust.call(this, acceleration);
+			}
 		}
 		
 		//writeDebug(
@@ -85,6 +106,23 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	};
 	
 	return module;
+	
+	function thrust(acceleration)
+	{
+		if (!(this.prevVelocity.equals(this.body.velocity)))
+			this.speed = new Phaser.Point().distance(this.body.velocity);
+		
+		// writeDebug2([
+		// 	["prev vel: " + [Math.round(this.prevVelocity.x, 2), Math.round(this.prevVelocity.y, 2)]],
+		// 	["velocity: " + [Math.round(this.body.velocity.x, 2), Math.round(this.body.velocity.y, 2)]],
+		// 	["speed:    " + this.speed]
+		// ]);
+		
+		//if (this.maxSpeed > this.speed)
+		{
+			this.body.thrust(acceleration);
+		}
+	}
 
 	function setShipFrame(ship) {
 		var angle = ship.angle < 0 ? ship.angle + 360 : ship.angle;
@@ -120,20 +158,17 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		rock.canHitShip = true;
 	}
 		
-	function touchInputCheck()
+	function touchInputDown()
 	{
-	   if (game.input.x > game.width / 2)
-	   {
-	       if (this.touchingScreen == true)
-	        {
-	            this.touchingScreen = false;
-	        }
-	    
-	       else if (this.touchingScreen == false)
-	        {
-	            this.touchingScreen = true;
-	        }
-	   }
+		if (game.input.x > game.width / 2)
+		{
+			this.touchingScreen = true;
+		}
+	}
+	
+	function touchInputUp()
+	{
+		this.touchingScreen = false;
 	}
 	
 });
