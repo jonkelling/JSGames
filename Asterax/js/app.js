@@ -39,12 +39,11 @@ requirejs.config({
 	rock:     'game/rock',
 	bullets:  'game/bullets',
 	bullet:   'game/bullet',
-	rockGroupController: 'game/rockGroupController',
-	gameController: 'lib/gamecontroller'
+	rockGroupController: 'game/rockGroupController'
   },
 });
 
-require(['jq', 'Phaser', 'create', 'preload', 'update', 'AsteraxSprite', 'gameController'],
+require(['jq', 'Phaser', 'create', 'preload', 'update', 'AsteraxSprite'],
 
 
 function( jq, Phaser, create ) {
