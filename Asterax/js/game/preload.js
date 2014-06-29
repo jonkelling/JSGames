@@ -50,6 +50,7 @@ function preload() {
 	game.load.physics('rocks', 'assets/physics/rockSprites.json');
 	
 	game.load.json('rockpositions', 'assets/rockSpritePositions.json');
+	game.load.json('config', 'assets/config.json');
 	
 }
 

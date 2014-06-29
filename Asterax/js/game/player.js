@@ -1,4 +1,4 @@
-define(['ship', 'bullets'], function (Ship, Bullets) {
+define(['ship', 'bullets', 'loadout'], function (Ship, Bullets, Loadout) {
 	
 	var engine;
 	

@@ -17,6 +17,7 @@ var acceleration = 400;
 var bullets;
 var rocks;
 var AsteraxSprite;
+var loadoutX = 0;
 
 requirejs.config({
   baseUrl: 'js',
@@ -30,9 +31,11 @@ requirejs.config({
 	preload:  'game/preload',
 	create:   'game/create',
 	update:   'game/update',
+	loadout:  'game/loadout',
 	AsteraxSprite: 'game/asteraxSprite',
 	player:   'game/player',
 	ship:     'game/ship',
+	shield:   'game/shield',
 	rock:     'game/rock',
 	bullets:  'game/bullets',
 	bullet:   'game/bullet',
@@ -41,7 +44,7 @@ requirejs.config({
   },
 });
 
-require(['jq', 'Phaser', 'create', 'preload', 'update', 'AsteraxSprite'],
+require(['jq', 'Phaser', 'create', 'preload', 'update', 'AsteraxSprite', 'gameController'],
 
 
 function( jq, Phaser, create ) {

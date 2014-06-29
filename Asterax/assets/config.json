@@ -1,0 +1,73 @@
+{
+
+	"rocks": {
+		"stats": [
+			{
+				"title": "no rock at position (i.e. 'size') 0!",
+				"size": 0
+			},
+			{
+				"title": "small",
+				"size": 1,
+				"mass": 1,
+				"damage": 1
+			},
+			{
+				"title": "medium",
+				"size": 2,
+				"mass": 4,
+				"damage": 2
+			},
+			{
+				"title": "large",
+				"size": 3,
+				"mass": 10,
+				"damage": 3
+			}
+		]
+	}
+	, 
+	"game": {
+
+	}
+	, 
+	"player": {
+
+	}
+	, 
+	"ships": [
+		{
+			"id":1,
+			"name":"A-Ship",
+			"weapon1":1,
+			"weaponMods":[2],
+			"shield":1,
+			"engine":2
+		}
+	]
+	,
+	"shields": [
+		 { "id":1, "name":"Level 1", "health":1 }
+		,{ "id":2, "name":"Level 2", "health":3 }
+		,{ "id":3, "name":"Level 3", "health":8 }
+	]
+	,
+	"engines": [
+		 { "id":1, "name":"Low",  "acceleration":100, "topSpeed":10 }
+		,{ "id":2, "name":"Mid",  "acceleration":200, "topSpeed":15 }
+		,{ "id":3, "name":"High", "acceleration":400, "topSpeed":17 }
+	]
+	,
+	"weapons": [
+		 { "id":1, "name":"Pea Shooter", "class":"" }
+		,{ "id":2, "name":"Twin Shot" }
+	]
+	,
+	"weaponMods": [
+		 { "id":1, "name":"Safe Shot" }
+		,{ "id":2, "name":"6-Shooter" }
+		,{ "id":3, "name":"8-Shooter" }
+		,{ "id":4, "name":"12-Shooter" }
+		,{ "id":5, "name":"Fast Shot" }
+	]
+}
