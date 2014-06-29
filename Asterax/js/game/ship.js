@@ -1,5 +1,5 @@
 
-define(['AsteraxSprite'], function(AsteraxSprite) {
+define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, Loadout) {
 	//var ship;
 	var killCount = 0;
 	
@@ -16,6 +16,8 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	
 	module.prototype.create = function()
 	{
+		this.loadConfig(1);
+		
 		this.body.data.immuneToRocks = [];
 		
 		this.frame = 0;
@@ -32,7 +34,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		this.body.onBeginContact.add(hitRock, this);
 		
 		this.speed = 0;
-		this.maxSpeed = 17;
+		this.loadout.engine.topSpeed = 17;
 		this.prevVelocity = new Phaser.Point();
 		
 		//touchscreen
@@ -48,6 +50,11 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		
 		
 	};
+	
+	module.prototype.loadConfig = function(id) {
+		this.loadout = Loadout.getShip(id);
+		this.health = this.loadout.shield.health;
+	}
 	
 	module.prototype.update = function()
 	{
@@ -70,24 +77,24 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		
 		if (app.cursors.up.isDown || this.touchingRightScreen == true)
 		{
-			if (this.speed > this.maxSpeed)
+			if (this.speed > this.loadout.engine.topSpeed)
 			{
 				var angleFromVelocity = new Phaser.Point().angle(new Phaser.Point(this.body.velocity.x, this.body.velocity.y).rperp(), true);
 				if (Math.abs(this.body.angle - angleFromVelocity) > 2.5)
 				{
-					thrust.call(this, acceleration);
-					var q = this.maxSpeed / Math.sqrt(Math.pow(this.body.velocity.x, 2) + Math.pow(this.body.velocity.y, 2));
+					thrust.call(this, this.loadout.engine.acceleration);
+					var q = this.loadout.engine.topSpeed / Math.sqrt(Math.pow(this.body.velocity.x, 2) + Math.pow(this.body.velocity.y, 2));
 					this.body.data.velocity[0] *= q;
 					this.body.data.velocity[1] *= q;
 				}
 				else if (!isTurning)
 				{
-					var newVelocity = app.velocityFromRotation(this.rotation, this.maxSpeed).perp();
+					var newVelocity = app.velocityFromRotation(this.rotation, this.loadout.engine.topSpeed).perp();
 					this.body.data.velocity[0] = newVelocity.x;
 					this.body.data.velocity[1] = newVelocity.y;
 				}
 				// writeDebug([
-				// 		this.maxSpeed,
+				// 		this.loadout.engine.topSpeed,
 				// 		Math.sqrt(Math.pow(this.body.velocity.x, 2) + Math.pow(this.body.velocity.y, 2)),
 				// 		q+"",
 				// 		"angle:  " + this.body.angle,
@@ -96,7 +103,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 			}
 			else
 			{
-				thrust.call(this, acceleration);
+				thrust.call(this, this.loadout.engine.acceleration);
 			}
 		}
 		
@@ -124,7 +131,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		// 	["speed:    " + this.speed]
 		// ]);
 		
-		//if (this.maxSpeed > this.speed)
+		//if (this.loadout.engine.topSpeed > this.speed)
 		{
 			this.body.thrust(acceleration);
 		}
@@ -154,8 +161,9 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 			// r.sprite.kill();
 			killCount++;
 			
+			this.damage(1);
+			
 			game.time.events.add(Phaser.Timer.HALF, resetRockHit, this, rock.sprite);
-			// killCountDebugTimeout = setTimeout(function() { writeDebug(["kills: " + (killCount)]); }, 50);
 		}
 	}
 	
