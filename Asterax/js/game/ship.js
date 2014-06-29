@@ -36,7 +36,8 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		this.prevVelocity = new Phaser.Point();
 		
 		//touchscreen
-		this.touchingScreen = false;
+		this.touchingRightScreen = false;
+		this.touchingLeftSCreen = false;
 		if (game.device.touch)
 		{
 			game.input.onDown.add(touchInputDown, this);
@@ -44,6 +45,8 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 			
 // 			game.input.touch.touchMoveCallback = function() { alert(); };
 		}
+		
+		
 	};
 	
 	module.prototype.update = function()
@@ -58,11 +61,14 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		app.cursors.right.isDown ?	this.body.rotateRight(70) :
 									this.body.setZeroRotation();
 		
+// 		writeDebug3(this.touchingRightScreen);
+// 		writeDebug4(this.touchingLeftScreen);
+        writeDebug3(game.input.pointer1.x + ", " + game.input.pointer1.y + ", " + game.input.pointer1.isDown);
+        writeDebug4(game.input.pointer2.x + ", " + game.input.pointer2.y + ", " + game.input.pointer2.isDown);
+		
 		setShipFrame(this);
 		
-		
-		
-		if (app.cursors.up.isDown || this.touchingScreen == true)
+		if (app.cursors.up.isDown || this.touchingRightScreen == true)
 		{
 			if (this.speed > this.maxSpeed)
 			{
@@ -160,15 +166,29 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		
 	function touchInputDown()
 	{
-		if (game.input.x > game.width / 2)
+		if (game.input.pointer1.x > game.width / 2 || game.input.pointer2.x > game.width / 2)
 		{
-			this.touchingScreen = true;
+			this.touchingRightScreen = true;
+		}
+		
+		if (game.input.pointer1.x < game.width / 3 || game.input.pointer2.x < game.width / 3)
+		{
+			this.touchingLeftScreen = true;
 		}
 	}
 	
 	function touchInputUp()
 	{
-		this.touchingScreen = false;
+	    if (game.input.pointer1.x > game.width / 2 || game.input.pointer2.x > game.width / 2)
+		{
+			this.touchingRightScreen = false;
+		}
+		
+		if (game.input.pointer1.x < game.width / 3 || game.input.pointer2.x < game.width / 3)
+		{
+			this.touchingLeftScreen = false;
+		}
+		//this.touchingRightScreen = false;
 	}
 	
 });

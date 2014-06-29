@@ -28,3 +28,11 @@ function writeDebug(texts) {
 		game.debug.text(texts[i]+"", 20, 450 + y);
 	}
 }
+
+function writeDebug3(text) {
+    $('#debugdiv3').text(text);
+}
+
+function writeDebug4(text) {
+    $('#debugdiv4').text(text);
+}
