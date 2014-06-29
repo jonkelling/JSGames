@@ -43,7 +43,7 @@ requirejs.config({
   },
 });
 
-require(['jq', 'Phaser', 'create', 'preload', 'update', 'AsteraxSprite', 'gameController'],
+require(['jq', 'Phaser', 'create', 'preload', 'update', 'AsteraxSprite'],
 
 
 function( jq, Phaser, create ) {
