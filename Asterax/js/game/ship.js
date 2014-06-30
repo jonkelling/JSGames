@@ -66,6 +66,8 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 		
 		app.cursors.left.isDown  ?	this.body.rotateLeft(70) :
 		app.cursors.right.isDown ?	this.body.rotateRight(70) :
+		(game.input.pointer1.isDown && (game.input.pointer1.x < (game.width / 3))) ? this.body.rotateLeft(70) :
+		(game.input.pointer2.isDown && (game.input.pointer2.x < (game.width / 3))) ? this.body.rotateLeft(70) :
 									this.body.setZeroRotation();
 		
 // 		writeDebug3(this.touchingRightScreen);
