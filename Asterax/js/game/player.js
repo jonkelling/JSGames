@@ -20,6 +20,8 @@ define(['ship', 'bullets', 'loadout'], function (Ship, Bullets, Loadout) {
 			this.bullets.create();
 			
 			app.fireButton.onDown.add(fireBullet, this); //fire button
+			game.input.tapRate = 150;
+			game.input.onTap.add(fireBullet, this);
 			
 			// this.bullets2 = new Bullets();
 			// this.bullets2.create();

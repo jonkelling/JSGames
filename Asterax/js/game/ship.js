@@ -36,19 +36,6 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 		this.speed = 0;
 		this.loadout.engine.topSpeed = 17;
 		this.prevVelocity = new Phaser.Point();
-		
-		//touchscreen
-		this.touchingRightScreen = false;
-		this.touchingLeftSCreen = false;
-		if (game.device.touch)
-		{
-			game.input.onDown.add(touchInputDown, this);
-			game.input.onUp.add(touchInputUp, this);
-			
-// 			game.input.touch.touchMoveCallback = function() { alert(); };
-		}
-		
-		
 	};
 	
 	module.prototype.loadConfig = function(id) {
@@ -70,6 +57,10 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 		(game.input.pointer2.isDown && (game.input.pointer2.x < (game.width / 3))) ? this.body.rotateLeft(70) :
 									this.body.setZeroRotation();
 		
+		var touchingRightScreen = false;
+		if ((game.input.pointer1.isDown && (game.input.pointer1.x > (game.width / 2))) || (game.input.pointer2.isDown && (game.input.pointer2.x > (game.width / 2))) ) {
+		   touchingRightScreen = true; 
+		}
 // 		writeDebug3(this.touchingRightScreen);
 // 		writeDebug4(this.touchingLeftScreen);
         writeDebug3(game.input.pointer1.x + ", " + game.input.pointer1.y + ", " + game.input.pointer1.isDown);
@@ -77,7 +68,7 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 		
 		setShipFrame(this);
 		
-		if (app.cursors.up.isDown || this.touchingRightScreen == true)
+		if (app.cursors.up.isDown || touchingRightScreen)
 		{
 			if (this.speed > this.loadout.engine.topSpeed)
 			{
@@ -173,32 +164,5 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 	{
 		rock.canHitShip = true;
 	}
-		
-	function touchInputDown()
-	{
-		if (game.input.pointer1.x > game.width / 2 || game.input.pointer2.x > game.width / 2)
-		{
-			this.touchingRightScreen = true;
-		}
-		
-		if (game.input.pointer1.x < game.width / 3 || game.input.pointer2.x < game.width / 3)
-		{
-			this.touchingLeftScreen = true;
-		}
-	}
 	
-	function touchInputUp()
-	{
-	    if (game.input.pointer1.x > game.width / 2 || game.input.pointer2.x > game.width / 2)
-		{
-			this.touchingRightScreen = false;
-		}
-		
-		if (game.input.pointer1.x < game.width / 3 || game.input.pointer2.x < game.width / 3)
-		{
-			this.touchingLeftScreen = false;
-		}
-		//this.touchingRightScreen = false;
-	}
-	
-});
+})
