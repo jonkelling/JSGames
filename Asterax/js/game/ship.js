@@ -161,7 +161,7 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 			// r.sprite.kill();
 			killCount++;
 			
-			this.damage(1);
+			//this.damage(1);
 			
 			game.time.events.add(Phaser.Timer.HALF, resetRockHit, this, rock.sprite);
 		}
