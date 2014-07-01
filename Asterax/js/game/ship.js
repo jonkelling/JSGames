@@ -5,7 +5,7 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 	
 	var module = function(aName)
 	{
-		AsteraxSprite.call(this, game, 200, 200, 'ship');
+		AsteraxSprite.call(this, game, game.width/2, game.height/2, 'ship');
 		
 		this.name = aName ? aName : "A-Ship";
 		this.create();
@@ -34,7 +34,6 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 		this.body.onBeginContact.add(hitRock, this);
 		
 		this.speed = 0;
-		this.loadout.engine.topSpeed = 17;
 		this.prevVelocity = new Phaser.Point();
 	};
 	
@@ -154,7 +153,11 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 			// r.sprite.kill();
 			killCount++;
 			
-			//this.damage(1);
+			if (!this.player.invincible)
+			{
+				this.damage(1);
+				rock.sprite.kill();
+			}
 			
 			game.time.events.add(Phaser.Timer.HALF, resetRockHit, this, rock.sprite);
 		}

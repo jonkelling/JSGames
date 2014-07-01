@@ -28,11 +28,11 @@
 	}
 	, 
 	"game": {
-
+		
 	}
 	, 
 	"player": {
-
+		"invincible": false
 	}
 	, 
 	"ships": [
@@ -41,7 +41,7 @@
 			"name":"A-Ship",
 			"weapon1":1,
 			"weaponMods":[2],
-			"shield":1,
+			"shield":3,
 			"engine":2
 		}
 	]

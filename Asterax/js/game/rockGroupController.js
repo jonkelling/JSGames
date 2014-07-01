@@ -1,6 +1,8 @@
 
 define(['rock'], function(Rock) {
 	
+	var nullAreaSize = {width: 300, height: 200};
+	
 	var module = function() {
 	}
 	
@@ -14,7 +16,10 @@ define(['rock'], function(Rock) {
 			
 			for (var i=0; i < 6; i++) {
 				var name = 'rock' + (i % 4);
-				this.rocks.create(game.world.randomX, game.world.randomY, name, 3);
+				
+				var randomPoint = getRandomPointOutsideNullArea();
+				
+				this.rocks.create(randomPoint.x, randomPoint.y, name, 3);
 			}
 		},
 		
@@ -23,7 +28,10 @@ define(['rock'], function(Rock) {
 		}
 	};
 	
-	function getNewGroup(parent) {
+	return module;
+	
+	function getNewGroup(parent)
+	{
 		var group = parent	?	game.add.group(parent)
 							:	game.add.group();
 		group.classType = Rock;
@@ -31,8 +39,25 @@ define(['rock'], function(Rock) {
 		group.physicsBodyType = Phaser.Physics.P2JS;
 		
 		return group;
-	};
+	}
 	
-	return module;
+	function getRandomPointOutsideNullArea()
+	{
+		var point = {x:0,y:0};
+		
+		var modifiedWidth = game.width - nullAreaSize.width;
+		var modifiedHeight = game.height - nullAreaSize.height;
+		
+		point.x = game.rnd.integerInRange(0, modifiedWidth);
+		point.y = game.rnd.integerInRange(0, modifiedHeight);
+		
+		if (point.x > (modifiedWidth / 2))
+			point.x += nullAreaSize.width;
+		
+		if (point.y > (modifiedHeight / 2))
+			point.y += nullAreaSize.height;
+		
+		return point;
+	}
 	
 });
