@@ -29,7 +29,7 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 			game.physics.p2.setImpactEvents(true);
 			
 			//  Make things a bit more bouncey
-			game.physics.p2.defaultRestitution = 0.8;
+			game.physics.p2.defaultRestitution = 0.4;
 			
 			app.shipCollisionGroup = game.physics.p2.createCollisionGroup();
 			app.rocksCollisionGroup = game.physics.p2.createCollisionGroup();

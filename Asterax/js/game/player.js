@@ -3,6 +3,7 @@ define(['ship', 'bullets', 'loadout'], function (Ship, Bullets, Loadout) {
 	var engine;
 	
 	var module = function() {
+		this.invincible = game.cache.getJSON("config").player.invincible;
 	};
 	
 	module.prototype = {
@@ -15,6 +16,7 @@ define(['ship', 'bullets', 'loadout'], function (Ship, Bullets, Loadout) {
 			this.shipGroup.physicsBodyType = Phaser.Physics.P2JS;
 			this.shipGroup.classType = Ship;
 			this.ship = this.shipGroup.create();
+			this.ship.player = this;
 			
 			this.bullets = new Bullets(this);
 			this.bullets.create();
@@ -42,6 +44,7 @@ define(['ship', 'bullets', 'loadout'], function (Ship, Bullets, Loadout) {
 	
 	function fireBullet()
 	{
+		
 		app.time = game.time.now;
 		this.bullets.fireBullet();
 	}
