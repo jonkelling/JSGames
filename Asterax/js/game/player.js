@@ -1,4 +1,4 @@
-define(['ship', 'bullets', 'loadout'], function (Ship, Bullets, Loadout) {
+define(['ship', 'loadout'], function (Ship, Loadout) {
 	
 	var engine;
 	
@@ -18,13 +18,6 @@ define(['ship', 'bullets', 'loadout'], function (Ship, Bullets, Loadout) {
 			this.ship = this.shipGroup.create();
 			this.ship.player = this;
 			
-			this.bullets = new Bullets(this);
-			this.bullets.create();
-			
-			app.fireButton.onDown.add(fireBullet, this); //fire button
-// 			game.input.tapRate = 150;
-// 			game.input.onTap.add(fireBullet, this);
-			
 			// this.bullets2 = new Bullets();
 			// this.bullets2.create();
 		},
@@ -32,7 +25,6 @@ define(['ship', 'bullets', 'loadout'], function (Ship, Bullets, Loadout) {
 		update: function()
 		{
 			this.ship.update();
-			this.bullets.update();
 		}
 	};
 	
@@ -41,13 +33,6 @@ define(['ship', 'bullets', 'loadout'], function (Ship, Bullets, Loadout) {
 	// 	get: function() { return this.bullets.maxLiveBullets; },
 	// 	set: function(value) { this.bullets.maxLiveBullets = value; }
 	// });
-	
-	function fireBullet()
-	{
-		
-		app.time = game.time.now;
-		this.bullets.fireBullet();
-	}
 	
 	return module;
 });

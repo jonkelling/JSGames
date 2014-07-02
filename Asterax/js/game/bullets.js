@@ -1,9 +1,9 @@
 define(['bullet'], function(Bullet) {
 	
-	var module = function(player) {
+	var module = function(ship) {
 		this.data = {};
 		this.maxLiveBullets = app.defaultMaxLiveBullets;
-		this.player = player;
+		this.ship = ship;
 		this.canFire = true;
 		this.stopFire = false;
 		this.fireRate = app.defaultFireRate;
@@ -43,7 +43,7 @@ define(['bullet'], function(Bullet) {
 					this.canFire = false;
 					game.time.events.add(this.fireRate, setCanFire, this);
 					
-					nextBullet.reset(this.player.ship.x, this.player.ship.y);
+					nextBullet.reset(this.ship.x, this.ship.y);
 					
 					nextBullet.lifespan = this.lifespan;
 					nextBullet.body.gravityScale = 0;
@@ -51,10 +51,10 @@ define(['bullet'], function(Bullet) {
 					nextBullet.body.angularDamping = 0;
 					nextBullet.body.mass = 0.05;
 					
-					nextBullet.body.angle = this.player.ship.body.angle;
+					nextBullet.body.angle = this.ship.body.angle;
 					nextBullet.body.moveForward(this.speed);
-					nextBullet.body.data.velocity[0] += this.player.ship.body.data.velocity[0];
-					nextBullet.body.data.velocity[1] += this.player.ship.body.data.velocity[1];
+					nextBullet.body.data.velocity[0] += this.ship.body.data.velocity[0];
+					nextBullet.body.data.velocity[1] += this.ship.body.data.velocity[1];
 					this.currentBullet = nextBullet;
 				}
 			}
