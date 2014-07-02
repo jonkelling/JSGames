@@ -1,5 +1,5 @@
 
-define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, Loadout) {
+define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite, Bullets, Shield, Loadout) {
 	//var ship;
 	var killCount = 0;
 	
@@ -35,6 +35,13 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 		
 		this.speed = 0;
 		this.prevVelocity = new Phaser.Point();
+		
+		this.bullets = new Bullets(this);
+		this.bullets.create();
+
+        app.fireButton.onDown.add(fireBullet, this); //fire button
+		// game.input.tapRate = 150;
+		// game.input.onTap.add(fireBullet, this);
 	};
 	
 	module.prototype.loadConfig = function(id) {
@@ -107,6 +114,8 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 			}
 		}
 		
+		this.bullets.update();
+		
 		//writeDebug(
 		//		[
 		//			"speed:           " + Math.round(this.body.speed),
@@ -158,7 +167,6 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 		if (rock.sprite.canHitShip)
 		{
 			rock.sprite.canHitShip = false;
-			// r.sprite.kill();
 			killCount++;
 			
 			if (!this.player.invincible)
@@ -174,6 +182,14 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 	function resetRockHit(rock)
 	{
 		rock.canHitShip = true;
+	}
+	
+	function fireBullet()
+	{
+		if (this.exists)
+		{
+			this.bullets.fireBullet();
+		}
 	}
 	
 })
