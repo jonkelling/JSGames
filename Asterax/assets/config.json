@@ -32,7 +32,7 @@
 	}
 	, 
 	"player": {
-		"invincible": false
+		"invincible": true
 	}
 	, 
 	"ships": [

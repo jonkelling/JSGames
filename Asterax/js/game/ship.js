@@ -56,18 +56,26 @@ define(['AsteraxSprite', 'shield', 'loadout'], function(AsteraxSprite, Shield, L
 		(game.input.pointer2.isDown && (game.input.pointer2.x < (game.width / 3))) ? this.body.rotateLeft(70) :
 									this.body.setZeroRotation();
 		
-		var touchingRightScreen = false;
-		if ((game.input.pointer1.isDown && (game.input.pointer1.x > (game.width / 2))) || (game.input.pointer2.isDown && (game.input.pointer2.x > (game.width / 2))) ) {
-		   touchingRightScreen = true; 
+		//activating thrust if touching bottom-right side of screen on iPhone
+		var touchingLowerRight = false;
+		var touchingUpperRight = false;
+		var p1Right = game.input.pointer1.x > (game.width / 2);
+		var p1Down = game.input.pointer1.y > (game.height / 2);
+    	var p2Right = game.input.pointer2.x > (game.width / 2);
+    	var p2Down = game.input.pointer2.y > (game.height / 2);
+    	if ( (game.input.pointer1.isDown && p1Right && p1Down) || (game.input.pointer2.isDown && p2Right && p2Down) )
+    	{
+		   touchingLowerRight = true; 
 		}
-// 		writeDebug3(this.touchingRightScreen);
+		
+// 		writeDebug3(this.touchingLowerRight);
 // 		writeDebug4(this.touchingLeftScreen);
         writeDebug3(game.input.pointer1.x + ", " + game.input.pointer1.y + ", " + game.input.pointer1.isDown);
         writeDebug4(game.input.pointer2.x + ", " + game.input.pointer2.y + ", " + game.input.pointer2.isDown);
 		
 		setShipFrame(this);
 		
-		if (app.cursors.up.isDown || touchingRightScreen)
+		if (app.cursors.up.isDown || touchingLowerRight)
 		{
 			if (this.speed > this.loadout.engine.topSpeed)
 			{
