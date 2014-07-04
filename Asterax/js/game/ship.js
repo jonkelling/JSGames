@@ -2,6 +2,12 @@
 define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite, Bullets, Shield, Loadout) {
 	//var ship;
 	var killCount = 0;
+	var turningShipRight = false;
+	var turningShipLeft = false;
+	var leftPointerStart = 0;
+	var wherePointer1Was = null;
+	var wherePointer2Was = null;
+	var turningSensitivity = 5;
 	
 	var module = function(aName)
 	{
@@ -49,9 +55,79 @@ define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite
 		this.health = this.loadout.shield.health;
 	}
 	
+	function stoppedTouchingScreen()
+	{
+	    /*if (game.input.pointer1.isUp && (wherePointer1Was < (game.width / 2)))
+	    {
+	        leftPointerStart = 0;
+	        turningShipRight = false;
+	        turningShipLeft = false;
+	    }
+	    if (game.input.pointer2.isUp && (wherePointer2Was < (game.width / 2)))
+	    {
+	        leftPointerStart = 0;
+	        turningShipRight = false;
+	        turningShipLeft = false;
+	    }*/
+	    turningShipLeft = false;
+	    turningShipRight = false;
+	    leftPointerStart = 0;
+	}
+	
 	module.prototype.update = function()
 	{
 		this.wrap();
+	    
+	    //if lifted finger
+	    game.input.onUp.add(stoppedTouchingScreen, this);
+	   
+	    //definitions of pointers touching parts of the screen
+    	var p1Right = game.input.pointer1.x > (game.width / 2);
+    	var p1Left = game.input.pointer1.x < (game.width / 2);
+    	var p1Down = game.input.pointer1.y > (game.height / 2);
+    	var p1Up = game.input.pointer1.y < (game.height / 2);
+    	var p2Right = game.input.pointer2.x > (game.width / 2);
+    	var p2Left = game.input.pointer2.x < (game.width / 2);
+    	var p2Down = game.input.pointer2.y > (game.height / 2);
+    	var p2Up = game.input.pointer2.y < (game.height / 2);
+    	wherePointer1Was = game.input.pointer1.x;
+    	wherePointer2Was = game.input.pointer2.x;
+    	
+		//turning the ship
+		if (game.input.pointer1.isDown && p1Left)
+		{
+		    if (leftPointerStart == 0)
+		    {
+		        leftPointerStart = game.input.pointer1.x;
+		    }
+		    if (leftPointerStart != 0 && (game.input.pointer1.x >= (leftPointerStart + turningSensitivity)))
+		    {
+		        turningShipRight = true;
+		        turningShipLeft = false;
+		    }
+		    if (leftPointerStart != 0 && (game.input.pointer1.x <= (leftPointerStart - turningSensitivity)))
+		    {
+		        turningShipLeft = true;
+		        turningShipRight = false;
+		    }
+		}
+		if (game.input.pointer2.isDown && p2Left)
+		{
+		    if (leftPointerStart == null)
+		    {
+		        leftPointerStart = game.input.pointer2.x;
+		    }
+		    if (leftPointerStart != null && (game.input.pointer2.x >= (leftPointerStart + turningSensitivity)))
+		    {
+		        turningShipRight = true;
+		        turningShipLeft = false;
+		    }
+		    if (leftPointerStart != null && (game.input.pointer2.x <= (leftPointerStart - turningSensitivity)))
+		    {
+		        turningShipLeft = true;
+		        turningShipRight = false;
+		    }
+		}
 		
 		var isTurning = 
 			app.cursors.left.isDown ||
@@ -59,20 +135,21 @@ define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite
 		
 		app.cursors.left.isDown  ?	this.body.rotateLeft(70) :
 		app.cursors.right.isDown ?	this.body.rotateRight(70) :
-		(game.input.pointer1.isDown && (game.input.pointer1.x < (game.width / 3))) ? this.body.rotateLeft(70) :
-		(game.input.pointer2.isDown && (game.input.pointer2.x < (game.width / 3))) ? this.body.rotateLeft(70) :
+		//(game.input.pointer1.isDown && (game.input.pointer1.x < (game.width / 3))) ? this.body.rotateLeft(70) :
+		//(game.input.pointer2.isDown && (game.input.pointer2.x < (game.width / 3))) ? this.body.rotateLeft(70) :
+		turningShipLeft == true ? this.body.rotateLeft(70) :
+		turningShipRight == true ? this.body.rotateRight(70) :
 									this.body.setZeroRotation();
-		
+	
 		//activating thrust if touching bottom-right side of screen on iPhone
 		var touchingLowerRight = false;
-		var touchingUpperRight = false;
-		var p1Right = game.input.pointer1.x > (game.width / 2);
-		var p1Down = game.input.pointer1.y > (game.height / 2);
-    	var p2Right = game.input.pointer2.x > (game.width / 2);
-    	var p2Down = game.input.pointer2.y > (game.height / 2);
     	if ( (game.input.pointer1.isDown && p1Right && p1Down) || (game.input.pointer2.isDown && p2Right && p2Down) )
     	{
 		   touchingLowerRight = true; 
+		}
+		if ( (game.input.pointer1.isDown && p1Right && p1Up) || (game.input.pointer2.isDown && p2Right && p2Up) )
+		{
+		    fireBullet.call(this);
 		}
 		
 // 		writeDebug3(this.touchingLowerRight);
@@ -188,7 +265,7 @@ define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite
 	{
 		if (this.exists)
 		{
-			this.bullets.fireBullet();
+		    this.bullets.fireBullet();
 		}
 	}
 	
