@@ -39,7 +39,12 @@ requirejs.config({
 	rock:     'game/rock',
 	bullets:  'game/bullets',
 	bullet:   'game/bullet',
-	rockGroupController: 'game/rockGroupController'
+	rockGroupController: 'game/rockGroupController',
+	weapon:     'game/weapon',
+	peaShooter: 'game/weapons/peaShooter',
+	twinShot:   'game/weapons/twinShot',
+	tripleShot: 'game/weapons/tripleShot',
+	homingShot: 'game/weapons/homingShot'
   },
 });
 

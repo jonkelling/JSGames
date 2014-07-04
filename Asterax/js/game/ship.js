@@ -154,8 +154,8 @@ define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite
 		
 // 		writeDebug3(this.touchingLowerRight);
 // 		writeDebug4(this.touchingLeftScreen);
-        writeDebug3(game.input.pointer1.x + ", " + game.input.pointer1.y + ", " + game.input.pointer1.isDown);
-        writeDebug4(game.input.pointer2.x + ", " + game.input.pointer2.y + ", " + game.input.pointer2.isDown);
+        // writeDebug3(game.input.pointer1.x + ", " + game.input.pointer1.y + ", " + game.input.pointer1.isDown);
+        // writeDebug4(game.input.pointer2.x + ", " + game.input.pointer2.y + ", " + game.input.pointer2.isDown);
 		
 		setShipFrame(this);
 		
@@ -252,6 +252,15 @@ define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite
 				rock.sprite.kill();
 			}
 			
+			if (this.exists)
+			{
+				startShieldHitAnimation.call(this);
+			}
+			else
+			{
+				
+			}
+			
 			game.time.events.add(Phaser.Timer.HALF, resetRockHit, this, rock.sprite);
 		}
 	}
@@ -269,4 +278,35 @@ define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite
 		}
 	}
 	
-})
+	function startShieldHitAnimation()
+	{
+		var shieldSprite = game.add.sprite(this.x, this.y, 'shield');
+		var shieldSprite2 = game.add.sprite(this.x, this.y, 'shield');
+		var t = game.add.tween(shieldSprite);
+		var t2 = game.add.tween(shieldSprite2);
+		
+		shieldSprite.alpha = 0;
+		shieldSprite.anchor.setTo(0.5);
+		shieldSprite2.anchor.setTo(0.5);
+		shieldSprite2.alpha = 0.7;
+		shieldSprite2.position = this.position;
+		
+		t2.to( { alpha: 0 }, 500, Phaser.Easing.Quadratic.In, true, 0, 0, false);
+		
+		// (properties, duration, ease, autoStart, delay, repeat, yoyo)
+		game.time.events.add(50, function() {
+			shieldSprite.alpha = 0.3;
+			var p = new Phaser.Point(this.body.velocity.x, this.body.velocity.y);
+			p.x *= 10;
+			p.y *= 10;
+			t.to( {  alpha: 0
+					,x: shieldSprite.x - p.x
+					,y: shieldSprite.y - p.y
+					,width: 1.4 * shieldSprite.width
+					,height: 1.4 * shieldSprite.height
+				  }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
+		}, this);
+		
+	}
+	
+});

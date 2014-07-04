@@ -41,7 +41,7 @@
 			"name":"A-Ship",
 			"weapon1":1,
 			"weaponMods":[2],
-			"shield":3,
+			"shield":4,
 			"engine":2
 		}
 	]
@@ -50,6 +50,7 @@
 		 { "id":1, "name":"Level 1", "health":1 }
 		,{ "id":2, "name":"Level 2", "health":3 }
 		,{ "id":3, "name":"Level 3", "health":8 }
+		,{ "id":4, "name":"Level 100", "health":100 }
 	]
 	,
 	"engines": [
@@ -59,8 +60,10 @@
 	]
 	,
 	"weapons": [
-		 { "id":1, "name":"Pea Shooter", "class":"" }
-		,{ "id":2, "name":"Twin Shot" }
+		 { "id":1, "name":"Pea Shooter"  , "moduleName":"peaShooter" }
+		,{ "id":2, "name":"Twin Shot"    , "moduleName":"twinShot" }
+		,{ "id":3, "name":"Triple Shot"  , "moduleName":"tripleShot" }
+		,{ "id":4, "name":"Homing Shot"  , "moduleName":"homingShot" }
 	]
 	,
 	"weaponMods": [
