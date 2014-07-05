@@ -1,4 +1,4 @@
-define(['bullet'], function(Bullet) {
+define(['bullet', 'peaShooter', 'twinShot', 'tripleShot', 'homingShot', 'explodingShot'], function(Bullet) {
 	
 	var module = function(ship) {
 		this.data = {};

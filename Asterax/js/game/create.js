@@ -1,13 +1,5 @@
 
-define(['player', 'rock', 'rockGroupController', 'require', 'peaShooter'], function (Player, Rock, RockGroupController, require, Weapon) {
-	
-	function fireButtonDown() {
-		alert('down');
-	}
-	
-	function fireButtonUp() {
-		alert('up');
-	}
+define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], function (Player, Rock, RockGroupController, Loadout) {
 	
 	return {
 		run: function() {
@@ -41,17 +33,15 @@ define(['player', 'rock', 'rockGroupController', 'require', 'peaShooter'], funct
 			game.physics.p2.updateBoundsCollisionGroup();
 			
 			game.physics.p2.setBoundsToWorld(false, false, false, false, false);
-
+			
 			app.cursors = game.input.keyboard.createCursorKeys();
 			app.fireButton = game.input.keyboard.addKey(Phaser.Keyboard.C);
 			app.testButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 			
 			app.testButton.onDown.add(function() {
-				// var Weapon = require(['peaShooter']);
-				var Loadout = require(['loadout']);
-				var w = new Weapon();
-				alert(Weapon);
-				w.loadWeaponMods([Loadout.getWeaponMod(1), Loadout.getWeaponMod(5)]);
+				var _w = require('peaShooter');
+				var w = new _w();
+				w.loadWeaponMods([5,1,2]);
 			});
 			
 			app.player = new Player();

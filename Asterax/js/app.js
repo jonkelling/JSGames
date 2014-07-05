@@ -44,8 +44,9 @@ requirejs.config({
 	peaShooter: 'game/weapons/peaShooter',
 	twinShot:   'game/weapons/twinShot',
 	tripleShot: 'game/weapons/tripleShot',
-	homingShot: 'game/weapons/homingShot'
-  },
+	homingShot: 'game/weapons/homingShot',
+	explodingShot: 'game/weapons/explodingShot'
+  }
 });
 
 require(['jq', 'Phaser', 'create', 'preload', 'update'],

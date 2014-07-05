@@ -1,9 +1,10 @@
 
-define(['weapon', 'bullet'], function(Weapon) {
+define(['weapon', 'bullet'], function(Weapon/*, Bullet*/) {
 	
 	var module = function()
 	{
-		Weapon.call(this, "peaShooter");
+		Weapon.call(this, ___moduleName___);
+		// this.spriteKey = 'bullet';
 	}
 	
 	module.prototype = Object.create(Weapon.prototype);
@@ -12,7 +13,7 @@ define(['weapon', 'bullet'], function(Weapon) {
 	// module.prototype.getBulletClass = function()
 	// {
 	// 	return Bullet;
-	// }
+	// };
 	
 	return module;
 	

@@ -1,6 +1,6 @@
 
-define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite, Bullets, Shield, Loadout) {
-	//var ship;
+define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot', 'tripleShot', 'homingShot', 'explodingShot'], function(require, AsteraxSprite, Shield, Loadout) {
+	
 	var killCount = 0;
 	var turningShipRight = false;
 	var turningShipLeft = false;
@@ -42,8 +42,11 @@ define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite
 		this.speed = 0;
 		this.prevVelocity = new Phaser.Point();
 		
-		this.bullets = new Bullets(this);
-		this.bullets.create();
+		var weaponClass = require(this.loadout.weapon1.moduleName);
+		this.bullets = new weaponClass();
+		this.bullets.ship = this;
+		
+		this.bullets.loadWeaponMods([5,6,7]);
 
         app.fireButton.onDown.add(fireBullet, this); //fire button
 		// game.input.tapRate = 150;
@@ -77,6 +80,17 @@ define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite
 	module.prototype.update = function()
 	{
 		this.wrap();
+		
+		if (app.fireButton.isDown && this.bullets.automatic === true)
+		{
+			fireBullet.call(this);
+		}
+		else
+		{
+			// this won't work the way the code runs now.
+			// i'm just leaving this here to remind me that I had this idea.
+			// this.bullets.skipOneShot = false;
+		}
 	    
 	    //if lifted finger
 	    game.input.onUp.add(stoppedTouchingScreen, this);
@@ -227,11 +241,11 @@ define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite
 		var angle = ship.angle < 0 ? ship.angle + 360 : ship.angle;
 		while (angle >= 360)
 			angle -= 360;
-	
+		
 		var nextFrame = Math.round(angle / 6);
 		if (nextFrame >= 60)
 			nextFrame = 0;
-
+		
 		if (ship.frame != nextFrame) {
 			ship.frame = nextFrame;
 			ship.body.clearShapes();
@@ -274,7 +288,7 @@ define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite
 	{
 		if (this.exists)
 		{
-		    this.bullets.fireBullet();
+		    this.bullets.fire();
 		}
 	}
 	

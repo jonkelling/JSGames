@@ -1,12 +1,14 @@
 
 define(['AsteraxSprite'], function(AsteraxSprite) {
 	
-	var module = function(game, x, y, frame, group) {
-		AsteraxSprite.call(this, game, 0, 0, 'bullet');
+	var module = function(game, x, y, key, frame) {
+		AsteraxSprite.call(this, game, 0, 0, key, frame);
 		
 		this.body.setCollisionGroup(app.bulletsCollisionGroup);
 		this.body.collides([app.rocksCollisionGroup]);
 		this.body.onBeginContact.add(hitRock, this);
+		
+		this.weapon = null;
 	}
 	
 	module.prototype = Object.create(AsteraxSprite.prototype);
@@ -18,8 +20,21 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	{
 		if (this.alive && rock.sprite.alive)
 		{
-			this.kill();
-			rock.sprite.kill();
+			if (this.weapon && this.weapon.beforeHitRock)
+			{
+				this.weapon.beforeHitRock(this, rock);
+			}
+			
+			if (!this.weapon || this.weapon.config.autoKillRock === true)
+			{
+				this.kill();
+				rock.sprite.kill();
+			}
+			
+			if (this.weapon && this.weapon.afterHitRock)
+			{
+				this.weapon.afterHitRock(this, rock);
+			}
 		}
 		else
 		{

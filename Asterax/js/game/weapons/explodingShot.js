@@ -3,7 +3,7 @@ define(['weapon'], function(Weapon) {
 
 	var module = function()
 	{
-		Weapon.call(this, "homingShot");
+		Weapon.call(this, "explodingShot");
 	}
 
 	module.prototype = Object.create(Weapon.prototype);

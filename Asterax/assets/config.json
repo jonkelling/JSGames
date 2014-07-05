@@ -63,19 +63,20 @@
 	]
 	,
 	"weapons": [
-		 { "id":1, "name":"Pea Shooter"  , "moduleName":"peaShooter" }
-		,{ "id":2, "name":"Twin Shot"    , "moduleName":"twinShot" }
-		,{ "id":3, "name":"Triple Shot"  , "moduleName":"tripleShot" }
-		,{ "id":4, "name":"Homing Shot"  , "moduleName":"homingShot" }
+		 { "id":1, "name":"Pea Shooter"    , "autoKillRock":true , "moduleName":"peaShooter" }
+		,{ "id":2, "name":"Twin Shot"      , "autoKillRock":true , "moduleName":"twinShot" }
+		,{ "id":3, "name":"Triple Shot"    , "autoKillRock":true , "moduleName":"tripleShot" }
+		,{ "id":4, "name":"Homing Shot"    , "autoKillRock":true , "moduleName":"homingShot" }
+		,{ "id":5, "name":"Exploding Shot" , "autoKillRock":true , "moduleName":"explodingShot" }
 	]
 	,
 	"weaponMods": [
-		 { "id":1, "name":"Default"    , "safe":false , "mass":0.05, "fireRate":50, "maxLiveBullets":6, "speed":200, "lifespan":1000, "automatic":false }
+		 { "id":1, "name":"Default"    , "safe":false , "mass":0.05, "fireRate":70, "maxLiveBullets":6, "speed":200, "lifespan":1000, "automatic":false }
 		,{ "id":2, "name":"Safe Shot"  , "safe":true }
 		,{ "id":3, "name":"6-Shooter"  , "maxLiveBullets":6 }
 		,{ "id":4, "name":"8-Shooter"  , "maxLiveBullets":8 }
 		,{ "id":5, "name":"12-Shooter" , "maxLiveBullets":12 }
-		,{ "id":6, "name":"Fast Shot"  , "speed":300 }
+		,{ "id":6, "name":"Fast Shot"  , "speed":400, "fireRate":90, "lifespan":1000 }
 		,{ "id":7, "name":"Automatic"  , "automatic":true }
 	]
 }
