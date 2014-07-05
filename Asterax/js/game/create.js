@@ -1,5 +1,5 @@
 
-define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGroupController) {
+define(['player', 'rock', 'rockGroupController', 'require', 'peaShooter'], function (Player, Rock, RockGroupController, require, Weapon) {
 	
 	function fireButtonDown() {
 		alert('down');
@@ -47,9 +47,11 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 			app.testButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 			
 			app.testButton.onDown.add(function() {
-				var json = game.cache.getJSON('rockpositions');
-				alert(json[json["rock0"].children[2]].origin);
-				alert(json["fdsafdsa"]);
+				// var Weapon = require(['peaShooter']);
+				var Loadout = require(['loadout']);
+				var w = new Weapon();
+				alert(Weapon);
+				w.loadWeaponMods([Loadout.getWeaponMod(1), Loadout.getWeaponMod(5)]);
 			});
 			
 			app.player = new Player();
