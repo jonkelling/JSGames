@@ -82,7 +82,11 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		// 		speed:0.1, 		lifespan:500
 		// 	});
 		runNewExplosionEmitter.call(this, ['fire1',], {scale:0.4, minAlpha:0.0});
-		runNewExplosionEmitter2.call(this);
+		
+		if (game.device.webGL)
+		{
+			runNewExplosionEmitter2.call(this);
+		}
 		
 		if (this.rockSize == app.rockSize.SMALL)
 		{
@@ -128,9 +132,12 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 				game.time.events.add(0, runNewExplosionEmitter, r1, ['white-smoke',''], {scale:1.0, maxAlpha:0.25, lifespan:600, speed:100});
 				game.time.events.add(0, runNewExplosionEmitter, r2, ['white-smoke',''], {scale:1.0, maxAlpha:0.25, lifespan:600, speed:100});
 				
-				runNewExplosionEmitter2.call(r0, ['smoke-puff', 'white-smoke']);
-				runNewExplosionEmitter2.call(r1, ['smoke-puff', 'white-smoke']);
-				runNewExplosionEmitter2.call(r2, ['smoke-puff', 'white-smoke']);
+				if (game.device.webGL)
+				{
+					runNewExplosionEmitter2.call(r0, ['smoke-puff', 'white-smoke']);
+					runNewExplosionEmitter2.call(r1, ['smoke-puff', 'white-smoke']);
+					runNewExplosionEmitter2.call(r2, ['smoke-puff', 'white-smoke']);
+				}
 			}
 		}
 	}

@@ -28,7 +28,10 @@
 	}
 	, 
 	"game": {
-		
+		"width2": 1440,
+		"height2": 900,
+		"width": 960,
+		"height": 640
 	}
 	, 
 	"player": {

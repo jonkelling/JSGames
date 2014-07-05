@@ -53,7 +53,7 @@ define(['AsteraxSprite', 'bullets', 'shield', 'loadout'], function(AsteraxSprite
 	module.prototype.loadConfig = function(id) {
 		this.loadout = Loadout.getShip(id);
 		this.health = this.loadout.shield.health;
-	}
+	};
 	
 	function stoppedTouchingScreen()
 	{

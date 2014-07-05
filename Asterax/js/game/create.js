@@ -14,11 +14,15 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 			game.renderer.clearBeforeRender = false;
 			game.renderer.roundPixels = true;
 			
+			game.scale.setShowAll();
+			game.scale.refresh();
+			game.scale.startFullScreen(true);
+			
 			app.renderForOldDevice = !game.device.webGL && game.device.iPad;
 			
 			if (!app.renderForOldDevice)
 			{
-				app.background = game.add.tileSprite(0, 0, 800, 600, 'background');
+				app.background = game.add.tileSprite(0, 0, game.width, game.height, 'background');
 			}
 			game.antialias = !app.renderForOldDevice;
 			game.renderer.clearBeforeRender = app.renderForOldDevice;
@@ -54,10 +58,10 @@ define(['player', 'rock', 'rockGroupController'], function (Player, Rock, RockGr
 			app.rockGroupController = new RockGroupController();
 			app.rockGroupController.create();
 			
-			$('body').append('<div style="position: absolute; left: 820px; top: 20px;">' +
-								'<input id="engine1button" type="button" value="engine 1"/><br/>' +
-								'<input id="engine2button" type="button" value="engine 2"/><br/>' +
-								'<input id="engine3button" type="button" value="engine 3"/>' +
+			$('body').append('<div style="position: absolute; left: 980px; top: 20px;">' +
+								// '<input id="engine1button" type="button" value="engine 1"/><br/>' +
+								// '<input id="engine2button" type="button" value="engine 2"/><br/>' +
+								// '<input id="engine3button" type="button" value="engine 3"/>' +
 								'<div id="debugdiv3"></div>' +
 								'<div id="debugdiv4"></div>' +
 							 '</div>');
