@@ -46,7 +46,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 		this.bullets = new weaponClass();
 		this.bullets.ship = this;
 		
-		this.bullets.loadWeaponMods([5,6,7]);
+		this.bullets.loadWeaponMods([5,6,7,8]);
 
         app.fireButton.onDown.add(fireBullet, this); //fire button
 		// game.input.tapRate = 150;
@@ -81,7 +81,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 	{
 		this.wrap();
 		
-		if (app.fireButton.isDown && this.bullets.automatic === true)
+		if (app.fireButton.isDown && this.bullets.automatic == true)
 		{
 			fireBullet.call(this);
 		}

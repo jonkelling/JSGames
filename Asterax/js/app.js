@@ -33,6 +33,7 @@ requirejs.config({
 	update:   'game/update',
 	loadout:  'game/loadout',
 	AsteraxSprite: 'game/asteraxSprite',
+	AutoDestroySprite: 'game/autoDestroySprite',
 	player:   'game/player',
 	ship:     'game/ship',
 	shield:   'game/shield',

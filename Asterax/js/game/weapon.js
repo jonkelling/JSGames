@@ -12,13 +12,13 @@ define(['AsteraxSprite', 'loadout', 'bullet'], function(AsteraxSprite, Loadout, 
 		
 		this.ship = app.player.ship;
 		
-		this.loadWeaponMods([1]);
-		
 		this.group = game.add.group();
 		
 		this.group.enableBody = true;
 		this.group.physicsBodyType = Phaser.Physics.P2JS;
 		this.group.classType = this.getBulletClass();
+		
+		this.loadWeaponMods([1]);
 	};
 	
 	module.prototype.constructor = module;
@@ -51,6 +51,13 @@ define(['AsteraxSprite', 'loadout', 'bullet'], function(AsteraxSprite, Loadout, 
 			if (mod.lifespan != undefined) { this.lifespan = mod.lifespan; }
 			if (mod.automatic != undefined) { this.automatic = mod.automatic; }
 		}
+		
+		this.group.removeAll();
+		if (this.group.length == 0)
+		{
+			this.createSprites();
+			this.group.forEach(setWeapon, this);
+		}
 	};
 	
 	module.prototype.update = function()
@@ -64,15 +71,9 @@ define(['AsteraxSprite', 'loadout', 'bullet'], function(AsteraxSprite, Loadout, 
 		this.group.createMultiple(this.maxLiveBullets, this.spriteKey);
 	};
 	
-	module.prototype.fire = function()
+	module.prototype.fire = function(force)
 	{
-		if (this.group.length == 0)
-		{
-			this.createSprites();
-			this.group.forEach(setWeapon, this);
-		}
-		
-		var nextBullet = this.group.getFirstExists(false);
+		var nextBullet = this.group.getFirstDead();
 		
 		if (!nextBullet)
 		{
@@ -80,20 +81,25 @@ define(['AsteraxSprite', 'loadout', 'bullet'], function(AsteraxSprite, Loadout, 
 		}
 		else
 		{
-			if (this.canFire) {
+			if (this.canFire || force) {
 				this.canFire = false;
-				game.time.events.add(this.fireRate, setCanFire, this);
 				
-				if (this.skipOneShot)
+				if (!force)
+				{
+					game.time.events.add(this.fireRate, setCanFire, this);
+				}
+				
+				if (this.skipOneShot && !force)
 				{
 					this.skipOneShot = false;
-					return;
+					//return;
 				}
+				this.skipOneShot = false;
 				
 				nextBullet.reset(this.ship.x, this.ship.y);
 				
-				this.beforeFire(nextBullet);
 				this.setupNextBullet(nextBullet);
+				this.beforeFire(nextBullet);
 				this.currentBullet = nextBullet;
 				this.afterFire(nextBullet);
 			}

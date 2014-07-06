@@ -18,20 +18,21 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	
 	function hitRock(rock)
 	{
-		if (this.alive && rock.sprite.alive)
+		if (this.alive)
 		{
-			if (this.weapon && this.weapon.beforeHitRock)
+			if (rock.sprite.alive && this.weapon.beforeHitRock)
 			{
 				this.weapon.beforeHitRock(this, rock);
 			}
 			
-			if (!this.weapon || this.weapon.config.autoKillRock === true)
+			if (this.weapon.config.autoKillRock == true)
 			{
 				this.kill();
 				rock.sprite.kill();
+				
 			}
 			
-			if (this.weapon && this.weapon.afterHitRock)
+			if (rock.sprite.alive && this.weapon.afterHitRock)
 			{
 				this.weapon.afterHitRock(this, rock);
 			}

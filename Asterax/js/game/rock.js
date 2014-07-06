@@ -1,5 +1,5 @@
 
-define(['AsteraxSprite'], function(AsteraxSprite) {
+define(['AsteraxSprite', 'AutoDestroySprite'], function(AsteraxSprite, AutoDestroySprite) {
 
 	var module = function(game, x, y, name, rockSize)
 	{
@@ -104,6 +104,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 				{
 					group.create(this.x, this.y, "rock_sm" + i, nextSize).setRockAngleAndVelocityFromBaseRock(this,  game.rnd.integerInRange(-1, 1));
 				}
+				game.time.events.add(0, runNewExplosionEmitter, this, ['white-smoke',''], {scale:1.0, maxAlpha:0.17, lifespan:600, speed:100});
 			}
 			else if (this.rockSize == app.rockSize.LARGE)
 			{
@@ -172,22 +173,32 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		emitter.gravity = 0;
 		emitter.setScale(scale, scale*3, scale, scale*3, 100);
 		emitter.start(options.explode, options.lifespan, options.frequency, options.quantity);
+		
+		game.time.events.add(options.lifespan, destroyEmitter, emitter);
 	}
 	
 	function runNewExplosionEmitter2()
 	{
-		var emitter = game.add.emitter(this.x, this.y, 50);
+		var emitter = game.add.emitter(this.x, this.y, 15);
+		//emitter.classType = AutoDestroySprite;
 		
 		var speed = 100;
-		var duration = 400;
+		var duration = 600;
 		
-		emitter.makeParticles('grayscale');
+		emitter.makeParticles('grayscale', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]);
 		emitter.minParticleSpeed.setTo(-speed, -speed);
 		emitter.maxParticleSpeed.setTo(speed, speed);
-		// emitter.setAlpha(1, 0.0, duration)
-		emitter.setScale(200, 200, 200, 200, 100);
+		emitter.setAlpha(1, 0.0, duration*2, Phaser.Easing.Quadratic.In);
+		// emitter.setScale(200, 200, 200, 200, 100);
 		emitter.gravity = 0;
-		emitter.start(true, duration*5, 250, 10);
+		emitter.start(true, duration*2, 0, 15);
+		
+		game.time.events.add(duration*2, destroyEmitter, emitter);
+	}
+	
+	function destroyEmitter()
+	{
+		this.destroy();
 	}
 
 });
