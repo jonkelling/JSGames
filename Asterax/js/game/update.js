@@ -30,9 +30,9 @@ function writeDebug(texts) {
 }
 
 function writeDebug3(text) {
-    $('#debugdiv3').text(text);
+    $('#debugdiv3').html(text);
 }
 
 function writeDebug4(text) {
-    $('#debugdiv4').text(text);
+    $('#debugdiv4').html(text);
 }

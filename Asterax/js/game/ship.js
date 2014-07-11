@@ -22,7 +22,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 	
 	module.prototype.create = function()
 	{
-		this.loadConfig(1);
+		this.loadConfig(game.rnd.integerInRange(1,2));
 		
 		this.body.data.immuneToRocks = [];
 		
@@ -46,7 +46,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 		this.bullets = new weaponClass();
 		this.bullets.ship = this;
 		
-		this.bullets.loadWeaponMods([5,6,7,8]);
+		this.bullets.loadWeaponMods(this.loadout.weaponModIds);
 
         app.fireButton.onDown.add(fireBullet, this); //fire button
 		// game.input.tapRate = 150;
@@ -181,20 +181,19 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 				if (Math.abs(this.body.angle - angleFromVelocity) > 2.5)
 				{
 					thrust.call(this, this.loadout.engine.acceleration);
-					var q = this.loadout.engine.topSpeed / Math.sqrt(Math.pow(this.body.velocity.x, 2) + Math.pow(this.body.velocity.y, 2));
-					this.body.data.velocity[0] *= q;
-					this.body.data.velocity[1] *= q;
 				}
 				else if (!isTurning)
 				{
-					var newVelocity = app.velocityFromRotation(this.rotation, this.loadout.engine.topSpeed).perp();
-					this.body.data.velocity[0] = newVelocity.x;
-					this.body.data.velocity[1] = newVelocity.y;
 				}
+				
+				var newVelocity = this.rawVelocity.clone().setMagnitude(this.loadout.engine.topSpeed);
+				this.body.data.velocity[0] = newVelocity.x;
+				this.body.data.velocity[1] = newVelocity.y;
+				
 				// writeDebug([
 				// 		this.loadout.engine.topSpeed,
-				// 		Math.sqrt(Math.pow(this.body.velocity.x, 2) + Math.pow(this.body.velocity.y, 2)),
-				// 		q+"",
+				// 		this.speed,
+				// 		this.rawVelocity.getMagnitude(),
 				// 		"angle:  " + this.body.angle,
 				// 		"angle2: " + new Phaser.Point().angle(new Phaser.Point(this.body.velocity.x, this.body.velocity.y).rperp(), true),
 				// 	]);
@@ -222,8 +221,8 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 	
 	function thrust(acceleration)
 	{
-		if (!(this.prevVelocity.equals(this.body.velocity)))
-			this.speed = new Phaser.Point().distance(this.body.velocity);
+		// if (!(this.prevVelocity.equals(this.body.velocity)))
+		// 	this.speed = new Phaser.Point().distance(this.body.velocity);
 		
 		// writeDebug2([
 		// 	["prev vel: " + [Math.round(this.prevVelocity.x, 2), Math.round(this.prevVelocity.y, 2)]],

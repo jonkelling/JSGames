@@ -12,6 +12,7 @@ define(function() {
 			id: shipData.id,
 			name: shipData.name,
 			weapon1: this.getWeapon(shipData.weapon1),
+			weaponModIds: shipData.weaponMods,
 			weaponMods: [],
 			shield: this.getShield(shipData.shield),
 			engine: this.getEngine(shipData.engine)

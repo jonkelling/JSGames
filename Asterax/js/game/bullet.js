@@ -14,6 +14,13 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	module.prototype = Object.create(AsteraxSprite.prototype);
 	module.prototype.constructor = module;
 	
+	Object.defineProperty(module.prototype, "center", {
+		get: function() {
+			var mod = (3/8);
+			return this.position.clone().subtract(this.body.data.velocity[0]*mod, this.body.data.velocity[1]*mod);
+		}
+	})
+	
 	return module;
 	
 	function hitRock(rock)

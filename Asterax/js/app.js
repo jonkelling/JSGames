@@ -5,7 +5,8 @@ var app = {
 		defaultFireRate: 50,
 		defaultBulletLifespan: 1000,
 		defaultBulletSpeed: 200,
-		rockSize: {SMALL: 1, MEDIUM: 2, LARGE: 3}
+		rockSize: {SMALL: 1, MEDIUM: 2, LARGE: 3},
+		PIOver2: Math.PI/2
 };
 var game = {};
 
@@ -28,10 +29,12 @@ requirejs.config({
 	//update:   'inc/update',
 	jq:       'lib/jquery-2.0.3.min',
 	//main:     'game/main',
+	phaserExtensions: 'game/phaserExtensions',
 	preload:  'game/preload',
 	create:   'game/create',
 	update:   'game/update',
 	loadout:  'game/loadout',
+	destroyable: 'game/destroyable',
 	AsteraxSprite: 'game/asteraxSprite',
 	AutoDestroySprite: 'game/autoDestroySprite',
 	player:   'game/player',
@@ -50,10 +53,10 @@ requirejs.config({
   }
 });
 
-require(['jq', 'Phaser', 'create', 'preload', 'update'],
+require(['create', 'jq', 'Phaser', 'phaserExtensions', 'preload', 'update'],
 
 
-function( jq, Phaser, create ) {
+function( create ) {
 	
 	jQuery.getJSON('./assets/config.json', function(data) {
 		var width = data.game.width;
@@ -65,7 +68,10 @@ function( jq, Phaser, create ) {
 
 
 function render() {
-	
+	// if (app.render && app.renderContext)
+	// {
+	// 	app.render.call(app.renderContext);
+	// }
 }
 
 

@@ -1,8 +1,10 @@
 
-define(['AsteraxSprite', 'loadout', 'bullet'], function(AsteraxSprite, Loadout, Bullet) {
+define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyable, AsteraxSprite, Loadout, Bullet) {
 	
 	var module = function(moduleName)
 	{
+		Destroyable.call(this);
+		
 		this.moduleName = moduleName;
 		this.spriteKey = 'bullet';
 		this.canFire = true;
@@ -19,8 +21,11 @@ define(['AsteraxSprite', 'loadout', 'bullet'], function(AsteraxSprite, Loadout, 
 		this.group.classType = this.getBulletClass();
 		
 		this.loadWeaponMods([1]);
+		
+		this.destroyables.push(this.group);
 	};
 	
+	module.prototype = Object.create(Destroyable.prototype);
 	module.prototype.constructor = module;
 	
 	module.prototype.loadWeaponMods = function(modIds)
@@ -153,6 +158,10 @@ define(['AsteraxSprite', 'loadout', 'bullet'], function(AsteraxSprite, Loadout, 
 		return Bullet;
 	};
 	
+	module.prototype.bulletKilled = function(bullet)
+	{
+	};
+	
 	Object.defineProperty(module.prototype, "prop", {
 		get: function() { return null; },
 		set: function(value) { }
@@ -172,9 +181,15 @@ define(['AsteraxSprite', 'loadout', 'bullet'], function(AsteraxSprite, Loadout, 
 		             : this.deadBulletUpdate(bullet);
 	}
 	
+	function _bulletKilled(bullet)
+	{
+		this.bulletKilled(bullet);
+	}
+	
 	function setWeapon(bullet)
 	{
 		bullet.weapon = this;
+		bullet.events.onKilled.add(_bulletKilled, this);
 	}
 	
 });

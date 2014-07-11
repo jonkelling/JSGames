@@ -51,7 +51,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
 			app.rockGroupController = new RockGroupController();
 			app.rockGroupController.create();
 			
-			$('body').append('<div style="position: absolute; left: 980px; top: 20px;">' +
+			$('body').append('<div style="position: absolute; left: ' + (game.canvas.offsetWidth+10) + 'px; top: 20px; width:200px;">' +
 								// '<input id="engine1button" type="button" value="engine 1"/><br/>' +
 								// '<input id="engine2button" type="button" value="engine 2"/><br/>' +
 								// '<input id="engine3button" type="button" value="engine 3"/>' +
