@@ -52,7 +52,7 @@ define(['AsteraxSprite', 'AutoDestroySprite'], function(AsteraxSprite, AutoDestr
 	};
 	
 	module.prototype.setRockAngleAndVelocityFromBaseRock = function(baseRock, sideWaysDirection)
-	{
+	{	
 		var baseVelocity = baseRock.body.velocity;
 		
 		this.body.data.velocity[0] = baseVelocity.x;
@@ -75,6 +75,15 @@ define(['AsteraxSprite', 'AutoDestroySprite'], function(AsteraxSprite, AutoDestr
 	}
 	
 	function onKilled()
+	{
+		if (!this.hasBeenKilled)
+		{
+			this.hasBeenKilled = true;
+			explodeRock.apply(this);
+		}
+	}
+	
+	function explodeRock()
 	{
 		// runNewExplosionEmitter.call(this, ['muzzleflash2'], {
 		// 		alphaEase:Phaser.Easing.Circular.InOut, 

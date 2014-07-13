@@ -18,7 +18,7 @@ define(['weapon'], function(Weapon) {
 	module.prototype.setupNextBullet = function(bullet)
 	{
 		Weapon.prototype.setupNextBullet.apply(this, arguments);
-		bullet.body.damping = 0.9999999999;
+		bullet.body.damping = 0.99999999;
 		bullet.body.angularDamping = 0.5;
 		bullet.startingSpeed = Math.round(bullet.speed);
 	}
@@ -112,18 +112,22 @@ define(['weapon'], function(Weapon) {
 	{
 		var rocks = app.rockGroupController.rocks;
 		var closestRock = rocks.getFirstAlive();
-		var closestDistance = closestRock.position.distance(bullet.position);
 		
-		rocks.forEachAlive(function(rock) {
-			var rockDistance = rock.position.distance(bullet.position);
-			if (rockDistance < closestDistance)
-			{
-				closestRock = rock;
-				closestDistance = rockDistance;
-			}
-		});
-		
-		bullet.closestRock = closestRock;
+		if (closestRock)
+		{
+			var closestDistance = closestRock.position.distance(bullet.position);
+			
+			rocks.forEachAlive(function(rock) {
+				var rockDistance = rock.position.distance(bullet.position);
+				if (rockDistance < closestDistance)
+				{
+					closestRock = rock;
+					closestDistance = rockDistance;
+				}
+			});
+			
+			bullet.closestRock = closestRock;
+		}
 	}
 
 });
