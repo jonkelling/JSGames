@@ -61,7 +61,7 @@ function( create ) {
 	jQuery.getJSON('./assets/config.json', function(data) {
 		var width = data.game.width;
 		var height = data.game.height;
-		game = new Phaser.Game(width, height, Phaser.AUTO, 'Asterax', {preload: preload, create: create.run, update: update, render: render});
+		game = new Phaser.Game(width, height, Phaser.AUTO, 'Asterax', {preload: require('preload'), create: create.run, update: require('update'), render: render});
 	});
 	
 });

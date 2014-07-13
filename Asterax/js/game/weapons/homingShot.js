@@ -42,11 +42,11 @@ define(['weapon'], function(Weapon) {
 			s += bullet.startingSpeed + " / " + Math.round(bullet.speed) + "<br/>";
 		}, this);
 		
-		writeDebug3(s);
+		// writeDebug3(s);
 		
 		if (this.group.countLiving() == 0)
 		{
-			// game.debug.geom();
+			game.debug.geom();
 		}
 	};
 	
@@ -56,14 +56,19 @@ define(['weapon'], function(Weapon) {
 		{
 			bullet.lastTime = game.physics.p2.time;
 			bullet.positionHistory += game.physics.p2.time + ": " + bullet.position.clone().subtract(bullet.startPosition.x, bullet.startPosition.y).toStringFixed() + "<br/>\n";
-			writeDebug4(bullet.positionHistory);
+			// writeDebug4(bullet.positionHistory);
 		}
 		
 		if (bullet.closestRock)
 		{
 			bullet.targetLine = bullet.targetLine || new Phaser.Line(0,0,100,100);
 			bullet.targetLine.fromSprite(bullet, bullet.closestRock, true);
-			// game.debug.geom(bullet.targetLine);
+			game.debug.geom(bullet.targetLine);
+			
+			var line = bullet.targetLine;
+			writeDebug4(line.start.x + ", " + line.start.y + "<br/>" + line.end.x + ", " + line.end.y);
+			
+			drawThrustDirectionLine(bullet);
 			
 			bullet.body.thrust(this.speed/2);
 			
@@ -128,6 +133,21 @@ define(['weapon'], function(Weapon) {
 			
 			bullet.closestRock = closestRock;
 		}
+	}
+	
+	function drawThrustDirectionLine(bullet) {
+		bullet.thrustDirectionLine = bullet.thrustDirectionLine || new Phaser.Line(
+			bullet.center.x, bullet.center.y,
+			bullet.center.x, bullet.center.y);
+		
+		var line = bullet.thrustDirectionLine;
+		var shift = new Phaser.Point(4, 0);
+		shift.rotate(0, 0, bullet.rotation - Math.PI);
+		line.end.add(shift.x, shift.y);
+		
+		game.debug.geom(line);
+		
+		writeDebug3(line.start.x + ", " + line.start.y + "<br/>" + line.end.x + ", " + line.end.y);
 	}
 
 });

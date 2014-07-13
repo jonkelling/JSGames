@@ -1,38 +1,41 @@
 
-function update() {
+define(['Phaser'], function () {
 	
-	app.player.update();
-	app.rockGroupController.update();
+	window.roundPoint = function (p) {
+		return [Math.round(p.x), Math.round(p.y)];
+	}
 	
-	if (!app.renderForOldDevice)
+	window.writeDebug2 = function (texts) {
+		for (var i = 0; i < texts.length; i++) {
+			var y = i * 18;
+			game.debug.text(texts[i]+"", 450, 450 + y);
+		}
+	}
+	
+	window.writeDebug = function (texts) {
+		for (var i = 0; i < texts.length; i++) {
+			var y = i * 18;
+			game.debug.text(texts[i]+"", 20, 450 + y);
+		}
+	}
+	
+	window.writeDebug3 = function (text) {
+		$('#debugdiv3').html(text);
+	}
+	
+	window.writeDebug4 = function (text) {
+		$('#debugdiv4').html(text);
+	}
+	
+	return function()
 	{
-		//  Scroll the background
-		//app.background.tilePosition.x += app.backgroundSpeed;
-	}
-}
-
-function roundPoint(p) {
-	return [Math.round(p.x), Math.round(p.y)];
-}
-
-function writeDebug2(texts) {
-	for (var i = 0; i < texts.length; i++) {
-		var y = i * 18;
-		game.debug.text(texts[i]+"", 450, 450 + y);
-	}
-}
-
-function writeDebug(texts) {
-	for (var i = 0; i < texts.length; i++) {
-		var y = i * 18;
-		game.debug.text(texts[i]+"", 20, 450 + y);
-	}
-}
-
-function writeDebug3(text) {
-    $('#debugdiv3').html(text);
-}
-
-function writeDebug4(text) {
-    $('#debugdiv4').html(text);
-}
+		app.player.update();
+		app.rockGroupController.update();
+		
+		if (!app.renderForOldDevice)
+		{
+			//  Scroll the background
+			//app.background.tilePosition.x += app.backgroundSpeed;
+		}
+	};
+});
