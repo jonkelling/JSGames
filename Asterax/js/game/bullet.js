@@ -19,7 +19,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 			var mod = (3/8);
 			return this.position.clone().subtract(this.body.data.velocity[0]*mod, this.body.data.velocity[1]*mod);
 		}
-	})
+	});
 	
 	return module;
 	
@@ -46,7 +46,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		}
 		else
 		{
-			//writeDebug2(['dead!']);
+			//app.debug.writeDebug2(['dead!']);
 		}
 	}
 	

@@ -49,15 +49,17 @@ requirejs.config({
 	twinShot:   'game/weapons/twinShot',
 	tripleShot: 'game/weapons/tripleShot',
 	homingShot: 'game/weapons/homingShot',
-	explodingShot: 'game/weapons/explodingShot'
+	explodingShot: 'game/weapons/explodingShot',
+	debug:    'game/debug'
   }
 });
 
-require(['create', 'jq', 'Phaser', 'phaserExtensions', 'preload', 'update'],
+require(['create', 'jq', 'Phaser', 'phaserExtensions', 'preload', 'update', 'debug'],
 
 
 function( create ) {
 	
+	app.debug = require('debug');
 	jQuery.getJSON('./assets/config.json', function(data) {
 		var width = data.game.width;
 		var height = data.game.height;

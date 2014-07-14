@@ -167,6 +167,12 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyab
 		set: function(value) { }
 	});
 	
+	Object.defineProperty(module.prototype, "pxm", {
+		get: function() {
+			return game.physics.p2.pxm(this.speed);
+		}
+	});
+	
 	return module;
 	
 	function setCanFire()

@@ -11,14 +11,14 @@ define(['weapon'], function(Weapon) {
 		
 		this.destroyables.push(this.timer);
 	};
-
+	
 	module.prototype = Object.create(Weapon.prototype);
 	module.prototype.constructor = module;
 	
 	module.prototype.setupNextBullet = function(bullet)
 	{
 		Weapon.prototype.setupNextBullet.apply(this, arguments);
-		bullet.body.damping = 0.99999999;
+		// bullet.body.damping = 0.99999999;
 		bullet.body.angularDamping = 0.5;
 		bullet.startingSpeed = Math.round(bullet.speed);
 	}
@@ -42,7 +42,7 @@ define(['weapon'], function(Weapon) {
 			s += bullet.startingSpeed + " / " + Math.round(bullet.speed) + "<br/>";
 		}, this);
 		
-		// writeDebug3(s);
+		// app.debug.writeDebug3(s);
 		
 		if (this.group.countLiving() == 0)
 		{
@@ -56,21 +56,20 @@ define(['weapon'], function(Weapon) {
 		{
 			bullet.lastTime = game.physics.p2.time;
 			bullet.positionHistory += game.physics.p2.time + ": " + bullet.position.clone().subtract(bullet.startPosition.x, bullet.startPosition.y).toStringFixed() + "<br/>\n";
-			// writeDebug4(bullet.positionHistory);
+			// app.debug.writeDebug4(bullet.positionHistory);
 		}
 		
 		if (bullet.closestRock)
 		{
 			bullet.targetLine = bullet.targetLine || new Phaser.Line(0,0,100,100);
 			bullet.targetLine.fromSprite(bullet, bullet.closestRock, true);
-			game.debug.geom(bullet.targetLine);
+			// game.debug.geom(bullet.targetLine);
 			
 			var line = bullet.targetLine;
-			writeDebug4(line.start.x + ", " + line.start.y + "<br/>" + line.end.x + ", " + line.end.y);
 			
 			drawThrustDirectionLine(bullet);
 			
-			bullet.body.thrust(this.speed/2);
+			bullet.body.thrust(this.speed/20);
 			
 			var targetAngle = bullet.position.angle(bullet.closestRock.position)
 			var bulletRotation = bullet.previousPosition.angle(bullet.position);
@@ -79,21 +78,21 @@ define(['weapon'], function(Weapon) {
 			if (bulletRotation !== targetAngle) {
 				// Calculate difference between the current angle and targetAngle
 				var delta = targetAngle - bulletRotation;
-			
+				
 				// Keep it in range from -180 to 180 to make the most efficient turns.
 				if (delta > Math.PI) delta -= game.math.PI2;
 				if (delta < -Math.PI) delta += game.math.PI2;
-			
+				
 				if (delta > 0) {
 					// Turn clockwise
 					bullet.body.angle += this.config.turnRate;
-					// writeDebug4("right");
+					// app.debug.writeDebug4("right");
 				} else {
 					// Turn counter-clockwise
 					bullet.body.angle -= this.config.turnRate;
-					// writeDebug4("left");
+					// app.debug.writeDebug4("left");
 				}
-			
+				
 				// Just set angle to target angle if they are close
 				// if (Math.abs(delta) < this.game.math.degToRad(this.TURN_RATE)) {
 				// 	this.rotation = targetAngle;
@@ -136,18 +135,16 @@ define(['weapon'], function(Weapon) {
 	}
 	
 	function drawThrustDirectionLine(bullet) {
-		bullet.thrustDirectionLine = bullet.thrustDirectionLine || new Phaser.Line(
-			bullet.center.x, bullet.center.y,
-			bullet.center.x, bullet.center.y);
+		var line = bullet.thrustDirectionLine = bullet.thrustDirectionLine || new Phaser.Line();
 		
-		var line = bullet.thrustDirectionLine;
-		var shift = new Phaser.Point(4, 0);
-		shift.rotate(0, 0, bullet.rotation - Math.PI);
+		line.start.setTo(bullet.center.x, bullet.center.y);
+		line.end.setTo(bullet.center.x, bullet.center.y);
+		
+		var shift = new Phaser.Point(20, 0);
+		shift.rotate(0, 0, bullet.rotation + app.PIOver2);
 		line.end.add(shift.x, shift.y);
 		
 		game.debug.geom(line);
-		
-		writeDebug3(line.start.x + ", " + line.start.y + "<br/>" + line.end.x + ", " + line.end.y);
 	}
 
 });

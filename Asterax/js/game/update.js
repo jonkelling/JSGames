@@ -1,32 +1,6 @@
 
 define(['Phaser'], function () {
 	
-	window.roundPoint = function (p) {
-		return [Math.round(p.x), Math.round(p.y)];
-	}
-	
-	window.writeDebug2 = function (texts) {
-		for (var i = 0; i < texts.length; i++) {
-			var y = i * 18;
-			game.debug.text(texts[i]+"", 450, 450 + y);
-		}
-	}
-	
-	window.writeDebug = function (texts) {
-		for (var i = 0; i < texts.length; i++) {
-			var y = i * 18;
-			game.debug.text(texts[i]+"", 20, 450 + y);
-		}
-	}
-	
-	window.writeDebug3 = function (text) {
-		$('#debugdiv3').html(text);
-	}
-	
-	window.writeDebug4 = function (text) {
-		$('#debugdiv4').html(text);
-	}
-	
 	return function()
 	{
 		app.player.update();
@@ -37,5 +11,22 @@ define(['Phaser'], function () {
 			//  Scroll the background
 			//app.background.tilePosition.x += app.backgroundSpeed;
 		}
+		
+		/*
+		var bullet = app.player.ship.bullets.group.getFirstAlive();
+		
+		if (bullet)
+		{
+			var v = bullet.rawVelocity.clone().subtract(app.player.ship.rawVelocity.x, app.player.ship.rawVelocity.y);
+			
+			app.debug.writeDebug3(bullet.speed.toFixed(2));
+			app.debug.writeDebug4((v.getMagnitude()).toFixed(2) + "<br/>" + bullet.weapon.pxm);
+		}
+		else
+		{
+			// app.debug.writeDebug3("");
+			// app.debug.writeDebug4("");
+		}
+		*/
 	};
 });

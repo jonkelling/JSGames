@@ -22,7 +22,7 @@ define(['rock'], function(Rock) {
 			// 	this.rocks.create(randomPoint.x, randomPoint.y, name, 3);
 			// }
 			
-			this.rocks.create(650, 100, 'rock1', 3);
+			this.rocks.create(650, 450, 'rock1', 3);
 		},
 		
 		update: function() {

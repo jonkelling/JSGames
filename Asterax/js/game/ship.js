@@ -166,10 +166,10 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 		    fireBullet.call(this);
 		}
 		
-// 		writeDebug3(this.touchingLowerRight);
-// 		writeDebug4(this.touchingLeftScreen);
-        // writeDebug3(game.input.pointer1.x + ", " + game.input.pointer1.y + ", " + game.input.pointer1.isDown);
-        // writeDebug4(game.input.pointer2.x + ", " + game.input.pointer2.y + ", " + game.input.pointer2.isDown);
+// 		app.debug.writeDebug3(this.touchingLowerRight);
+// 		app.debug.writeDebug4(this.touchingLeftScreen);
+        // app.debug.writeDebug3(game.input.pointer1.x + ", " + game.input.pointer1.y + ", " + game.input.pointer1.isDown);
+        // app.debug.writeDebug4(game.input.pointer2.x + ", " + game.input.pointer2.y + ", " + game.input.pointer2.isDown);
 		
 		setShipFrame(this);
 		
@@ -190,7 +190,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 				this.body.data.velocity[0] = newVelocity.x;
 				this.body.data.velocity[1] = newVelocity.y;
 				
-				// writeDebug([
+				// app.debug.writeDebug([
 				// 		this.loadout.engine.topSpeed,
 				// 		this.speed,
 				// 		this.rawVelocity.getMagnitude(),
@@ -206,7 +206,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 		
 		this.bullets.update();
 		
-		//writeDebug(
+		//app.debug.writeDebug(
 		//		[
 		//			"speed:           " + Math.round(this.body.speed),
 		//			"velocity:        " + roundPoint(this.body.velocity),
@@ -224,7 +224,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 		// if (!(this.prevVelocity.equals(this.body.velocity)))
 		// 	this.speed = new Phaser.Point().distance(this.body.velocity);
 		
-		// writeDebug2([
+		// app.debug.writeDebug2([
 		// 	["prev vel: " + [Math.round(this.prevVelocity.x, 2), Math.round(this.prevVelocity.y, 2)]],
 		// 	["velocity: " + [Math.round(this.body.velocity.x, 2), Math.round(this.body.velocity.y, 2)]],
 		// 	["speed:    " + this.speed]
