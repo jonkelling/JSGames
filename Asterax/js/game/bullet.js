@@ -17,9 +17,10 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	module.prototype.thrust = function(speed, rotation, asDegrees)
 	{
 		var saveRotation = this.rotation;
-		this.rotation = (asDegrees ? game.math.degToRad(rotation) : rotation);
+		this.body.rotation = (asDegrees ? game.math.degToRad(rotation) : rotation);
 		this.body.thrust(speed);
-		this.rotation = saveRotation;
+		drawThrustDirectionLine(this);
+		this.body.rotation = saveRotation;
 	};
 	
 	Object.defineProperty(module.prototype, "center", {
@@ -56,6 +57,19 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		{
 			//app.debug.writeDebug2(['dead!']);
 		}
+	}
+	
+	function drawThrustDirectionLine(bullet) {
+		var line = bullet.thrustDirectionLine = bullet.thrustDirectionLine || new Phaser.Line();
+		
+		line.start.setTo(bullet.center.x, bullet.center.y);
+		line.end.setTo(bullet.center.x, bullet.center.y);
+		
+		var shift = new Phaser.Point(20, 0);
+		shift.rotate(0, 0, bullet.body.rotation + app.PIOver2);
+		line.end.add(shift.x, shift.y);
+		
+		game.debug.geom(line);
 	}
 	
 });

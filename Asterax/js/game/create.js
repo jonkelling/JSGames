@@ -59,6 +59,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
 								// '<input id="engine3button" type="button" value="engine 3"/>' +
 								'<div id="debugdiv3"></div>' +
 								'<div id="debugdiv4"></div>' +
+								'<div id="debugdiv5"></div>' +
 							 '</div>');
 			// 
 			// $('#engine1button').click(function() { acceleration = 100; });

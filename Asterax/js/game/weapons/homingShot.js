@@ -79,7 +79,7 @@ define(['weapon'], function(Weapon) {
 				while (delta > Math.PI) delta -= game.math.PI2;
 				while (delta < -Math.PI) delta += game.math.PI2;
 				
-				app.debug.writeDebug3("delta: " + delta.toFixed(4) + "<br/>" + "targetAngle: " + targetAngle.toFixed(4) + "<br/>" + "bulletRotation: " + bullet.body.rotation.toFixed(4));
+				app.debug.writeDebug3("speed: " + bullet.speed + "<br/>delta: " + delta.toFixed(4) + "<br/>" + "targetAngle: " + targetAngle.toFixed(4) + "<br/>" + "bulletRotation: " + bullet.body.rotation.toFixed(4));
 				
 				if (delta > 0) {
 					// Turn clockwise
@@ -91,7 +91,7 @@ define(['weapon'], function(Weapon) {
 					app.debug.writeDebug4("left");
 				}
 				
-				app.debug.writeDebug4("delta: " + delta.toFixed(4) + "<br/>" + "targetAngle: " + targetAngle.toFixed(4) + "<br/>" + "bulletRotation: " + bullet.body.rotation.toFixed(4));
+				app.debug.writeDebug4("speed: " + bullet.speed + "<br/>delta: " + delta.toFixed(4) + "<br/>" + "targetAngle: " + targetAngle.toFixed(4) + "<br/>" + "bulletRotation: " + bullet.body.rotation.toFixed(4));
 				
 				// Just set angle to target angle if they are close
 				// if (Math.abs(delta) < this.game.math.degToRad(this.TURN_RATE)) {
@@ -99,20 +99,21 @@ define(['weapon'], function(Weapon) {
 				// }
 			}
 			
-			bullet.rotation = bullet.angleTo(bullet.closestRock);
-			drawThrustDirectionLine(bullet);
+			bullet.body.rotation = bullet.angleTo(bullet.closestRock);
 			
-			// bullet.body.thrust(this.speed/20);
-			app.debug.writeDebug3(bullet.speed + ", " + bullet.weapon.pxm);
+			// app.debug.writeDebug3(bullet.speed + ", " + bullet.weapon.pxm);
 			if (bullet.speed > bullet.weapon.pxm)
 			{
-				app.debug.writeDebug4(bullet.speed);
-				bullet.thrust(11, (bullet.rawVelocity.rotation90)+game.math.degToRad(180));
+				app.debug.writeDebug5("back");
+				bullet.thrust(50, (bullet.body.rotation)+Math.PI);
 			}
 			else
 			{
-				bullet.thrust(10, bullet.rotation);
+				app.debug.writeDebug5("forward");
+				bullet.thrust(200, bullet.body.rotation);
 			}
+			
+			drawVelocityPolygon(bullet);
 		}
 	};
 	
@@ -149,17 +150,30 @@ define(['weapon'], function(Weapon) {
 		}
 	}
 	
-	function drawThrustDirectionLine(bullet) {
-		var line = bullet.thrustDirectionLine = bullet.thrustDirectionLine || new Phaser.Line();
+	function drawVelocityPolygon(bullet)
+	{
+		var v = bullet.rawVelocity.clone();
+		v.setMagnitude(v.getMagnitude()*6);
+		var point3 = bullet.position.clone().add(v.x, v.y);
+		var p = new Phaser.Polygon(
+			bullet.position,
+			bullet.closestRock.position,
+			point3
+		);
 		
-		line.start.setTo(bullet.center.x, bullet.center.y);
-		line.end.setTo(bullet.center.x, bullet.center.y);
-		
-		var shift = new Phaser.Point(20, 0);
-		shift.rotate(0, 0, bullet.rotation + app.PIOver2);
-		line.end.add(shift.x, shift.y);
-		
+		for (var i = 0; i < p.points.length-1; i++)
+		{
+			var line = new Phaser.Line(
+				p.points[i  ].x, p.points[i  ].y,
+				p.points[i+1].x, p.points[i+1].y);
+			game.debug.geom(line);
+		}
+		var line = new Phaser.Line(
+			p.points[i].x, p.points[i].y,
+			p.points[0].x, p.points[0].y);
 		game.debug.geom(line);
+		
+		game.debug.geom(Phaser.Point.centroid(p.points), "#ff0000", true);
 	}
 
 });

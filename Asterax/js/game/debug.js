@@ -37,6 +37,11 @@ define(['Phaser'], function () {
 		writeDebug4: function (text) {
 			$('#debugdiv4').html(text);
 		}
+		,
+		
+		writeDebug5: function (text) {
+			$('#debugdiv5').html(text);
+		}
 	};
 	
 	return new module();
