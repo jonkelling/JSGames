@@ -38,11 +38,13 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
 			app.fireButton = game.input.keyboard.addKey(Phaser.Keyboard.C);
 			app.testButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 			
+			game.enableStep();
 			app.testButton.onDown.add(function() {
 				// var _w = require('peaShooter');
 				// var w = new _w();
 				// w.loadWeaponMods([5,1,2]);
-				game.paused = !game.paused;
+				// game.paused = !game.paused;
+				game.step();
 			});
 			
 			app.player = new Player();
