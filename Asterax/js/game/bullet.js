@@ -14,6 +14,14 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	module.prototype = Object.create(AsteraxSprite.prototype);
 	module.prototype.constructor = module;
 	
+	module.prototype.thrust = function(speed, rotation, asDegrees)
+	{
+		var saveRotation = this.rotation;
+		this.rotation = (asDegrees ? game.math.degToRad(rotation) : rotation);
+		this.body.thrust(speed);
+		this.rotation = saveRotation;
+	};
+	
 	Object.defineProperty(module.prototype, "center", {
 		get: function() {
 			var mod = (3/8);

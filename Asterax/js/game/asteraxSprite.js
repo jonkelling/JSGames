@@ -16,6 +16,11 @@ define(['Phaser'], function() {
 		this.game.world.wrap(this.body, Math.round(Math.max(this.width, this.height) / 2)-1, false);
 	};
 	
+	module.prototype.angleTo = function(sprite, asDegrees)
+	{
+		return this.position.angle(sprite.position, asDegrees)+app.PIOver2;
+	};
+	
 	Object.defineProperty(module.prototype, "anglePerp", {
 		get: function() { return this.angle - 90; }
 	});

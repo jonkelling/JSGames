@@ -67,10 +67,6 @@ define(['weapon'], function(Weapon) {
 			
 			var line = bullet.targetLine;
 			
-			drawThrustDirectionLine(bullet);
-			
-			bullet.body.thrust(this.speed/20);
-			
 			var targetAngle = bullet.position.angle(bullet.closestRock.position)
 			var bulletRotation = bullet.previousPosition.angle(bullet.position);
 			
@@ -97,6 +93,21 @@ define(['weapon'], function(Weapon) {
 				// if (Math.abs(delta) < this.game.math.degToRad(this.TURN_RATE)) {
 				// 	this.rotation = targetAngle;
 				// }
+			}
+			
+			bullet.rotation = bullet.angleTo(bullet.closestRock);
+			drawThrustDirectionLine(bullet);
+			
+			// bullet.body.thrust(this.speed/20);
+			app.debug.writeDebug3(bullet.speed + ", " + bullet.weapon.pxm);
+			if (bullet.speed > bullet.weapon.pxm)
+			{
+				app.debug.writeDebug4(bullet.speed);
+				bullet.thrust(11, (bullet.rawVelocity.rotation90)+game.math.degToRad(180));
+			}
+			else
+			{
+				bullet.thrust(10, bullet.rotation);
 			}
 		}
 	};
