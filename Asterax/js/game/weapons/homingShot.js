@@ -72,7 +72,7 @@ define(['weapon'], function(Weapon) {
 			bullet.body.thrust(this.speed/20);
 			
 			var targetAngle = bullet.position.angle(bullet.closestRock.position)
-			var bulletRotation = bullet.previousPosition.angle(bullet.position);
+			var bulletRotation = bullet.body.rotation;// bullet.previousPosition.angle(bullet.position);
 			
 			// Gradually (bullet.TURN_RATE) aim the missile towards the target angle
 			if (bulletRotation !== targetAngle) {
@@ -80,18 +80,22 @@ define(['weapon'], function(Weapon) {
 				var delta = targetAngle - bulletRotation;
 				
 				// Keep it in range from -180 to 180 to make the most efficient turns.
-				if (delta > Math.PI) delta -= game.math.PI2;
-				if (delta < -Math.PI) delta += game.math.PI2;
+				while (delta > Math.PI) delta -= game.math.PI2;
+				while (delta < -Math.PI) delta += game.math.PI2;
+				
+				app.debug.writeDebug3("delta: " + delta.toFixed(4) + "<br/>" + "targetAngle: " + targetAngle.toFixed(4) + "<br/>" + "bulletRotation: " + bullet.body.rotation.toFixed(4));
 				
 				if (delta > 0) {
 					// Turn clockwise
-					bullet.body.angle += this.config.turnRate;
-					// app.debug.writeDebug4("right");
+					bullet.body.rotation += Math.min(this.config.turnRate, delta);
+					app.debug.writeDebug4("right");
 				} else {
 					// Turn counter-clockwise
-					bullet.body.angle -= this.config.turnRate;
-					// app.debug.writeDebug4("left");
+					bullet.body.rotation += Math.max(-this.config.turnRate, delta);
+					app.debug.writeDebug4("left");
 				}
+				
+				app.debug.writeDebug4("delta: " + delta.toFixed(4) + "<br/>" + "targetAngle: " + targetAngle.toFixed(4) + "<br/>" + "bulletRotation: " + bullet.body.rotation.toFixed(4));
 				
 				// Just set angle to target angle if they are close
 				// if (Math.abs(delta) < this.game.math.degToRad(this.TURN_RATE)) {
