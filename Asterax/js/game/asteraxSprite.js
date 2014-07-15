@@ -18,7 +18,11 @@ define(['Phaser'], function() {
 	
 	module.prototype.angleTo = function(sprite, asDegrees)
 	{
-		return this.position.angle(sprite.position, asDegrees)+app.PIOver2;
+		if (sprite instanceof Phaser.Sprite)
+		{
+			sprite = sprite.position;
+		}
+		return this.position.angle(sprite, asDegrees)+app.PIOver2;
 	};
 	
 	Object.defineProperty(module.prototype, "anglePerp", {

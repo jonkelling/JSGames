@@ -105,13 +105,18 @@ define(['weapon'], function(Weapon) {
 			if (bullet.speed > bullet.weapon.pxm)
 			{
 				app.debug.writeDebug5("back");
-				bullet.thrust(50, (bullet.body.rotation)+Math.PI);
+				// bullet.thrust(50, (bullet.body.rotation)+Math.PI);
 			}
 			else
 			{
 				app.debug.writeDebug5("forward");
-				bullet.thrust(200, bullet.body.rotation);
+				// bullet.thrust(200, bullet.body.rotation);
 			}
+			
+			var thrustTarget = getThrustDirectionUsingCentroid.call(bullet);
+			
+			if (Math.abs(bullet.angleTo(bullet.closestRock) - bullet.rawVelocity.rotation90) > 0.15)
+				bullet.thrust(5, bullet.angleTo(thrustTarget));
 			
 			drawVelocityPolygon(bullet);
 		}
@@ -150,6 +155,22 @@ define(['weapon'], function(Weapon) {
 		}
 	}
 	
+	function getThrustDirectionUsingCentroid()
+	{
+		var v = this.rawVelocity.clone();
+		v.setMagnitude(v.getMagnitude()*6);
+		
+		//var p = new Phaser.Polygon(
+		var points = [
+			this.position,
+			this.closestRock.position,
+			this.position.clone().add(v.x, v.y)
+		];
+		// );
+		
+		return Phaser.Point.centroid(points);
+	}
+	
 	function drawVelocityPolygon(bullet)
 	{
 		var v = bullet.rawVelocity.clone();
@@ -173,7 +194,7 @@ define(['weapon'], function(Weapon) {
 			p.points[0].x, p.points[0].y);
 		game.debug.geom(line);
 		
-		game.debug.geom(Phaser.Point.centroid(p.points), "#ff0000", true);
+		game.debug.geom(getThrustDirectionUsingCentroid.call(bullet), "#ff0000", true);
 	}
 
 });
