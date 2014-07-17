@@ -37,6 +37,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
 			app.cursors = game.input.keyboard.createCursorKeys();
 			app.fireButton = game.input.keyboard.addKey(Phaser.Keyboard.C);
 			app.testButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+			app.testButton2 = game.input.keyboard.addKey(Phaser.Keyboard.G);
 			
 			// game.enableStep();
 			app.testButton.onDown.add(function() {
@@ -44,7 +45,20 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
 				// var w = new _w();
 				// w.loadWeaponMods([5,1,2]);
 				// game.paused = !game.paused;
+				game.enableStep();
 				game.step();
+				
+				if (app.disableStepTimeout)
+				{
+					window.clearTimeout(app.disableStepTimeout);
+					app.disableStepTimeout = null;
+				}
+				
+				// app.disableStepTimeout = window.setTimeout(function() {game.disableStep();}, 5000);
+			});
+			
+			app.testButton2.onDown.add(function() {
+				game.disableStep();
 			});
 			
 			app.player = new Player();

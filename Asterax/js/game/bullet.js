@@ -19,7 +19,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		var saveRotation = this.rotation;
 		this.body.rotation = (asDegrees ? game.math.degToRad(rotation) : rotation);
 		this.body.thrust(speed);
-		drawThrustDirectionLine(this);
+		// drawThrustDirectionLine(this);
 		this.body.rotation = saveRotation;
 	};
 	
@@ -69,7 +69,7 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		shift.rotate(0, 0, bullet.body.rotation + app.PIOver2);
 		line.end.add(shift.x, shift.y);
 		
-		game.debug.geom(line);
+		game.debug.geom(line, "rgba(0,0,255,0.5)");
 	}
 	
 });

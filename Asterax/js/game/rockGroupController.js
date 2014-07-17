@@ -14,15 +14,15 @@ define(['rock'], function(Rock) {
 			//setTimeout(function() { window.location.reload() }, 1500);
 			this.rocks = getNewGroup();
 			
-			// for (var i=0; i < 3; i++) {
-			// 	var name = 'rock' + (i % 4);
-			// 	
-			// 	var randomPoint = getRandomPointOutsideNullArea();
-			// 	
-			// 	this.rocks.create(randomPoint.x, randomPoint.y, name, 3);
-			// }
+			for (var i=0; i < 2; i++) {
+				var name = 'rock' + (i % 4);
+				
+				var randomPoint = getRandomPointOutsideNullArea();
+				
+				this.rocks.create(randomPoint.x, randomPoint.y, name, 3);
+			}
 			
-			this.rocks.create(650, 100, 'rock1', 3);
+			// this.rocks.create(650, 100, 'rock1', 3);
 		},
 		
 		update: function() {

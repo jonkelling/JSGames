@@ -131,6 +131,8 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyab
 	
 	module.prototype.afterFire = function(bullet)
 	{
+		bullet.fireTime = game.time.now;
+		bullet.firePosition = bullet.position.clone();
 	};
 	
 	module.prototype.bulletUpdate = function(bullet)
@@ -139,6 +141,9 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyab
 	
 	module.prototype.aliveBulletUpdate = function(bullet)
 	{
+		var timeDiff = game.time.now - bullet.fireTime;
+		app.debug.writeDebug3(timeDiff + ": " + bullet.firePosition.distance(bullet.position));
+		app.debug.writeDebug4(bullet.speed);
 	};
 	
 	module.prototype.deadBulletUpdate = function(bullet)

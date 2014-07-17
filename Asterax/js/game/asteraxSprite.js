@@ -38,9 +38,9 @@ define(['Phaser'], function() {
 			return this.body.data.rawVelocity;
 		}
 	});
-	Object.defineProperty(module.prototype, "rawVelocityPerp", {
+	Object.defineProperty(module.prototype, "rawVelocityNegative", {
 		get: function() {
-			return this.rawVelocity.clone().perp().perp();
+			return this.rawVelocity.negative();
 		}
 	});
 	Object.defineProperty(module.prototype, "previousPosition", {
