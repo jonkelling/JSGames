@@ -22,7 +22,7 @@ define(['Phaser'], function() {
 		{
 			sprite = sprite.position;
 		}
-		return this.position.angle(sprite, asDegrees)+app.PIOver2;
+		return this.position.angle(sprite, asDegrees)//+app.PIOver2;
 	};
 	
 	Object.defineProperty(module.prototype, "anglePerp", {

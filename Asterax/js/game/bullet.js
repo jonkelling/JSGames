@@ -16,8 +16,9 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 	
 	module.prototype.thrust = function(speed, rotation, asDegrees)
 	{
-		var saveRotation = this.rotation;
-		this.body.rotation = (asDegrees ? game.math.degToRad(rotation) : rotation);
+		var saveRotation = this.body.rotation;
+		this.body.rotation = (asDegrees ? game.math.degToRad(rotation) : rotation) + app.PIOver2;
+		// app.debug.writeDebug([saveRotation, this.body.rotation]);
 		this.body.thrust(speed);
 		// drawThrustDirectionLine(this);
 		this.body.rotation = saveRotation;

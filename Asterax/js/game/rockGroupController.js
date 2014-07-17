@@ -14,7 +14,7 @@ define(['rock'], function(Rock) {
 			//setTimeout(function() { window.location.reload() }, 1500);
 			this.rocks = getNewGroup();
 			
-			for (var i=0; i < 2; i++) {
+			for (var i=0; i < 12; i++) {
 				var name = 'rock' + (i % 4);
 				
 				var randomPoint = getRandomPointOutsideNullArea();

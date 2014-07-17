@@ -31,7 +31,13 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyab
 	module.prototype.loadWeaponMods = function(modIds)
 	{
 		var mods = [];
-		modIds.sort();
+		modIds.sort(function(a, b) {
+			a = parseInt(a);
+			b = parseInt(b);
+			return a == b ?  0 :
+			       a <  b ? -1 :
+			       a >  b ?  1 : 0;
+		});
 		for (var i = 0; i < modIds.length; i++) {
 			mods.push(Loadout.getWeaponMod(modIds[i]));
 		}

@@ -1,9 +1,10 @@
 
 define(['weapon'], function(Weapon) {
 	
-	var showDebugLines = true;
+	var showDebugLines = false;
 	var greenLineColor = "rgba(0,255,0,0.1)";
-	var triMod = 1;
+	var triModMax = 12;
+	var homingThrustCut = 1;
 	
 	var module = function()
 	{
@@ -22,7 +23,7 @@ define(['weapon'], function(Weapon) {
 	module.prototype.setupNextBullet = function(bullet)
 	{
 		var savedSpeed = this.speed;
-		this.speed = this.speed * 0.8;
+		// this.speed = this.speed * 0.8;
 		Weapon.prototype.setupNextBullet.apply(this, arguments);
 		this.speed = savedSpeed;
 	}
@@ -98,7 +99,7 @@ define(['weapon'], function(Weapon) {
 				// }
 			}
 			
-			bullet.body.rotation = bullet.angleTo(bullet.closestRock);
+			// bullet.body.rotation = bullet.angleTo(bullet.closestRock);
 			
 			// app.debug.writeDebug3(bullet.speed + ", " + bullet.weapon.pxm);
 			if (bullet.speed > bullet.weapon.pxm)
@@ -114,17 +115,17 @@ define(['weapon'], function(Weapon) {
 			
 			var thrustTarget = getThrustDirectionUsingCentroid.call(bullet);
 			
-			var absBulletRockDelta = Math.abs(bullet.angleTo(bullet.closestRock) - bullet.rawVelocity.rotation90);
+			var absBulletRockDelta = Math.abs(bullet.angleTo(bullet.closestRock) - bullet.rawVelocityNegative.rotation);
 			
 			// app.debug.writeDebug3(absBulletRockDelta);
 			// app.debug.writeDebug4(bullet.speed.toFixed(2) + " / " + bullet.weapon.pxm.toFixed(2));
 			
-			if (absBulletRockDelta > 0.15)
+			// if (absBulletRockDelta > 0.15)
 			{
 				if (bullet.speed > bullet.weapon.pxm)
-					bullet.thrust(bullet.weapon.pxm, bullet.angleTo(getSlowDownTargetPoint(bullet)));
+					bullet.thrust(bullet.weapon.pxm/homingThrustCut, bullet.angleTo(getSlowDownTargetPoint(bullet)));
 				else
-					bullet.thrust(bullet.weapon.pxm, bullet.angleTo(thrustTarget));
+					bullet.thrust(bullet.weapon.pxm/homingThrustCut, bullet.angleTo(thrustTarget));
 			}
 			
 			if (showDebugLines)
@@ -172,10 +173,12 @@ define(['weapon'], function(Weapon) {
 		// var v = this.rawVelocity.clone();
 		// v.setMagnitude(v.getMagnitude()*1);
 		
-		app.debug.writeDebug2([this.speed]);
-		app.debug.writeDebug3(app.player.ship.rawVelocityNegative.rotation);
-		app.debug.writeDebug4(app.player.ship.position.angle(this.closestRock.position));
-		app.debug.writeDebug5(this.rawVelocityNegative + "<br/>" + this.position + "<br/>" + this.closestRock.position);
+		// app.debug.writeDebug2([this.speed]);
+		// app.debug.writeDebug3(this.rawVelocityNegative.rotation);
+		// app.debug.writeDebug4(this.angleTo(this.closestRock));
+		// app.debug.writeDebug5(this.rawVelocityNegative + "<br/>" + this.position + "<br/>" + this.closestRock.position);
+		
+		var triMod = getTriMod.call(this);
 		
 		var v = this.rawVelocity;
 		var point3 = this.point3 = (this.point3 || this.position.clone());
@@ -212,6 +215,8 @@ define(['weapon'], function(Weapon) {
 		// var v = bullet.rawVelocity.clone();
 		// v.setMagnitude(v.getMagnitude()*1);
 		
+		var triMod = getTriMod.call(bullet);
+		
 		var v = bullet.rawVelocity;
 		var point3 = bullet.point3 = (bullet.point3 || bullet.position.clone());
 		point3.copyFrom(bullet.position);
@@ -230,6 +235,18 @@ define(['weapon'], function(Weapon) {
 			game.debug.geom(line, greenLineColor);
 		
 		return point4;
+	}
+	
+	function getTriMod()
+	{
+		var delta = this.rawVelocityNegative.rotation - this.angleTo(this.closestRock);
+		
+		while (delta > Math.PI) delta -= game.math.PI2;
+		while (delta < -Math.PI) delta += game.math.PI2;
+		
+		delta = Math.abs(delta);
+		
+		return Math.min(12, Math.pow(5*delta, 2.4) + 1);
 	}
 
 });
