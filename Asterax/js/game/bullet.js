@@ -46,7 +46,6 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 			{
 				this.kill();
 				rock.sprite.kill();
-				
 			}
 			
 			if (rock.sprite.alive && this.weapon.afterHitRock)

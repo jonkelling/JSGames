@@ -3,7 +3,7 @@ define(['weapon'], function(Weapon) {
 	
 	var showDebugLines = false;
 	var greenLineColor = "rgba(0,255,0,0.1)";
-	var triModMax = 12;
+	var triModMax = 3;
 	var homingThrustCut = 1;
 	
 	var module = function()
@@ -13,7 +13,7 @@ define(['weapon'], function(Weapon) {
 		this.timer = game.time.create(false);
 		this.timer.loop(150, updateTargetRocks, this);
 		this.timer.start();
-		
+
 		this.destroyables.push(this.timer);
 	};
 	
@@ -26,7 +26,7 @@ define(['weapon'], function(Weapon) {
 		// this.speed = this.speed * 0.8;
 		Weapon.prototype.setupNextBullet.apply(this, arguments);
 		this.speed = savedSpeed;
-	}
+	};
 	
 	module.prototype.afterFire = function(bullet)
 	{
@@ -50,7 +50,7 @@ define(['weapon'], function(Weapon) {
 	
 	module.prototype.aliveBulletUpdate = function(bullet)
 	{
-		if (game.physics.p2.time - bullet.lastTime >= 0.1)
+        if (game.physics.p2.time - bullet.lastTime >= 0.1)
 		{
 			bullet.lastTime = game.physics.p2.time;
 			bullet.positionHistory += game.physics.p2.time + ": " + bullet.position.clone().subtract(bullet.startPosition.x, bullet.startPosition.y).toStringFixed() + "<br/>\n";
@@ -81,7 +81,7 @@ define(['weapon'], function(Weapon) {
 				
 				// app.debug.writeDebug3("speed: " + bullet.speed + "<br/>delta: " + delta.toFixed(4) + "<br/>" + "targetAngle: " + targetAngle.toFixed(4) + "<br/>" + "bulletRotation: " + bullet.body.rotation.toFixed(4));
 				
-				if (delta > 0) {
+				/*if (delta > 0) {
 					// Turn clockwise
 					bullet.body.rotation += Math.min(this.config.turnRate, delta);
 					// app.debug.writeDebug4("right");
@@ -89,7 +89,7 @@ define(['weapon'], function(Weapon) {
 					// Turn counter-clockwise
 					bullet.body.rotation += Math.max(-this.config.turnRate, delta);
 					// app.debug.writeDebug4("left");
-				}
+				}*/
 				
 				// app.debug.writeDebug4("speed: " + bullet.speed + "<br/>delta: " + delta.toFixed(4) + "<br/>" + "targetAngle: " + targetAngle.toFixed(4) + "<br/>" + "bulletRotation: " + bullet.body.rotation.toFixed(4));
 				
@@ -146,17 +146,22 @@ define(['weapon'], function(Weapon) {
 	
 	function updateTargetRock(bullet)
 	{
+        if (bullet.closestRock)
+            bullet.closestRock.targetingBullet = null;
+        bullet.closestRock = null;
+
 		var rocks = app.rockGroupController.rocks;
 		var closestRock = rocks.getFirstAlive();
 		
 		if (closestRock)
 		{
-			var closestDistance = closestRock.position.distance(bullet.position);
+
+			var closestDistance = 9999999;
 			
 			rocks.forEachAlive(function(rock) {
 				var rockDistance = rock.position.distance(bullet.position);
-				if (rockDistance < closestDistance)
-				if (!rock.targetingBullet || !rock.targetingBullet.alive || rock.targetingBullet === bullet)
+                if (!rock.targetingBullet || !rock.targetingBullet.alive || rock.targetingBullet === bullet)
+				if (rockDistance < closestDistance || rock.targetingBullet === bullet)
 				{
 					closestRock = rock;
 					closestDistance = rockDistance;

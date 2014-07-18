@@ -51,8 +51,8 @@
 		{
 			"id":2,
 			"name":"B-Ship",
-			"weapon1":4,
-			"weaponMods":[1,5,6,7,9,10],
+			"weapon1":6,
+			"weaponMods":[1,3],
 			"shield":2,
 			"engine":2
 		}
@@ -77,6 +77,7 @@
 		,{ "id":3, "name":"Triple Shot"    , "autoKillRock":true , "moduleName":"tripleShot"      }
 		,{ "id":4, "name":"Homing Shot"    , "autoKillRock":true , "moduleName":"homingShot" , "turnRate":1.1   }
 		,{ "id":5, "name":"Exploding Shot" , "autoKillRock":true , "moduleName":"explodingShot"   }
+		,{ "id":6, "name":"Scatter Bomb"   , "autoKillRock":true , "moduleName":"scatterBomb" }
 	]
 	,
 	"weaponMods": [

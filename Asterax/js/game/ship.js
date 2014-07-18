@@ -1,5 +1,5 @@
 
-define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot', 'tripleShot', 'homingShot', 'explodingShot'], function(require, AsteraxSprite, Shield, Loadout) {
+define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot', 'tripleShot', 'homingShot', 'explodingShot', 'scatterBomb'], function(require, AsteraxSprite, Shield, Loadout) {
 	
 	var killCount = 0;
 	var turningShipRight = false;
@@ -44,7 +44,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 		
 		var weaponClass = require(this.loadout.weapon1.moduleName);
 		this.bullets = new weaponClass();
-		this.bullets.ship = this;
+//		this.bullets.ship = this;
 		
 		this.bullets.loadWeaponMods(this.loadout.weaponModIds);
 

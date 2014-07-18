@@ -50,6 +50,7 @@ requirejs.config({
 	tripleShot: 'game/weapons/tripleShot',
 	homingShot: 'game/weapons/homingShot',
 	explodingShot: 'game/weapons/explodingShot',
+    scatterBomb:   'game/weapons/scatterBomb',
 	debug:    'game/debug'
   }
 });

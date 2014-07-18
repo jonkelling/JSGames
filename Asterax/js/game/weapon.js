@@ -12,7 +12,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyab
 		
 		this.config = Loadout.getWeaponByModuleName(moduleName);
 		
-		this.ship = app.player.ship;
+//		this.ship = app.player.ship;
 		
 		this.group = game.add.group();
 		
@@ -94,27 +94,31 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyab
 		{
 			if (this.canFire || force) {
 				this.canFire = false;
-				
+
 				if (!force)
 				{
 					game.time.events.add(this.fireRate, setCanFire, this);
 				}
-				
+
 				if (this.skipOneShot && !force)
 				{
 					this.skipOneShot = false;
 					//return;
 				}
 				this.skipOneShot = false;
-				
+
+                this.beforeFire(nextBullet);
+
 				nextBullet.reset(this.ship.x, this.ship.y);
-				
+                nextBullet.revive();
+
 				this.setupNextBullet(nextBullet);
-				this.beforeFire(nextBullet);
 				this.currentBullet = nextBullet;
 				this.afterFire(nextBullet);
 			}
 		}
+
+        return nextBullet;
 	};
 	
 	module.prototype.setupNextBullet = function(nextBullet)
@@ -183,6 +187,12 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyab
 			return game.physics.p2.pxm(this.speed);
 		}
 	});
+
+    Object.defineProperty(module.prototype, "ship", {
+        get: function() {
+            return app.player.ship;
+        }
+    });
 	
 	return module;
 	
