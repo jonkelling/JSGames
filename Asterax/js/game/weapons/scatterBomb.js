@@ -1,7 +1,7 @@
 
 define(['weapon', 'homingShot', 'bullet'], function(Weapon, HomingShot, Bullet) {
 
-    var numberOfBulletsPerScatter = 4;
+    var numberOfBulletsPerScatter = 10;
 
 	var module = function()
 	{
