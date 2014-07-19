@@ -56,6 +56,8 @@ define(['weapon'], function(Weapon) {
 			bullet.positionHistory += game.physics.p2.time + ": " + bullet.position.clone().subtract(bullet.startPosition.x, bullet.startPosition.y).toStringFixed() + "<br/>\n";
 			// app.debug.writeDebug4(bullet.positionHistory);
 		}
+
+        wobbleBullet.call(bullet);
 		
 		if (bullet.closestRock)
 		{
@@ -253,5 +255,24 @@ define(['weapon'], function(Weapon) {
 		
 		return Math.min(12, Math.pow(5*delta, 2.4) + 1);
 	}
+
+    function wobbleBullet()
+    {
+        var rotationDelta = this.body.rotation - (this.lastRotation || this.body.rotation);
+        this.lastRotation = this.body.rotation;
+        this.wobbleVelocity = this.wobbleVelocity || new Phaser.Point();
+
+        this.wobbleVelocity.rotate(0, 0, rotationDelta);
+
+        this.wobbleVelocity
+    }
+
+    function moveForwardWithRotation(speed, rotation)
+    {
+        var savedRotation = this.body.rotation;
+        this.body.rotation = rotation;
+        this.body.moveForward(speed);
+        this.body.rotation = savedRotation;
+    }
 
 });
