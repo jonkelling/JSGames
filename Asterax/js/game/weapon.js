@@ -229,7 +229,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
             bullet.tailEmitter.makeParticles(bullet.weapon.tailSpriteKey);
             bullet.tailEmitter.setAlpha(0.7, 0.0, tailEmitterLifespan, tailEmitterEase);
             bullet.tailEmitter.allowRotation = false;
-            bullet.tailEmitter.start(false, tailEmitterLifespan, 10);
+            bullet.tailEmitter.start(false, tailEmitterLifespan, 5);
         }
 	}
 
