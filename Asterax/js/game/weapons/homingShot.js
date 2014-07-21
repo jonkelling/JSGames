@@ -8,8 +8,6 @@ define(['weapon'], function(Weapon) {
 	
 	var module = function(spriteKey, tailSpriteKey)
 	{
-        spriteKey = spriteKey || "bullet-white";
-        tailSpriteKey = tailSpriteKey || "bullet-white-tail";
 		Weapon.call(this, "homingShot", spriteKey, tailSpriteKey);
 		
 		this.timer = game.time.create(false);

@@ -75,7 +75,7 @@
 		 { "id":1, "name":"Pea Shooter"    , "autoKillRock":true , "moduleName":"peaShooter"      }
 		,{ "id":2, "name":"Twin Shot"      , "autoKillRock":true , "moduleName":"twinShot"        }
 		,{ "id":3, "name":"Triple Shot"    , "autoKillRock":true , "moduleName":"tripleShot"      }
-		,{ "id":4, "name":"Homing Shot"    , "autoKillRock":true , "moduleName":"homingShot" , "turnRate":1.1   }
+		,{ "id":4, "name":"Homing Shot"    , "autoKillRock":true , "moduleName":"homingShot" , "turnRate":1.1, "spriteKey":"bullet-white", "tailSpriteKey":"bullet-white-tail"   }
 		,{ "id":5, "name":"Exploding Shot" , "autoKillRock":true , "moduleName":"explodingShot"   }
 		,{ "id":6, "name":"Scatter Bomb"   , "autoKillRock":true , "moduleName":"scatterBomb" }
 	]

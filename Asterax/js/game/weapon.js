@@ -7,14 +7,14 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 	var module = function(moduleName, spriteKey, tailSpriteKey)
 	{
 		Destroyable.call(this);
+
+        this.config = Loadout.getWeaponByModuleName(moduleName);
 		
 		this.moduleName = moduleName;
-		this.spriteKey = spriteKey || 'bullet';
-		this.tailSpriteKey = tailSpriteKey;
+		this.spriteKey = spriteKey || this.config.spriteKey || 'bullet';
+		this.tailSpriteKey = tailSpriteKey || this.config.tailSpriteKey;
 		this.canFire = true;
 		this.skipOneShot = false;
-		
-		this.config = Loadout.getWeaponByModuleName(moduleName);
 		
 //		this.ship = app.player.ship;
 		
