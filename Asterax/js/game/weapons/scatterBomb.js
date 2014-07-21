@@ -7,7 +7,7 @@ define(['weapon', 'homingShot', 'bullet'], function(Weapon, HomingShot, Bullet) 
 	{
 		Weapon.call(this, "scatterBomb");
 
-        this.scatterBomb = new HomingShot();
+        this.scatterBomb = new HomingShot("bullet-white", "bullet-white-tail");
         this.scatterBomb.maxLiveBullets = 100;
         this.scatterBomb.loadWeaponMods([6]);
 
@@ -50,7 +50,7 @@ define(['weapon', 'homingShot', 'bullet'], function(Weapon, HomingShot, Bullet) 
         bullet.reset(parentBullet.position.x, parentBullet.position.y);
         bullet.body.setZeroVelocity();
         bullet.body.angle = game.rnd.angle();
-        bullet.body.moveForward(game.rnd.integerInRange(0, 10));
+        bullet.body.moveForward(game.rnd.integerInRange(50, 170));
     }
 
 });

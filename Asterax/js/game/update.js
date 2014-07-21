@@ -4,8 +4,7 @@ define(['Phaser'], function () {
 	return function()
 	{
 		app.player.update();
-		app.rockGroupController.update();
-		
+
 		if (!app.renderForOldDevice)
 		{
 			//  Scroll the background

@@ -41,14 +41,17 @@ define(['Phaser'], function () {
 		game.load.spritesheet('grayscale', 'assets/particles/grayscale.png', 1, 1);
 		
 		
-		game.load.image('bullet', 'images/bullet.png', 11, 11);
-		
+		game.load.image('bullet', 'images/bullet.png');
+        game.load.image('bullet-white', 'images/bullet-white.png');
+        game.load.image('bullet-white-tail', 'images/bullet-white-tail.png');
+
 		game.load.image('background', 'images/backgrounds/galaxy-starry-night.jpg');
 		
 		
 		game.load.physics('ship', 'assets/physics/shipSprites.json');
-		game.load.physics('rocks', 'assets/physics/rockSprites.json');
-		
+        game.load.physics('rocks', 'assets/physics/rockSprites.json');
+        game.load.physics('bullets', 'assets/physics/bulletSprites.json');
+
 		game.load.json('rockpositions', 'assets/rockSpritePositions.json');
 		game.load.json('config', 'assets/config.json');
 	};

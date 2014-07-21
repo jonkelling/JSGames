@@ -10,6 +10,11 @@ define(['Phaser'], function() {
 	
 	module.prototype = Object.create(Phaser.Sprite.prototype);
 	module.prototype.constructor = module;
+
+    module.prototype.update = function ()
+    {
+        this.wrap();
+    };
 	
 	module.prototype.wrap = function()
 	{

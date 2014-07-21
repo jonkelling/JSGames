@@ -1,12 +1,16 @@
 
-define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyable, AsteraxSprite, Loadout, Bullet) {
+define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'TailEmitterParticle'], function(Destroyable, AsteraxSprite, Loadout, Bullet, TailEmitter, TailEmitterParticle) {
+
+    var tailEmitterLifespan = 350;
+    var tailEmitterEase = Phaser.Easing.Quadratic.In;
 	
-	var module = function(moduleName)
+	var module = function(moduleName, spriteKey, tailSpriteKey)
 	{
 		Destroyable.call(this);
 		
 		this.moduleName = moduleName;
-		this.spriteKey = 'bullet';
+		this.spriteKey = spriteKey || 'bullet';
+		this.tailSpriteKey = tailSpriteKey;
 		this.canFire = true;
 		this.skipOneShot = false;
 		
@@ -21,7 +25,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyab
 		this.group.classType = this.getBulletClass();
 		
 		this.loadWeaponMods([1]);
-		
+
 		this.destroyables.push(this.group);
 	};
 	
@@ -67,13 +71,12 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyab
 		if (this.group.length == 0)
 		{
 			this.createSprites();
-			this.group.forEach(setWeapon, this);
+			this.group.forEach(setupNewBullet, this);
 		}
 	};
 	
 	module.prototype.update = function()
 	{
-		this.group.callAll('wrap');
 		this.group.forEachExists(_bulletUpdate, this);
 	};
 	
@@ -134,7 +137,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyab
 		nextBullet.body.data.velocity[0] += this.ship.body.data.velocity[0];
 		nextBullet.body.data.velocity[1] += this.ship.body.data.velocity[1];
 	};
-	
+
 	module.prototype.beforeFire = function(bullet)
 	{
 	};
@@ -213,10 +216,23 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet'], function(Destroyab
 		this.bulletKilled(bullet);
 	}
 	
-	function setWeapon(bullet)
+	function setupNewBullet(bullet)
 	{
 		bullet.weapon = this;
 		bullet.events.onKilled.add(_bulletKilled, this);
+
+        if (bullet.weapon.tailSpriteKey)
+        {
+            bullet.tailEmitter = game.particles.add(new TailEmitter(game));
+            bullet.tailEmitter.classType = TailEmitterParticle;
+            bullet.tailEmitter.tailedSprite = bullet;
+            bullet.tailEmitter.makeParticles(bullet.weapon.tailSpriteKey);
+            bullet.tailEmitter.setAlpha(0.7, 0.0, tailEmitterLifespan, tailEmitterEase);
+            bullet.tailEmitter.allowRotation = false;
+            bullet.tailEmitter.start(false, tailEmitterLifespan, 10);
+        }
 	}
+
+
 	
 });

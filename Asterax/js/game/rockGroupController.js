@@ -26,7 +26,7 @@ define(['rock'], function(Rock) {
 		},
 		
 		update: function() {
-			this.rocks.callAll('wrap');
+//			this.rocks.callAll('wrap');
 		}
 	};
 	

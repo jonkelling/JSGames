@@ -3,12 +3,12 @@ define(['weapon'], function(Weapon) {
 	
 	var showDebugLines = false;
 	var greenLineColor = "rgba(0,255,0,0.1)";
-	var triModMax = 3;
+	var triModMax = 12;
 	var homingThrustCut = 1;
 	
-	var module = function()
+	var module = function(spriteKey, tailSpriteKey)
 	{
-		Weapon.call(this, "homingShot");
+		Weapon.call(this, "homingShot", spriteKey, tailSpriteKey);
 		
 		this.timer = game.time.create(false);
 		this.timer.loop(150, updateTargetRocks, this);
@@ -57,8 +57,8 @@ define(['weapon'], function(Weapon) {
 			// app.debug.writeDebug4(bullet.positionHistory);
 		}
 
-        wobbleBullet.call(bullet);
-		
+//        wobbleBullet.call(bullet);
+
 		if (bullet.closestRock)
 		{
 			bullet.targetLine = bullet.targetLine || new Phaser.Line(0,0,100,100);
@@ -125,10 +125,12 @@ define(['weapon'], function(Weapon) {
 			// if (absBulletRockDelta > 0.15)
 			{
 				if (bullet.speed > bullet.weapon.pxm)
-					bullet.thrust(bullet.weapon.pxm/homingThrustCut, bullet.angleTo(getSlowDownTargetPoint(bullet)));
+					bullet.thrust(bullet.weapon.pxm*2/homingThrustCut, bullet.angleTo(getSlowDownTargetPoint(bullet)));
 				else
-					bullet.thrust(bullet.weapon.pxm/homingThrustCut, bullet.angleTo(thrustTarget));
+					bullet.thrust(bullet.weapon.pxm*2/homingThrustCut, bullet.angleTo(thrustTarget));
 			}
+
+            bullet.body.rotation = bullet.rawVelocity.rotation90;
 			
 			if (showDebugLines)
 				drawVelocityPolygon(bullet);
@@ -231,7 +233,8 @@ define(['weapon'], function(Weapon) {
 		
 		var a = point3.angle(bullet.position) - point3.angle(bullet.closestRock.position);
 		var d = Math.cos(a)*point3.distance(bullet.position);
-		
+
+
 		var line = point3.lineTo(bullet.closestRock.position);
 		
 		var point4 = Phaser.Point.interpolate(line.start, line.end, d/line.length);
@@ -253,25 +256,27 @@ define(['weapon'], function(Weapon) {
 		
 		delta = Math.abs(delta);
 		
-		return Math.min(12, Math.pow(5*delta, 2.4) + 1);
+		return Math.min(triModMax, Math.pow(5*delta, 2.4) + 1);
 	}
 
     function wobbleBullet()
     {
+        var wobbleSpeed = 10;
+        this.wobbleStartTime = this.wobbleStartTime || game.time.now;
         var rotationDelta = this.body.rotation - (this.lastRotation || this.body.rotation);
         this.lastRotation = this.body.rotation;
         this.wobbleVelocity = this.wobbleVelocity || new Phaser.Point();
+        var wobbleDistance = wobbleSpeed * Math.sin((game.time.now - app.startTime)/50);
 
-        this.wobbleVelocity.rotate(0, 0, rotationDelta);
+        this.wobbleVelocity.rotate(0, 0, this.lastRotation, false, wobbleDistance);
 
-        this.wobbleVelocity
     }
 
     function moveForwardWithRotation(speed, rotation)
     {
         var savedRotation = this.body.rotation;
         this.body.rotation = rotation;
-        this.body.moveForward(speed);
+        this.body.setMagnitude(speed);
         this.body.rotation = savedRotation;
     }
 

@@ -49,6 +49,7 @@ define(['AsteraxSprite', 'AutoDestroySprite'], function(AsteraxSprite, AutoDestr
 
 	module.prototype.update = function()
 	{
+        AsteraxSprite.prototype.update.apply(this, arguments);
 	};
 	
 	module.prototype.setRockAngleAndVelocityFromBaseRock = function(baseRock, sideWaysDirection)

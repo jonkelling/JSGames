@@ -24,7 +24,7 @@ define(['ship', 'loadout'], function (Ship, Loadout) {
 		
 		update: function()
 		{
-			this.ship.update();
+//			this.ship.update();
 		}
 	};
 	

@@ -37,6 +37,8 @@ requirejs.config({
 	destroyable: 'game/destroyable',
 	AsteraxSprite: 'game/asteraxSprite',
 	AutoDestroySprite: 'game/autoDestroySprite',
+    TailEmitter: 'game/tailEmitter',
+    TailEmitterParticle: 'game/tailEmitterParticle',
 	player:   'game/player',
 	ship:     'game/ship',
 	shield:   'game/shield',
