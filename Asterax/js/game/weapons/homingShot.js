@@ -80,39 +80,6 @@ define(['weapon'], function(Weapon) {
 				// Keep it in range from -180 to 180 to make the most efficient turns.
 				while (delta > Math.PI) delta -= game.math.PI2;
 				while (delta < -Math.PI) delta += game.math.PI2;
-				
-				// app.debug.writeDebug3("speed: " + bullet.speed + "<br/>delta: " + delta.toFixed(4) + "<br/>" + "targetAngle: " + targetAngle.toFixed(4) + "<br/>" + "bulletRotation: " + bullet.body.rotation.toFixed(4));
-				
-				/*if (delta > 0) {
-					// Turn clockwise
-					bullet.body.rotation += Math.min(this.config.turnRate, delta);
-					// app.debug.writeDebug4("right");
-				} else {
-					// Turn counter-clockwise
-					bullet.body.rotation += Math.max(-this.config.turnRate, delta);
-					// app.debug.writeDebug4("left");
-				}*/
-				
-				// app.debug.writeDebug4("speed: " + bullet.speed + "<br/>delta: " + delta.toFixed(4) + "<br/>" + "targetAngle: " + targetAngle.toFixed(4) + "<br/>" + "bulletRotation: " + bullet.body.rotation.toFixed(4));
-				
-				// Just set angle to target angle if they are close
-				// if (Math.abs(delta) < this.game.math.degToRad(this.TURN_RATE)) {
-				// 	this.rotation = targetAngle;
-				// }
-			}
-			
-			// bullet.body.rotation = bullet.angleTo(bullet.closestRock);
-			
-			// app.debug.writeDebug3(bullet.speed + ", " + bullet.weapon.pxm);
-			if (bullet.speed > bullet.weapon.pxm)
-			{
-				// app.debug.writeDebug5("back");
-				// bullet.thrust(50, (bullet.body.rotation)+Math.PI);
-			}
-			else
-			{
-				// app.debug.writeDebug5("forward");
-				// bullet.thrust(200, bullet.body.rotation);
 			}
 			
 			var thrustTarget = getThrustDirectionUsingCentroid.call(bullet);
@@ -179,14 +146,6 @@ define(['weapon'], function(Weapon) {
 	
 	function getThrustDirectionUsingCentroid()
 	{
-		// var v = this.rawVelocity.clone();
-		// v.setMagnitude(v.getMagnitude()*1);
-		
-		// app.debug.writeDebug2([this.speed]);
-		// app.debug.writeDebug3(this.rawVelocityNegative.rotation);
-		// app.debug.writeDebug4(this.angleTo(this.closestRock));
-		// app.debug.writeDebug5(this.rawVelocityNegative + "<br/>" + this.position + "<br/>" + this.closestRock.position);
-		
 		var triMod = getTriMod.call(this);
 		
 		var v = this.rawVelocity;
@@ -199,7 +158,9 @@ define(['weapon'], function(Weapon) {
 			point3
 		]);
 		
-		// because closestRock changes, of course.
+		// element #1 of the array needs to be set
+		// because this.closestRock could have changed
+        // since the array was created.
 		points[1] = this.closestRock.position;
 		
 		return Phaser.Point.centroid(points);
@@ -221,9 +182,6 @@ define(['weapon'], function(Weapon) {
 	
 	function getSlowDownTargetPoint(bullet)
 	{
-		// var v = bullet.rawVelocity.clone();
-		// v.setMagnitude(v.getMagnitude()*1);
-		
 		var triMod = getTriMod.call(bullet);
 		
 		var v = bullet.rawVelocity;
