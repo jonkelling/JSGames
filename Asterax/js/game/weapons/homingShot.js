@@ -5,10 +5,15 @@ define(['weapon'], function(Weapon) {
 	var greenLineColor = "rgba(0,255,0,0.1)";
 	var triModMax = 12;
 	var homingThrustCut = 1;
+    var wobbleSpeed = 90;
+    var wobbleInterval = Phaser.Timer.SECOND / 6;
+    var wobbleDirection;
 	
 	var module = function(spriteKey, tailSpriteKey)
 	{
 		Weapon.call(this, "homingShot", spriteKey, tailSpriteKey);
+
+        wobbleDirection = game.math.degToRad(60);
 		
 		this.timer = game.time.create(false);
 		this.timer.loop(150, updateTargetRocks, this);
@@ -44,7 +49,7 @@ define(['weapon'], function(Weapon) {
 		
 		if (this.group.countLiving() == 0)
 		{
-			game.debug.geom();
+			game.debug.stop();
 		}
 	};
 	
@@ -57,7 +62,7 @@ define(['weapon'], function(Weapon) {
 			// app.debug.writeDebug4(bullet.positionHistory);
 		}
 
-//        wobbleBullet.call(bullet);
+        //wobbleBullet.call(bullet);
 
 		if (bullet.closestRock)
 		{
@@ -67,9 +72,7 @@ define(['weapon'], function(Weapon) {
 			if (showDebugLines)
 				game.debug.geom(bullet.targetLine, "rgba(0,255,0,0.1)");
 			
-			var line = bullet.targetLine;
-			
-			var targetAngle = bullet.position.angle(bullet.closestRock.position)
+			var targetAngle = bullet.position.angle(bullet.closestRock.position);
 			var bulletRotation = bullet.body.rotation;// bullet.previousPosition.angle(bullet.position);
 			
 			// Gradually (bullet.TURN_RATE) aim the missile towards the target angle
@@ -100,7 +103,9 @@ define(['weapon'], function(Weapon) {
             bullet.body.rotation = bullet.rawVelocity.rotation90;
 			
 			if (showDebugLines)
-				drawVelocityPolygon(bullet);
+            {
+                drawVelocityPolygon(bullet);
+            }
 		}
 	};
 	
@@ -171,10 +176,10 @@ define(['weapon'], function(Weapon) {
 		var centroid = getThrustDirectionUsingCentroid.call(bullet);
 		var points = bullet.velocityPolygonPoints;
 		
+		game.debug.geom(points[2].lineTo(points[0]), greenLineColor);
 		game.debug.geom(points[0].lineTo(points[1]), greenLineColor);
 		game.debug.geom(points[1].lineTo(points[2]), greenLineColor);
-		game.debug.geom(points[2].lineTo(points[0]), greenLineColor);
-				
+
 		game.debug.geom(centroid, "rgba(255,0,0,0.4)");
 		
 		// getSlowDownTargetPoint(bullet);
@@ -219,14 +224,27 @@ define(['weapon'], function(Weapon) {
 
     function wobbleBullet()
     {
-        var wobbleSpeed = 10;
         this.wobbleStartTime = this.wobbleStartTime || game.time.now;
-        var rotationDelta = this.body.rotation - (this.lastRotation || this.body.rotation);
-        this.lastRotation = this.body.rotation;
-        this.wobbleVelocity = this.wobbleVelocity || new Phaser.Point();
-        var wobbleDistance = wobbleSpeed * Math.sin((game.time.now - app.startTime)/50);
+        this.wobbleDirection = this.wobbleDirection || wobbleDirection;
 
-        this.wobbleVelocity.rotate(0, 0, this.lastRotation, false, wobbleDistance);
+        app.debug.writeDebug([game.time.now, this.wobbleStartTime, wobbleInterval]);
+
+        if ((game.time.now - this.wobbleStartTime) > wobbleInterval)
+        {
+//            this.body.rotation = this.rawVelocity.rotation90 + this.wobbleDirection;
+//            app.debug.writeDebug3(this.rawVelocity.rotation90 + "<br>" + this.body.rotation);
+            this.wobbleDirection *= -1;
+            this.wobbleStartTime = game.time.now;
+        }
+
+//        this.thrust(wobbleSpeed, this.rawVelocity.rotation90 + this.wobbleDirection);
+
+//        var rotationDelta = this.body.rotation - (this.lastRotation || this.body.rotation);
+//        this.lastRotation = this.body.rotation;
+//        this.wobbleVelocity = this.wobbleVelocity || new Phaser.Point();
+//        var wobbleDistance = wobbleSpeed * Math.sin((game.time.now - app.startTime)/50);
+
+//        this.wobbleVelocity.rotate(0, 0, this.lastRotation, false, wobbleDistance);
 
     }
 
