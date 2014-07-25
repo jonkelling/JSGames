@@ -39,7 +39,6 @@ define(['weapon', 'homingShot', 'bullet'], function(Weapon, HomingShot, Bullet) 
                 setupNextScatterBombBullet(newBullet, bullet);
             }
         }
-
 //        app.debug.writeDebug([this.group.countLiving(), this.scatterBomb.group.countLiving()]);
     };
 

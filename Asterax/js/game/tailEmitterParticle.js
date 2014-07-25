@@ -24,6 +24,7 @@ define(['Phaser'], function() {
         Phaser.Particle.prototype.update.apply(this, arguments);
         this.body.angularVelocity = 0;
         this.body.velocity.setTo(0);
+        this.tint = this.parent.tailedSprite.tint;
 
     };
 

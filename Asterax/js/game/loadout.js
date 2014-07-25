@@ -17,11 +17,11 @@ define(function() {
 			shield: this.getShield(shipData.shield),
 			engine: this.getEngine(shipData.engine)
 		};
-		
+
 		for (var i = 0; i < shipData.weaponMods.length; i++) {
 			shipDataWrapper.weaponMods.push(this.getWeaponMod(shipData.weaponMods[i]));
 		}
-		
+
 		return shipDataWrapper;
 	};
 	
@@ -57,4 +57,4 @@ define(function() {
 				return entry[i];
 		return null;
 	}
-})
+});

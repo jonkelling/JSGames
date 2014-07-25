@@ -56,6 +56,15 @@
 			"shield":2,
 			"engine":3
 		}
+        ,
+        {
+            "id":3,
+            "name":"B-Ship",
+            "weapon1":6,
+            "weaponMods":[1,3,6,13],
+            "shield":2,
+            "engine":3
+        }
 	]
 	,
 	"shields": [
@@ -93,5 +102,6 @@
 		,{ "id":10, "name":"Long Lived Rapid-Fire" , "fireRate":70, "lifespan":600000 }
         ,{ "id":11, "name":"Faster Shot"  , "speed":600, "fireRate":90, "lifespan":1000 }
         ,{ "id":12, "name":"Long Shot"  , "lifespan":2000 }
+        ,{ "id":13, "name":"Short Lived", "lifespan":500 }
 	]
 }

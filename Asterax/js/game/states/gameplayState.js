@@ -60,23 +60,8 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
         }
         ,
 
-        create: function() {
-            game.renderer.clearBeforeRender = false;
-            game.renderer.roundPixels = true;
-
-            game.scale.setShowAll();
-            game.scale.refresh();
-            game.scale.startFullScreen(true);
-
-            app.renderForOldDevice = !game.device.webGL && game.device.iPad;
-
-            if (!app.renderForOldDevice)
-            {
-                app.background = game.add.tileSprite(0, 0, game.width, game.height, 'background');
-            }
-            game.antialias = !app.renderForOldDevice;
-            game.renderer.clearBeforeRender = app.renderForOldDevice;
-
+        create: function()
+        {
             //	Enable p2 physics
             game.physics.startSystem(Phaser.Physics.P2JS);
 
@@ -85,12 +70,17 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
             //  Make things a bit more bouncey
             game.physics.p2.defaultRestitution = 0.4;
 
+            game.physics.p2.setBoundsToWorld(false, false, false, false, false);
+
+            if (!app.renderForOldDevice)
+            {
+                app.background = game.add.tileSprite(0, 0, game.width, game.height, 'background');
+            }
+
             app.shipCollisionGroup = game.physics.p2.createCollisionGroup();
             app.rocksCollisionGroup = game.physics.p2.createCollisionGroup();
             app.bulletsCollisionGroup = game.physics.p2.createCollisionGroup();
             game.physics.p2.updateBoundsCollisionGroup();
-
-            game.physics.p2.setBoundsToWorld(false, false, false, false, false);
 
             app.cursors = game.input.keyboard.createCursorKeys();
             app.fireButton = game.input.keyboard.addKey(Phaser.Keyboard.C);

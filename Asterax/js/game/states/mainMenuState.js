@@ -14,6 +14,8 @@ define(['Phaser'], function() {
 
         create: function()
         {
+            setupGame();
+
             game.add.text(50, 50, "Asterax", {font:"96px arial", fill:"#ffffff"});
             game.add.text(50, 150, "2014", {font:"48px arial", fill:"#ffffff"});
             var buttons = app.buttons = [
@@ -52,19 +54,6 @@ define(['Phaser'], function() {
 
     function glowButton(button)
     {
-        Object.defineProperty(button, "redTint", {
-            get: function() { return this.tint >> 16; },
-            set: function(value) { this.tint = (this.tint & 0x00ffff) + (value << 16); }
-        });
-        Object.defineProperty(button, "greenTint", {
-            get: function() { return this.tint >> 16; },
-            set: function(value) { this.tint = (this.tint & 0xff00ff) + (value << 8); }
-        });
-        Object.defineProperty(button, "blueTint", {
-            get: function() { return this.tint >> 16; },
-            set: function(value) { this.tint = (this.tint & 0xffff00) + (value << 0); }
-        });
-
         var t = game.add.tween(button);
 
         t.to({blueTint: 0x33, redTint: 0x33, greenTint: 0x99}, 850, Phaser.Easing.Quadratic.InOut, true, 0, Infinity, true);

@@ -100,3 +100,18 @@ app.velocityFromRotation = function (rotation, speed, point)
 	
 	return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
 }
+
+function setupGame()
+{
+    game.renderer.clearBeforeRender = false;
+
+    game.scale.setShowAll();
+    game.scale.refresh();
+    game.scale.startFullScreen(true);
+    game.renderer.roundPixels = true;
+
+    app.renderForOldDevice = !game.device.webGL && game.device.iPad;
+
+    game.antialias = !app.renderForOldDevice;
+    game.renderer.clearBeforeRender = app.renderForOldDevice;
+}

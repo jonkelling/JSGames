@@ -107,6 +107,15 @@ define(['weapon'], function(Weapon) {
                 drawVelocityPolygon(bullet);
             }
 		}
+
+        var age = game.physics.p2.time - bullet.startTime;
+        var mod = age / (bullet.weapon.lifespan / 1000);
+//        mod /= 2;
+//        mod += 0.5;
+        mod = 1 - mod;
+
+//        bullet.blueTint = Math.round(0xff * mod);
+//        bullet.greenTint = Math.round(0xff * mod);
 	};
 	
 	module.prototype.deadBulletUpdate = function(bullet)
