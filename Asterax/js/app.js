@@ -53,11 +53,14 @@ requirejs.config({
 	homingShot: 'game/weapons/homingShot',
 	explodingShot: 'game/weapons/explodingShot',
     scatterBomb:   'game/weapons/scatterBomb',
+    mainMenuState: 'game/states/mainMenuState',
+    gameplayState: 'game/states/gameplayState',
+    creditsState:  'game/states/creditsState',
 	debug:    'game/debug'
   }
 });
 
-require(['create', 'jq', 'Phaser', 'phaserExtensions', 'preload', 'update', 'debug'],
+require(['create', 'jq', 'Phaser', 'phaserExtensions', 'preload', 'update', 'mainMenuState', 'gameplayState', 'creditsState', 'debug'],
 
 
 function( create ) {
@@ -66,7 +69,11 @@ function( create ) {
 	jQuery.getJSON('./assets/config.json', function(data) {
 		var width = data.game.width;
 		var height = data.game.height;
-		game = new Phaser.Game(width, height, Phaser.AUTO, 'Asterax', {preload: require('preload'), create: create.run, update: require('update'), render: render});
+		game = new Phaser.Game(width, height, Phaser.AUTO, 'Asterax');
+
+        game.state.add('MainMenu', require('mainMenuState'), true);
+        game.state.add('Gameplay', require('gameplayState'));
+        game.state.add('Credits', require('creditsState'));
 	});
 	
 });
