@@ -19,18 +19,18 @@ define(['Phaser'], function(){
 	});
 
     Object.defineProperty(PIXI.Sprite.prototype, "redTint", {
-        get: function() { return this.tint >> 16; },
-        set: function(value) { this.tint = (this.tint & 0x00ffff) + (value << 16); }
+        get: function() { return (this.tint & 0xff0000) >> 16; },
+        set: function(value) { this.tint = (this.tint & 0x00ffff) | (value << 16); }
     });
 
     Object.defineProperty(PIXI.Sprite.prototype, "greenTint", {
-        get: function() { return this.tint >> 16; },
-        set: function(value) { this.tint = (this.tint & 0xff00ff) + (value << 8); }
+        get: function() { return (this.tint & 0x00ff00) >> 8; },
+        set: function(value) { this.tint = (this.tint & 0xff00ff) | (value << 8); }
     });
 
     Object.defineProperty(PIXI.Sprite.prototype, "blueTint", {
-        get: function() { return this.tint >> 16; },
-        set: function(value) { this.tint = (this.tint & 0xffff00) + (value << 0); }
+        get: function() { return (this.tint & 0x0000ff) >> 0; },
+        set: function(value) { this.tint = (this.tint & 0xffff00) | (value << 0); }
     });
 	
 	Phaser.Point.prototype.toStringFixed = function()
