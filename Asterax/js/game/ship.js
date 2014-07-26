@@ -14,7 +14,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 		AsteraxSprite.call(this, game, game.width/2, game.height/2, 'ship');
 		
 		this.name = aName ? aName : "A-Ship";
-		this.create();
+		this.events.onAddedToGroup.addOnce(this.create, this);
 	};
 	
 	module.prototype = Object.create(AsteraxSprite.prototype);
@@ -43,7 +43,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 		this.prevVelocity = new Phaser.Point();
 		
 		var weaponClass = require(this.loadout.weapon1.moduleName);
-		this.bullets = new weaponClass();
+		this.bullets = new weaponClass(this.parent);
 //		this.bullets.ship = this;
 		
 		this.bullets.loadWeaponMods(this.loadout.weaponModIds);
@@ -297,7 +297,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 		var shieldSprite2 = game.add.sprite(this.x, this.y, 'shield');
 		var t = game.add.tween(shieldSprite);
 		var t2 = game.add.tween(shieldSprite2);
-		
+
 		shieldSprite.alpha = 0;
 		shieldSprite.anchor.setTo(0.5);
 		shieldSprite2.anchor.setTo(0.5);

@@ -3,8 +3,9 @@ define(['rock'], function(Rock) {
 	
 	var nullAreaSize = {width: 300, height: 200};
 	
-	var module = function() {
-	}
+	var module = function(view) {
+        this.view = view;
+    };
 	
 	module.prototype = {
 		constructor: module,
@@ -12,7 +13,7 @@ define(['rock'], function(Rock) {
 		create: function()
 		{
 			//setTimeout(function() { window.location.reload() }, 1500);
-			this.rocks = getNewGroup();
+			this.rocks = getNewGroup(this.view);
 			
 			for (var i=0; i < 12; i++) {
 				var name = 'rock' + (i % 4);

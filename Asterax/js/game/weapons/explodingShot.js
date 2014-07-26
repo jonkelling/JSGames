@@ -1,9 +1,9 @@
 
 define(['weapon'], function(Weapon) {
 
-	var module = function()
+	var module = function(parent)
 	{
-		Weapon.call(this, "explodingShot");
+		Weapon.call(this, parent, "explodingShot");
 	}
 
 	module.prototype = Object.create(Weapon.prototype);

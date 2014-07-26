@@ -2,8 +2,9 @@ define(['ship', 'loadout'], function (Ship, Loadout) {
 	
 	var engine;
 	
-	var module = function() {
+	var module = function(view) {
 		this.invincible = game.cache.getJSON("config").player.invincible;
+        this.view = view;
 	};
 	
 	module.prototype = {
@@ -11,7 +12,7 @@ define(['ship', 'loadout'], function (Ship, Loadout) {
 		
 		create: function()
 		{
-			this.shipGroup = game.add.group();
+			this.shipGroup = game.add.group(this.view);
 			this.shipGroup.enableBody = true;
 			this.shipGroup.physicsBodyType = Phaser.Physics.P2JS;
 			this.shipGroup.classType = Ship;

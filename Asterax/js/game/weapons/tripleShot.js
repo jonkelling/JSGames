@@ -1,9 +1,9 @@
 
 define(['twinShot', 'weapon'], function(TwinShot, Weapon) {
 
-	var module = function()
+	var module = function(parent)
 	{
-		TwinShot.call(this, "tripleShot");
+		TwinShot.call(this, parent, "tripleShot");
 		
 		this.firingSecondShots = false;
 		this.firingThirdShot = false;

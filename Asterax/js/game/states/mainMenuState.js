@@ -12,15 +12,24 @@ define(['Phaser'], function() {
         }
         ,
 
+        init: function()
+        {
+            setupGlobalKeys();
+
+            app.nButton.onDown.add(startGame);
+            app.enterButton.onDown.add(startGame);
+        }
+        ,
+
         create: function()
         {
             setupGame();
-            setupGlobalKeys();
 
             game.add.text(50, 50, "Asterax", {font:"96px arial", fill:"#ffffff"});
             game.add.text(50, 150, "2014", {font:"48px arial", fill:"#ffffff"});
+
             var buttons = app.buttons = [
-                game.add.button(200, 250, "grayButton", startButtonClicked, this),
+                game.add.button(200, 250, "grayButton", startGame, this),
                 game.add.button(320, 250, "grayButton", creditsButtonClicked, this)
             ];
             var texts = [
@@ -43,7 +52,7 @@ define(['Phaser'], function() {
         }
     }
 
-    function startButtonClicked(button)
+    function startGame()
     {
         game.state.start('Gameplay');
     }

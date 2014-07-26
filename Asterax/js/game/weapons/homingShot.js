@@ -9,9 +9,9 @@ define(['weapon'], function(Weapon) {
     var wobbleInterval = Phaser.Timer.SECOND / 6;
     var wobbleDirection;
 	
-	var module = function(spriteKey, tailSpriteKey)
+	var module = function(parent, spriteKey, tailSpriteKey)
 	{
-		Weapon.call(this, "homingShot", spriteKey, tailSpriteKey);
+		Weapon.call(this, parent, "homingShot", spriteKey, tailSpriteKey);
 
         wobbleDirection = game.math.degToRad(60);
 		

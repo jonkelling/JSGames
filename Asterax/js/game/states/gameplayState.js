@@ -1,5 +1,5 @@
 
-define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], function (Player, Rock, RockGroupController, Loadout) {
+define(['player', 'rock', 'rockGroupController', 'loadout', 'mainMenuView', 'gameplayView'], function (Player, Rock, RockGroupController, Loadout, MainMenuView, GameplayView) {
 
     return {
         preload: function()
@@ -60,7 +60,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
         }
         ,
 
-        create: function()
+        init: function()
         {
             setupGlobalKeys();
 
@@ -73,11 +73,6 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
             game.physics.p2.defaultRestitution = 0.4;
 
             game.physics.p2.setBoundsToWorld(false, false, false, false, false);
-
-            if (!app.renderForOldDevice)
-            {
-                app.background = game.add.tileSprite(0, 0, game.width, game.height, 'background');
-            }
 
             app.shipCollisionGroup = game.physics.p2.createCollisionGroup();
             app.rocksCollisionGroup = game.physics.p2.createCollisionGroup();
@@ -111,24 +106,36 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
                 game.disableStep();
             });
 
-            app.player = new Player();
+            if ($('#debugdivs').length == 0)
+            {
+                $('body').append('<div id="debugdivs" style="position: absolute; left: ' + (game.canvas.offsetWidth + 10) + 'px; top: 20px; width:200px;">' +
+                    // '<input id="engine1button" type="button" value="engine 1"/><br/>' +
+                    // '<input id="engine2button" type="button" value="engine 2"/><br/>' +
+                    // '<input id="engine3button" type="button" value="engine 3"/>' +
+                    '<div id="debugdiv3"></div>' +
+                    '<div id="debugdiv4"></div>' +
+                    '<div id="debugdiv5"></div>' +
+                    '</div>');
+                //
+                // $('#engine1button').click(function() { acceleration = 100; });
+                // $('#engine2button').click(function() { acceleration = 400; });
+                // $('#engine3button').click(function() { acceleration = 800; });
+            }
+        }
+        ,
+
+        create: function()
+        {
+            this.view = new GameplayView();
+
+            if (!app.renderForOldDevice)
+                app.background = game.add.tileSprite(0, 0, game.width, game.height, 'background', 0, this.view);
+
+            app.player = new Player(this.view);
             app.player.create();
 
-            app.rockGroupController = new RockGroupController();
+            app.rockGroupController = new RockGroupController(this.view);
             app.rockGroupController.create();
-
-            $('body').append('<div style="position: absolute; left: ' + (game.canvas.offsetWidth+10) + 'px; top: 20px; width:200px;">' +
-                // '<input id="engine1button" type="button" value="engine 1"/><br/>' +
-                // '<input id="engine2button" type="button" value="engine 2"/><br/>' +
-                // '<input id="engine3button" type="button" value="engine 3"/>' +
-                '<div id="debugdiv3"></div>' +
-                '<div id="debugdiv4"></div>' +
-                '<div id="debugdiv5"></div>' +
-                '</div>');
-            //
-            // $('#engine1button').click(function() { acceleration = 100; });
-            // $('#engine2button').click(function() { acceleration = 400; });
-            // $('#engine3button').click(function() { acceleration = 800; });
         }
         ,
 

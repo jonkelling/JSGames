@@ -9,8 +9,8 @@ define(['AsteraxSprite', 'AutoDestroySprite'], function(AsteraxSprite, AutoDestr
 		this.rockSize = rockSize;
 		
 		this.canHitShip = true;
-		
-		this.create();
+
+        this.events.onAddedToGroup.addOnce(this.create, this);
 	};
 
 	module.prototype = Object.create(AsteraxSprite.prototype);

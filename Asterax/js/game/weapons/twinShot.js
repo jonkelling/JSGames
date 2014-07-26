@@ -1,9 +1,9 @@
 
 define(['weapon'], function(Weapon) {
 
-	var module = function(moduleName)
+	var module = function(parent, moduleName)
 	{
-		Weapon.call(this, moduleName || "twinShot");
+		Weapon.call(this, parent, moduleName || "twinShot");
 		
 		this.firingSecondShot = false;
 	}

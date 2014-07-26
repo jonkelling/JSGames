@@ -4,7 +4,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
     var tailEmitterLifespan = 350;
     var tailEmitterEase = Phaser.Easing.Quadratic.In;
 	
-	var module = function(moduleName, spriteKey, tailSpriteKey)
+	var module = function(parent, moduleName, spriteKey, tailSpriteKey)
 	{
 		Destroyable.call(this);
 
@@ -18,7 +18,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 		
 //		this.ship = app.player.ship;
 		
-		this.group = game.add.group();
+		this.group = game.add.group(parent);
 		
 		this.group.enableBody = true;
 		this.group.physicsBodyType = Phaser.Physics.P2JS;

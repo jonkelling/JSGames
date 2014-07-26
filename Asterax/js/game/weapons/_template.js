@@ -1,9 +1,9 @@
 
 define(['weapon', 'bullet'], function(Weapon/*, Bullet*/) {
 	
-	var module = function()
+	var module = function(parent)
 	{
-		Weapon.call(this, ___moduleName___);
+		Weapon.call(this, parent, ___moduleName___);
 		// this.spriteKey = 'bullet';
 	}
 	
