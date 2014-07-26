@@ -114,4 +114,17 @@ function setupGame()
 
     game.antialias = !app.renderForOldDevice;
     game.renderer.clearBeforeRender = app.renderForOldDevice;
+
+    app.escapeButton = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    app.nButton = game.input.keyboard.addKey(Phaser.Keyboard.N);
+    app.enterButton = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+}
+
+function setupGlobalKeys()
+{
+    app.escapeButton.onDown.add(function() {
+        game.state.current == "MainMenu"
+            ? game.state.start("Gameplay")
+            : game.state.start("MainMenu");
+    });
 }

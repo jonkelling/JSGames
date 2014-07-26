@@ -62,6 +62,8 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
 
         create: function()
         {
+            setupGlobalKeys();
+
             //	Enable p2 physics
             game.physics.startSystem(Phaser.Physics.P2JS);
 

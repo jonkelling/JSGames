@@ -15,6 +15,7 @@ define(['Phaser'], function() {
         create: function()
         {
             setupGame();
+            setupGlobalKeys();
 
             game.add.text(50, 50, "Asterax", {font:"96px arial", fill:"#ffffff"});
             game.add.text(50, 150, "2014", {font:"48px arial", fill:"#ffffff"});
