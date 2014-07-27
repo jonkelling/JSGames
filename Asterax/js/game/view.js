@@ -1,7 +1,8 @@
 
 define(['Phaser'], function() {
 
-    var module = function () {
+    var module = function (_game) {
+        _game = _game || game;
         Phaser.Group.call(this, game);
     };
 

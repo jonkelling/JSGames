@@ -1,9 +1,16 @@
 
-define(['player', 'rock', 'rockGroupController', 'loadout', 'mainMenuView', 'gameplayView'], function (Player, Rock, RockGroupController, Loadout, MainMenuView, GameplayView) {
+define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMenuView', 'gameplayView'], function (Player, Rock, RockGroupController, Loadout, PopupView, MainMenuView, GameplayView) {
 
     return {
         preload: function()
         {
+            game.load.image('blueButton', 'images/blue-button.png');
+            game.load.image('grayButton', 'images/gray-button.png');
+
+            game.load.image('popupEdge', 'images/backgrounds/popupEdge.png');
+            game.load.image('popupLargeCorner', 'images/backgrounds/popupLargeCorner.png');
+            game.load.image('popupSmallCorner', 'images/backgrounds/popupSmallCorner.png');
+
             game.load.spritesheet('ship', 'images/ship/Ship.png', 64, 64);
             game.load.image('shield', 'images/shield.png');
             game.load.image('rock0', 'images/rocks/asteroid_3ds.png');
@@ -106,6 +113,25 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'mainMenuView', 'gam
                 game.disableStep();
             });
 
+            app.escapeButton.onDown.add(function() {
+                if (!this.mainMenuPopupView)
+                {
+                    var mainMenuView = new MainMenuView(this.game);
+
+                    var state = this.state;
+                    state.onShutDownCallback = this.onShutDownCallback;
+
+                    mainMenuView.startGameCallback = function() { this.view.destroy(); state.restart(); };
+                    mainMenuView.startGameCallbackContext = this;
+
+                    this.mainMenuPopupView = new PopupView(this.game, mainMenuView, function()
+                    {
+                        this.mainMenuPopupView = null;
+                        this.game.paused = false;
+                    }, this);
+                }
+            }, this);
+
             if ($('#debugdivs').length == 0)
             {
                 $('body').append('<div id="debugdivs" style="position: absolute; left: ' + (game.canvas.offsetWidth + 10) + 'px; top: 20px; width:200px;">' +
@@ -142,6 +168,14 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'mainMenuView', 'gam
         update: function()
         {
             app.player.update();
+
+        }
+        ,
+
+        onShutDownCallback: function()
+        {
+            if (this.mainMenuPopupView)
+                this.mainMenuPopupView.destroy();
         }
     }
 });

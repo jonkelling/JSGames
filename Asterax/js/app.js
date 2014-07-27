@@ -39,6 +39,7 @@
             TailEmitter: 'game/tailEmitter',
             TailEmitterParticle: 'game/tailEmitterParticle',
             view:     'game/view',
+            popupView: 'game/popupView',
             mainMenuView: 'game/mainMenuView',
             gameplayView: 'game/gameplayView',
             player:   'game/player',
@@ -114,7 +115,7 @@
 
         game.scale.setShowAll();
         game.scale.refresh();
-        game.scale.startFullScreen(true);
+//        game.scale.startFullScreen(true);
         game.renderer.roundPixels = true;
 
         app.renderForOldDevice = !game.device.webGL && game.device.iPad;
@@ -136,10 +137,6 @@
             if (game.state.current == "MainMenu")
             {
                 game.state.start("Gameplay");
-            }
-            else
-            {
-                game.state.getCurrentState().view.visible = !game.state.getCurrentState().view.visible;
             }
         });
     };
