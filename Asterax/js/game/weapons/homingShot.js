@@ -45,12 +45,15 @@ define(['weapon'], function(Weapon) {
 	
 	module.prototype.update = function()
 	{
-		Weapon.prototype.update.apply(this);
-		
-		if (this.group.countLiving() == 0)
-		{
-			game.debug.stop();
-		}
+        if (!game.physics.p2.paused)
+        {
+            Weapon.prototype.update.apply(this);
+
+            if (this.group.countLiving() == 0)
+            {
+                game.debug.stop();
+            }
+        }
 	};
 	
 	module.prototype.aliveBulletUpdate = function(bullet)
@@ -126,7 +129,8 @@ define(['weapon'], function(Weapon) {
 	
 	function updateTargetRocks()
 	{
-		this.group.forEachAlive(updateTargetRock);
+        if (!game.physics.p2.paused)
+		    this.group.forEachAlive(updateTargetRock);
 	}
 	
 	function updateTargetRock(bullet)

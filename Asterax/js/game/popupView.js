@@ -4,8 +4,8 @@ define(['view'], function(View) {
     var popupPadding = 100;
     var borderColor = 2164260863;
 
-    var module = function(game, content, onClosedCallback, onClosedCallbackContext) {
-        View.apply(this, arguments);
+    var module = function(game, parent, content, onClosedCallback, onClosedCallbackContext) {
+        View.apply(this, [game, parent]);
 
         this.content = content;
         this.onClosedCallback = onClosedCallback;
@@ -19,11 +19,13 @@ define(['view'], function(View) {
 
     module.prototype.destroy = function()
     {
-        this.content = null;
+        app.nButton.onDown.remove(closePopupView, this);
+
+        this.content.destroy();
+
+//        this.content = null;
         this.onClosedCallback = null;
         this.onClosedCallbackContext = null;
-
-        app.nButton.onDown.remove(closePopupView, this);
 
         View.prototype.destroy.call(this);
     };
@@ -36,39 +38,7 @@ define(['view'], function(View) {
 
         var contentArea = {x:popupPadding, y:popupPadding, width:this.game.width - (2 * popupPadding), height:this.game.height - (2 * popupPadding)};
 
-        var bmp = this.game.add.bitmapData(this.game.width, this.game.height);
-
-        var x = popupPadding;
-        var y = popupPadding;
-        var w = this.game.width - (2 * x);
-        var h = this.game.height - (2 * y);
-
-        var lgCornerRad = 50;
-        var smCornerRad = 6;
-
-        var rt = { t:-Math.PI/2, r:0, b:Math.PI/2, l:Math.PI };
-
-        bmp.context.lineWidth = 4;
-        bmp.context.strokeStyle = Phaser.Color.unpackPixel(borderColor).rgba;
-        bmp.context.arc(x + lgCornerRad, y + lgCornerRad, lgCornerRad, rt.l, rt.t);
-        bmp.context.lineTo(x + w - smCornerRad, y);
-        bmp.context.arc(x + w - smCornerRad, y + smCornerRad, smCornerRad, rt.t, rt.r);
-        bmp.context.lineTo(x + w, y + h - lgCornerRad);
-        bmp.context.arc(x + w - lgCornerRad, y + h - lgCornerRad, lgCornerRad, rt.r, rt.b);
-        bmp.context.lineTo(x + smCornerRad, y + h);
-        bmp.context.arc(x + smCornerRad, y + h - smCornerRad, smCornerRad, rt.b, rt.l);
-        bmp.context.lineTo(x, y + lgCornerRad);
-        bmp.context.stroke();
-        var grad = bmp.context.createLinearGradient(x, y, x, y + h); //Phaser.Color.createColor(0x33, 0x33, 0x33, 0.5).rgba;
-        // green V
-//        grad.addColorStop(0, Phaser.Color.createColor(0x22, 0x66, 0x22, 0.8).rgba);
-//        grad.addColorStop(1, Phaser.Color.createColor(0x22, 0x66, 0x22, 0.5).rgba);
-        grad.addColorStop(0, Phaser.Color.createColor(0x00, 0x00, 0x00, 0.8).rgba);
-        grad.addColorStop(1, Phaser.Color.createColor(0x00, 0x00, 0x00, 0.7).rgba);
-        bmp.context.fillStyle = grad;
-        bmp.context.fill();
-
-        this.add(this.game.make.sprite(0, 0, bmp));
+        drawPopupBackground.call(this);
 
         this.add(this.content);
 
@@ -79,7 +49,42 @@ define(['view'], function(View) {
         this.content.height = contentArea.height;
     };
 
-    return module;
+
+
+    var controller = function() { };
+
+    controller.prototype =
+    {
+        constructor: controller,
+
+        show: function (game, content, onClosedCallback, onClosedCallbackContext)
+        {
+            this.close();
+            this.currentPopup = new module(game, game.world, content, onClosedCallback, onClosedCallbackContext);
+            this.currentPopup.controller = this;
+        },
+
+        close: function ()
+        {
+            if (this.currentPopup)
+            {
+                if (this.currentPopup.exists)
+                {
+                    closePopupView.call(this.currentPopup);
+                }
+            }
+            this.currentPopup = null;
+        }
+    };
+
+    Object.defineProperty(controller.prototype, "active", {
+        get: function() {
+            return (this.currentPopup && this.currentPopup.exists) ? true : false;
+        }
+    });
+
+    return new controller();
+
 
     function closePopupView() {
         if (this.onClosedCallback)
@@ -120,6 +125,43 @@ define(['view'], function(View) {
             }
             return pxo[ty * this.width + tx];
         }, this, x-padding, y-padding, sprite.width+(2*padding), sprite.height+(2*padding));
+    }
+
+    function drawPopupBackground()
+    {
+        var x = popupPadding;
+        var y = popupPadding;
+        var w = this.game.width - (2 * x);
+        var h = this.game.height - (2 * y);
+
+        var lgCornerRad = 50;
+        var smCornerRad = 6;
+
+        var rt = { t: -Math.PI / 2, r: 0, b: Math.PI / 2, l: Math.PI };
+
+        var bmp = this.game.add.bitmapData(this.game.width, this.game.height);
+
+        bmp.context.lineWidth = 4;
+        bmp.context.strokeStyle = Phaser.Color.unpackPixel(borderColor).rgba;
+        bmp.context.arc(x + lgCornerRad, y + lgCornerRad, lgCornerRad, rt.l, rt.t);
+        bmp.context.lineTo(x + w - smCornerRad, y);
+        bmp.context.arc(x + w - smCornerRad, y + smCornerRad, smCornerRad, rt.t, rt.r);
+        bmp.context.lineTo(x + w, y + h - lgCornerRad);
+        bmp.context.arc(x + w - lgCornerRad, y + h - lgCornerRad, lgCornerRad, rt.r, rt.b);
+        bmp.context.lineTo(x + smCornerRad, y + h);
+        bmp.context.arc(x + smCornerRad, y + h - smCornerRad, smCornerRad, rt.b, rt.l);
+        bmp.context.lineTo(x, y + lgCornerRad);
+        bmp.context.stroke();
+        var grad = bmp.context.createLinearGradient(x, y, x, y + h); //Phaser.Color.createColor(0x33, 0x33, 0x33, 0.5).rgba;
+        // green V
+//        grad.addColorStop(0, Phaser.Color.createColor(0x22, 0x66, 0x22, 0.8).rgba);
+//        grad.addColorStop(1, Phaser.Color.createColor(0x22, 0x66, 0x22, 0.5).rgba);
+        grad.addColorStop(0, Phaser.Color.createColor(0x00, 0x00, 0x00, 0.8).rgba);
+        grad.addColorStop(1, Phaser.Color.createColor(0x00, 0x00, 0x00, 0.7).rgba);
+        bmp.context.fillStyle = grad;
+        bmp.context.fill();
+
+        this.add(this.game.make.sprite(0, 0, bmp));
     }
 
 });

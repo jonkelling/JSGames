@@ -4,10 +4,10 @@ define(['view'], function(View) {
     var grayButtonSize = {width: 125, height: 52};
     var buttonFont = "14px arial";
 
-    var module = function (game) {
-        View.apply(this, arguments);
+    var module = function (game, parent) {
         this.events = new Phaser.Events(this);
         this.events.onAddedToGroup.addOnce(this.createView, this);
+        View.apply(this, arguments);
     };
 
     module.prototype = Object.create(View.prototype);
@@ -20,7 +20,7 @@ define(['view'], function(View) {
         this.add(this.game.add.text(50, 50, "Asterax", {font: "96px arial", fill: "#ffffff"}));
         this.add(this.game.add.text(50, 150, "2014", {font: "48px arial", fill: "#ffffff"}));
 
-        var buttons = app.buttons = [
+        var buttons = [
             this.add(this.game.add.button(200, 250, "grayButton", startGame, this)),
             this.add(this.game.add.button(320, 250, "grayButton", openCredits, this))
         ];

@@ -75,6 +75,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
             game.physics.startSystem(Phaser.Physics.P2JS);
 
             game.physics.p2.setImpactEvents(true);
+//            game.physics.p2.useElapsedTime = true;
 
             //  Make things a bit more bouncey
             game.physics.p2.defaultRestitution = 0.4;
@@ -114,20 +115,22 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
             });
 
             app.escapeButton.onDown.add(function() {
-                if (!this.mainMenuPopupView)
+                if (!PopupView.active)
                 {
                     var mainMenuView = new MainMenuView(this.game);
 
                     var state = this.state;
-                    state.onShutDownCallback = this.onShutDownCallback;
+//                    state.onShutDownCallback = this.onShutDownCallback;
 
                     mainMenuView.startGameCallback = function() { this.view.destroy(); state.restart(); };
                     mainMenuView.startGameCallbackContext = this;
 
-                    this.mainMenuPopupView = new PopupView(this.game, mainMenuView, function()
+//                    this.game.paused = true;
+                    this.game.physics.p2.pause();
+                    PopupView.show(this.game, mainMenuView, function()
                     {
-                        this.mainMenuPopupView = null;
-                        this.game.paused = false;
+                        this.game.physics.p2.resume();
+//                        this.game.paused = false;
                     }, this);
                 }
             }, this);
@@ -172,10 +175,10 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
         }
         ,
 
-        onShutDownCallback: function()
-        {
-            if (this.mainMenuPopupView)
-                this.mainMenuPopupView.destroy();
-        }
+//        onShutDownCallback: function()
+//        {
+//            if (this.mainMenuPopupView)
+//                this.mainMenuPopupView.destroy();
+//        }
     }
 });
