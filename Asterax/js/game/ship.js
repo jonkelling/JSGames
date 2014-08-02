@@ -79,6 +79,11 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 	
 	module.prototype.update = function()
 	{
+        if (!this.exists)
+        {
+            return;
+        }
+
         AsteraxSprite.prototype.update.apply(this, arguments);
 
         if (app.fireButton.isDown && this.bullets.automatic == true)

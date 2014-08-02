@@ -32,6 +32,21 @@ define(['Phaser'], function(){
         get: function() { return (this.tint & 0x0000ff) >> 0; },
         set: function(value) { this.tint = (this.tint & 0xffff00) | (value << 0); }
     });
+
+    // This is so setAllChildren will work when checkAlive == true
+    Object.defineProperty(Phaser.TileSprite.prototype, "alive", {
+        get: function()
+        {
+            if (this._alive == undefined)
+                this._alive = true;
+            return this._alive;
+        }
+        ,
+        set: function(value)
+        {
+            this._alive = value;
+        }
+    });
 	
 	Phaser.Point.prototype.toStringFixed = function()
 	{

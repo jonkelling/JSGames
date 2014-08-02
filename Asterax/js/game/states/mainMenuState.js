@@ -50,7 +50,16 @@ define(['mainMenuView'], function(MainMenuView) {
 
     function startGame()
     {
-        game.state.start('Gameplay');
+        if (this.started)
+        {
+            game.state.current = "Gameplay";
+            game.state.resume();
+        }
+        else
+        {
+            game.state.start('Gameplay');//, false, false);
+        }
+        this.started = this.started || true;
     }
 
     function creditsButtonClicked(button)

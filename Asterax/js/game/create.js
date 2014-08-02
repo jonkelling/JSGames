@@ -40,22 +40,22 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
 			app.testButton2 = game.input.keyboard.addKey(Phaser.Keyboard.G);
 			
 			// game.enableStep();
-			app.testButton.onDown.add(function() {
-				// var _w = require('peaShooter');
-				// var w = new _w();
-				// w.loadWeaponMods([5,1,2]);
-				// game.paused = !game.paused;
-				game.enableStep();
-				game.step();
-				
-				if (app.disableStepTimeout)
-				{
-					window.clearTimeout(app.disableStepTimeout);
-					app.disableStepTimeout = null;
-				}
-				
-				// app.disableStepTimeout = window.setTimeout(function() {game.disableStep();}, 5000);
-			});
+//			app.testButton.onDown.add(function() {
+//				// var _w = require('peaShooter');
+//				// var w = new _w();
+//				// w.loadWeaponMods([5,1,2]);
+//				// game.paused = !game.paused;
+//				game.enableStep();
+//				game.step();
+//
+//				if (app.disableStepTimeout)
+//				{
+//					window.clearTimeout(app.disableStepTimeout);
+//					app.disableStepTimeout = null;
+//				}
+//
+//				// app.disableStepTimeout = window.setTimeout(function() {game.disableStep();}, 5000);
+//			});
 			
 			app.testButton2.onDown.add(function() {
 				game.disableStep();

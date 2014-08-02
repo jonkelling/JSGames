@@ -136,7 +136,7 @@
 //                : game.state.start("MainMenu");
             if (game.state.current == "MainMenu")
             {
-                game.state.start("Gameplay");
+                game.state.start("Gameplay", true, false);
             }
         });
     };

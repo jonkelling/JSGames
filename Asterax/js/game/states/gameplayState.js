@@ -94,12 +94,15 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 
             // game.enableStep();
             app.testButton.onDown.add(function() {
+                this.view.paused = !this.view.paused;
+                return;
+
                 // var _w = require('peaShooter');
                 // var w = new _w();
                 // w.loadWeaponMods([5,1,2]);
                 // game.paused = !game.paused;
-                game.enableStep();
-                game.step();
+                this.game.enableStep();
+                this.game.step();
 
                 if (app.disableStepTimeout)
                 {
@@ -108,7 +111,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
                 }
 
                 // app.disableStepTimeout = window.setTimeout(function() {game.disableStep();}, 5000);
-            });
+            }, this);
 
             app.testButton2.onDown.add(function() {
                 game.disableStep();
@@ -120,17 +123,18 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
                     var mainMenuView = new MainMenuView(this.game);
 
                     var state = this.state;
-//                    state.onShutDownCallback = this.onShutDownCallback;
-
-                    mainMenuView.startGameCallback = function() { this.view.destroy(); state.restart(); };
+                    mainMenuView.startGameCallback = function()
+                    {
+                        this.view.destroy();
+                        this.view = null;
+                        state.restart(true, false);
+                    };
                     mainMenuView.startGameCallbackContext = this;
 
-//                    this.game.paused = true;
-                    this.game.physics.p2.pause();
+                    this.view.paused = true;
                     PopupView.show(this.game, mainMenuView, function()
                     {
-                        this.game.physics.p2.resume();
-//                        this.game.paused = false;
+                        this.view.paused = false;
                     }, this);
                 }
             }, this);
@@ -155,10 +159,19 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 
         create: function()
         {
+            if (this.view)
+            {
+                this.game.world.add(this.view);
+//                this.view.exists = this.view.visible = this.view.alive = true;
+//                this.game.state.start("Gameplay", false, false);
+//                this.game.state.resume();
+                return;
+            }
+
             this.view = new GameplayView();
 
             if (!app.renderForOldDevice)
-                app.background = game.add.tileSprite(0, 0, game.width, game.height, 'background', 0, this.view);
+                app.background = this.add.tileSprite(0, 0, game.width, game.height, 'background', 0, this.view);
 
             app.player = new Player(this.view);
             app.player.create();
@@ -171,9 +184,8 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
         update: function()
         {
             app.player.update();
-
         }
-        ,
+        //,
 
 //        onShutDownCallback: function()
 //        {
