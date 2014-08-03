@@ -62,5 +62,47 @@ define(['Phaser'], function(){
 	{
 		return Phaser.Point.negative(this);
 	}
+
+    /**
+     * Destroys this Group. Removes all children, then removes the container from the display list and nulls references.
+     *
+     * @method Phaser.Group#destroy
+     * @param {boolean} [destroyChildren=true] - Should every child of this Group have its destroy method called?
+     * @param {boolean} [soft=false] - A 'soft destroy' (set to true) doesn't remove this Group from its parent or null the game reference. Set to false and it does.
+     */
+    Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
+
+        if (this.game === null) { return; }
+
+        if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
+        if (typeof soft === 'undefined') { soft = false; }
+
+        this.removeAll(destroyChildren);
+
+        this.cursor = null;
+        this.filters = null;
+
+        if (!soft)
+        {
+            if (this.parent)
+            {
+                this.parent.removeChild(this);
+            }
+
+            this.game = null;
+            this.exists = false;
+
+            if (this.events)
+            {
+                this.events.destroy();
+            }
+        }
+
+    };
+
+//    Phaser.TweenManager.prototype.create = function (object, group)
+//    {
+//        return new Phaser.Tween(object, this.game, this, group);
+//    };
 	
 });

@@ -210,6 +210,11 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 		this.bulletUpdate(bullet);
 		bullet.alive ? this.aliveBulletUpdate(bullet)
 		             : this.deadBulletUpdate(bullet);
+
+        if (bullet.exists && this.config.drawTail === true)
+        {
+            drawTail.call(bullet);
+        }
 	}
 	
 	function _bulletKilled(bullet)
@@ -234,6 +239,91 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
         }
 	}
 
+    function BezierPoint(p)
+    {
+        this.point = p.clone();
+        this.controlPoint = null;
+    }
 
-	
+    function trackTail()
+    {
+        var maxTailPoints = 10;
+        var drawInterval = 100;
+        var cp1CaptureInterval = 40;
+        var cp2CaptureInterval = 60;
+
+        this.lastTailTime = this.lastTailTime || this.game.time.now;
+        this.tailPoints = this.tailPoints || new Phaser.LinkedList();
+
+        if (this.tailPoints.last == null)
+        {
+            this.tailPoints.add(new BezierPoint(this.position));
+            this.tailPoints.last.controlPoint = this.tailPoints.last.point;
+        }
+        else
+        {
+            var bz = this.tailPoints.last;
+            if (bz.controlPoint != null)
+            {
+
+            }
+//            if (this.game.time.now - this.lastTailTime)
+        }
+
+
+        if (this.tailPoints.total > maxTailPoints)
+        {
+            this.tailPoints.remove(this.tailPoints.first);
+        }
+    }
+
+    function drawTail()
+    {
+        var drawInterval = 100;
+        var cp1CaptureInterval = 40;
+        var cp2CaptureInterval = 60;
+        trackTail.call(this);
+
+        var bmd = this.weapon.tailBitmapData;
+        if (!this.weapon.tailBitmapData)
+        {
+            bmd = app.bmd = this.weapon.tailBitmapData = this.weapon.tailBitmapData || this.game.add.bitmapData(this.game.width, this.game.height);
+            this.game.add.sprite(0, 0, bmd);
+            bmd.context.strokeStyle = Phaser.Color.createColor(255, 255, 255, 0.9).rgba;
+            bmd.context.lineWidth = 1;
+            bmd.context.strokeThickness = 1;
+        }
+
+        this.lastTailPosition = this.lastTailPosition || this.position.clone();
+        this.lastTailPositionCP1 = this.lastTailPositionCP1 || new Phaser.Point();
+        this.lastTailPositionCP2 = this.lastTailPositionCP2 || new Phaser.Point();
+        this.lastTailTime = this.lastTailTime || this.game.time.now;
+        var distance = Math.abs(this.lastTailPosition.distance(this.position));
+
+        if (this.game.time.now - this.lastTailTime < cp1CaptureInterval)
+        {
+            this.lastTailPositionCP1.copyFrom(this.position);
+        }
+
+        if (this.game.time.now - this.lastTailTime < cp2CaptureInterval)
+        {
+            this.lastTailPositionCP2.copyFrom(this.position);
+        }
+
+        if (this.game.time.now - this.lastTailTime >= drawInterval)
+        {
+            bmd.clear();
+            bmd.context.moveTo((this.lastTailPosition.x), (this.lastTailPosition.y));
+//            bmd.context.lineTo(Math.round(this.x), Math.round(this.y));
+            var cp2add = new Phaser.Point(10, 10).rotate(0, 0, this.rotationPerp).negative();
+            var cp2 = this.position.clone().add(cp2add.x, cp2add.y);
+//            bmd.context.bezierCurveTo(this.lastTailPositionCP1.x, this.lastTailPositionCP1.y, cp2.x, cp2.y, this.x, this.y);
+            bmd.context.bezierCurveTo(this.lastTailPositionCP1.x, this.lastTailPositionCP1.y, this.lastTailPositionCP2.x, this.lastTailPositionCP2.y, this.x, this.y);
+            bmd.context.stroke();
+            bmd.dirty = true;
+            this.lastTailPosition.copyFrom(this.position);
+            this.lastTailTime = this.game.time.now;
+        }
+    }
+
 });

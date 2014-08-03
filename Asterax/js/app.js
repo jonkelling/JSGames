@@ -34,6 +34,7 @@
             update:   'game/update',
             loadout:  'game/loadout',
             destroyable: 'game/destroyable',
+            AsteraxGame: 'game/asteraxGame',
             AsteraxSprite: 'game/asteraxSprite',
             AutoDestroySprite: 'game/autoDestroySprite',
             TailEmitter: 'game/tailEmitter',
@@ -68,16 +69,16 @@
         }
     });
 
-    require(['create', 'jq', 'Phaser', 'phaserExtensions', 'preload', 'update', 'mainMenuState', 'gameplayState', 'creditsState', 'debug'],
+    require(['jq', 'Phaser', 'phaserExtensions', 'AsteraxGame', 'mainMenuState', 'gameplayState', 'creditsState', 'debug'],
 
 
-    function( create ) {
+    function() {
 
         app.debug = require('debug');
         jQuery.getJSON('./assets/config.json', function(data) {
             var width = data.game.width;
             var height = data.game.height;
-            game = new Phaser.Game(width, height, Phaser.AUTO, 'Asterax');
+            game = new (require('AsteraxGame'))(width, height, Phaser.AUTO, 'Asterax');
 
             game.state.add('MainMenu', require('mainMenuState'), true);
             game.state.add('Gameplay', require('gameplayState'));
