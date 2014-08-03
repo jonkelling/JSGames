@@ -279,6 +279,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
     function drawTail()
     {
+    	return;
         var drawInterval = 100;
         var cp1CaptureInterval = 40;
         var cp2CaptureInterval = 60;

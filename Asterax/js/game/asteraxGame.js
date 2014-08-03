@@ -17,6 +17,10 @@ define(['Phaser'], function() {
         get: function() { return this.state.getCurrentState().view; }
     });
 
+    Object.defineProperty(module.prototype, "rocks", {
+        get: function() { return this.rockGroupController.rocks; }
+    });
+
     return module;
 
 });

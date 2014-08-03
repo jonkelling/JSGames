@@ -43,6 +43,7 @@
             popupView: 'game/popupView',
             mainMenuView: 'game/mainMenuView',
             gameplayView: 'game/gameplayView',
+            hudView:  'game/hudView',
             player:   'game/player',
             ship:     'game/ship',
             shield:   'game/shield',

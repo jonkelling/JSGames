@@ -1,5 +1,5 @@
 
-define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMenuView', 'gameplayView'], function (Player, Rock, RockGroupController, Loadout, PopupView, MainMenuView, GameplayView) {
+define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMenuView', 'gameplayView', 'hudView'], function (Player, Rock, RockGroupController, Loadout, PopupView, MainMenuView, GameplayView, HUDView) {
 
     return {
         preload: function()
@@ -173,17 +173,19 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
             if (!app.renderForOldDevice)
                 app.background = this.add.tileSprite(0, 0, game.width, game.height, 'background', 0, this.view);
 
-            app.player = new Player(this.view);
-            app.player.create();
+            this.game.player = app.player = new Player(this.view);
+            this.game.player.create();
 
-            app.rockGroupController = new RockGroupController(this.view);
-            app.rockGroupController.create();
+            this.game.rockGroupController = app.rockGroupController = new RockGroupController(this.view);
+            this.game.rockGroupController.create();
+            
+            this.view.hud = this.view.add(new HUDView(this.game));
         }
         ,
 
         update: function()
         {
-            app.player.update();
+            this.game.player.update();
         }
         //,
 
