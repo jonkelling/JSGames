@@ -73,8 +73,8 @@
     require(['jq', 'Phaser', 'phaserExtensions', 'AsteraxGame', 'mainMenuState', 'gameplayState', 'creditsState', 'debug'],
 
 
-    function() {
-
+    function()
+    {
         app.debug = require('debug');
         
         jQuery.getJSON('./assets/config.json', function(data) {
