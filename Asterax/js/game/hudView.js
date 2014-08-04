@@ -24,7 +24,10 @@ define(['Phaser'], function() {
    module.prototype.setupView = function()
    {
        //gets called once to setup everything up.
-       this.statusText = this.add(this.game.add.text(50, 20, "..." + this.game.rocks.length, {font: "25px arial", fill: "#ffffff"}));
+       this.statusText1 = this.add(this.game.add.text(50, 18, "..." + this.game.rocks.length, {font: "20px Audiowide", fill: "#ffffff"}));
+       this.statusText2 = this.add(this.game.add.text(250, 18, "..." + this.game.rocks.length, {font: "20px Audiowide", fill: "#ffffff"}));
+       this.statusText3 = this.add(this.game.add.text(450, 18, "..." + this.game.rocks.length, {font: "20px Audiowide", fill: "#ffffff"}));
+       
        
        var bmd = game.add.bitmapData(this.game.width, this.game.height);
        
@@ -43,7 +46,9 @@ define(['Phaser'], function() {
    {
       if (this.game.rocks)
       {
-         this.statusText.text = "lives: " + 1 + "   rocks left: " + this.game.rocks.countLiving() + "   health: " + this.game.player.ship.health + "   Shield: " + this.game.player.ship.loadout.shield.name;
+         this.statusText1.text = "lives: " + 1;
+         this.statusText2.text = "health: " + this.game.player.ship.health;
+         this.statusText3.text = "shield: " + this.game.player.ship.loadout.shield.name;
       }
    };
    
