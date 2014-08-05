@@ -3,7 +3,6 @@ define(['Phaser'], function() {
    
    var module = function()
    {
-       this.events = new Phaser.Events(this);
        this.events.onAddedToGroup.addOnce(this.setupView, this);
        Phaser.Group.apply(this, arguments);
    };
@@ -32,13 +31,17 @@ define(['Phaser'], function() {
        var bmd = game.add.bitmapData(this.game.width, this.game.height);
        
        this.add(this.game.add.sprite(0, 0, bmd));
-       
-       bmd.context.moveTo(100, 100);
-       bmd.context.lineTo(300, 300);
+
+       bmd.context.beginPath();
+       bmd.context.moveTo(10, 50);
+       bmd.context.lineTo(950, 50);
        bmd.context.strokeStyle = Phaser.Color.createColor(0, 255, 0, 1).rgba;
        bmd.context.lineWidth = 2;
        bmd.context.strokeThickness = 2;
        bmd.context.stroke();
+       bmd.context.fillStyle = Phaser.Color.createColor(0, 255, 0, 0.3).rgba;
+       bmd.context.drawRect(10, 2, 950, 38);
+       bmd.context.fill();
        bmd.dirty = true;
    };
    

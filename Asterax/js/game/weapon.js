@@ -3,6 +3,8 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
     var tailEmitterLifespan = 350;
     var tailEmitterEase = Phaser.Easing.Quadratic.In;
+    var BEZIER = 1;
+    var WRAP = 2;
 	
 	var module = function(parent, moduleName, spriteKey, tailSpriteKey)
 	{
@@ -211,7 +213,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 		bullet.alive ? this.aliveBulletUpdate(bullet)
 		             : this.deadBulletUpdate(bullet);
 
-        if (bullet.exists && this.config.drawTail === true)
+        if (bullet.exists && bullet.alive && this.config.drawTail === true)
         {
             drawTail.call(bullet);
         }
@@ -220,6 +222,8 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 	function _bulletKilled(bullet)
 	{
 		this.bulletKilled(bullet);
+        bullet.tailPoints = null;
+        bullet.lastTailTime = null;
 	}
 	
 	function setupNewBullet(bullet)
@@ -243,17 +247,27 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
     {
         this.point = p.clone();
         this.controlPoint = null;
+        this.type = BEZIER;
     }
 
     function trackTail()
     {
-        var maxTailPoints = 10;
-        var drawInterval = 100;
-        var cp1CaptureInterval = 40;
+        var maxTailPoints = 3;
+        var drawInterval = 80;
+        var cp1CaptureInterval = 30;
         var cp2CaptureInterval = 60;
+
+        this.trackTailWrapped = this.trackTailWrapped || this.events.onWrapped.add(function()
+        {
+            this.xxx = this.xxx || 1;
+            if (this.xxx++ < 6)
+                alert();
+        });
 
         this.lastTailTime = this.lastTailTime || this.game.time.now;
         this.tailPoints = this.tailPoints || new Phaser.LinkedList();
+
+        var deltaTime = this.game.time.now - this.lastTailTime;
 
         if (this.tailPoints.last == null)
         {
@@ -262,14 +276,22 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
         }
         else
         {
-            var bz = this.tailPoints.last;
-            if (bz.controlPoint != null)
+            if (this.tailPoints.last.controlPoint == null)
             {
-
+                if (deltaTime >= cp1CaptureInterval)
+                {
+                    this.tailPoints.last.controlPoint = this.position.clone();
+                }
             }
-//            if (this.game.time.now - this.lastTailTime)
+            else
+            {
+                if (deltaTime >= drawInterval)
+                {
+                    this.tailPoints.add(new BezierPoint(this.position));
+                    this.lastTailTime = this.game.time.now;
+                }
+            }
         }
-
 
         if (this.tailPoints.total > maxTailPoints)
         {
@@ -278,6 +300,42 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
     }
 
     function drawTail()
+    {
+        trackTail.call(this);
+
+        var bmd = this.weapon.tailBitmapData;
+        if (!this.weapon.tailBitmapData)
+        {
+            bmd = app.bmd = this.weapon.tailBitmapData = this.weapon.tailBitmapData || this.game.add.bitmapData(this.game.width, this.game.height);
+            this.game.add.sprite(0, 0, bmd);
+            bmd.context.strokeStyle = Phaser.Color.createColor(255, 255, 255, 0.9).rgba;
+            bmd.context.lineWidth = 1;
+            bmd.context.strokeThickness = 1;
+        }
+
+        bmd.clear();
+        bmd.context.beginPath();
+        this.tailPoints.callAll2(function(bz) {
+            if (bz === this.tailPoints.first || bz.type == WRAP)
+            {
+                bmd.context.moveTo(bz.point.x, bz.point.y);
+            }
+            else
+            {
+                bmd.context.lineTo(bz.point.x, bz.point.y);
+                if (bz === this.tailPoints.last)
+                {
+                    bmd.context.lineTo(this.position.x, this.position.y);
+                }
+            }
+//            bmd.context.bezierCurveTo(this.lastTailPositionCP1.x, this.lastTailPositionCP1.y, cp2.x, cp2.y, this.x, this.y);
+//            bmd.context.bezierCurveTo(this.lastTailPositionCP1.x, this.lastTailPositionCP1.y, this.lastTailPositionCP2.x, this.lastTailPositionCP2.y, this.x, this.y);
+        }, this);
+        bmd.context.stroke();
+        bmd.dirty = true;
+    }
+
+    function drawTail2()
     {
     	return;
         var drawInterval = 100;

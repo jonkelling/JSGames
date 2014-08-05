@@ -2,8 +2,7 @@
 define(['Phaser'], function() {
 
     var module = function (_game, parent) {
-        this.events = new Phaser.Events(this);
-        Phaser.Group.apply(this, [_game || game, parent]);
+        Phaser.Group.call(this, _game || game, parent);
         this._paused = false;
     };
 

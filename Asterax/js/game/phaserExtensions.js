@@ -100,9 +100,47 @@ define(['Phaser'], function(){
 
     };
 
-//    Phaser.TweenManager.prototype.create = function (object, group)
-//    {
-//        return new Phaser.Tween(object, this.game, this, group);
-//    };
+    Object.defineProperty(Phaser.Group.prototype, "events", {
+        get: function() {
+            if (this._events == undefined)
+            {
+                this._events = new Phaser.Events(this);
+            }
+            return this._events;
+        },
+        set: function(value) {
+            this._events = value;
+        }
+    });
+
+    Phaser.TweenManager.prototype.create = function (object, group)
+    {
+        var t = new Phaser.Tween(object, this.game, this);
+        t.group = group;
+        return t;
+    };
+
+    Phaser.LinkedList.prototype.callAll2 = function (callback, callbackContext) {
+
+        if (!this.first || !this.last)
+        {
+            return;
+        }
+
+        var entity = this.first;
+
+        do
+        {
+            if (entity)
+            {
+                callback.call(callbackContext, entity);
+            }
+
+            entity = entity.next;
+
+        }
+        while(entity != this.last.next);
+
+    }
 	
 });

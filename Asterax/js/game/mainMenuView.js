@@ -5,7 +5,6 @@ define(['view'], function(View) {
     var buttonFont = "14px arial";
 
     var module = function (game, parent) {
-        this.events = new Phaser.Events(this);
         this.events.onAddedToGroup.addOnce(this.createView, this);
         this.startGameCallback = null;
         this.startGameCallbackContext = null;

@@ -101,7 +101,7 @@
                     }
                 };
                 
-                game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+                game.load.script('webfont', 'js/lib/webfont.js');
             } });
             
         });

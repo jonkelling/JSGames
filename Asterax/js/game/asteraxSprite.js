@@ -6,7 +6,9 @@ define(['Phaser'], function() {
 		game.physics.p2.enable(this, app.showPolygons);
 		this.smoothed = !app.renderForOldDevice;
 		this.anchor.setTo(0.5);
-	}
+
+        this.events.onWrapped = new Phaser.Signal();
+	};
 	
 	module.prototype = Object.create(Phaser.Sprite.prototype);
 	module.prototype.constructor = module;
@@ -18,7 +20,17 @@ define(['Phaser'], function() {
 	
 	module.prototype.wrap = function()
 	{
+        if (!this.exists)
+        {
+            return;
+        }
+        var saveX = this.body.x;
+        var saveY = this.body.y;
 		this.game.world.wrap(this.body, Math.round(Math.max(this.width, this.height) / 2)-1, false);
+        if (this.body.x != saveX || this.body.y != saveY)
+        {
+            this.events.onWrapped.dispatch(this);
+        }
 	};
 	
 	module.prototype.angleTo = function(sprite, asDegrees)
@@ -29,6 +41,13 @@ define(['Phaser'], function() {
 		}
 		return this.position.angle(sprite, asDegrees)//+app.PIOver2;
 	};
+
+    module.prototype.destroy = function(destroyChildren)
+    {
+        this.events.onPreWrap.dispose();
+        this.events.onWrapped.dispose();
+        Phaser.Sprite.prototype.destroy.apply(this, arguments);
+    };
 
 	Object.defineProperty(module.prototype, "anglePerp", {
 		get: function() { return this.angle - 90; }
