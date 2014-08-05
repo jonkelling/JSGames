@@ -259,9 +259,6 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
         this.trackTailWrapped = this.trackTailWrapped || this.events.onWrapped.add(function()
         {
-            this.xxx = this.xxx || 1;
-            if (this.xxx++ < 6)
-                alert();
         });
 
         this.lastTailTime = this.lastTailTime || this.game.time.now;
