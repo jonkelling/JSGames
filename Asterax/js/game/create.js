@@ -10,7 +10,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'peaShooter'], funct
 			game.scale.refresh();
 			game.scale.startFullScreen(true);
 			
-			app.renderForOldDevice = !game.device.webGL && game.device.iPad;
+			app.renderForOldDevice = !game.device.webGL || game.device.iPad || game.device.iPhone;
 			
 			if (!app.renderForOldDevice)
 			{

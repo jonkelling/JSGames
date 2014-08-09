@@ -69,13 +69,16 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 
         init: function()
         {
+//            this.game.time.advancedTiming = true;
+//            setTimeout(function(){this.game.time.fpsMin = 100;},1000);
+
             setupGlobalKeys();
 
             //	Enable p2 physics
             game.physics.startSystem(Phaser.Physics.P2JS);
 
             game.physics.p2.setImpactEvents(true);
-//            game.physics.p2.useElapsedTime = true;
+            //game.physics.p2.useElapsedTime = true;
 
             //  Make things a bit more bouncey
             game.physics.p2.defaultRestitution = 0.4;
@@ -94,8 +97,8 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 
             // game.enableStep();
             app.testButton.onDown.add(function() {
-                this.view.paused = !this.view.paused;
-                return;
+//                this.view.paused = !this.view.paused;
+//                return;
 
                 // var _w = require('peaShooter');
                 // var w = new _w();
@@ -117,27 +120,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
                 game.disableStep();
             });
 
-            app.escapeButton.onDown.add(function() {
-                if (!PopupView.active)
-                {
-                    var mainMenuView = new MainMenuView(this.game);
-
-                    var state = this.state;
-                    mainMenuView.startGameCallback = function()
-                    {
-                        this.view.destroy();
-                        this.view = null;
-                        state.restart(true, false);
-                    };
-                    mainMenuView.startGameCallbackContext = this;
-
-                    this.view.paused = true;
-                    PopupView.show(this.game, mainMenuView, function()
-                    {
-                        this.view.paused = false;
-                    }, this);
-                }
-            }, this);
+            app.escapeButton.onDown.add(showNewGameScreen, this);
 
             if ($('#debugdivs').length == 0)
             {
@@ -176,6 +159,8 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
             this.game.player = app.player = new Player(this.view);
             this.game.player.create();
 
+            this.game.player.ship.events.onKilled.addOnce(showNewGameScreen, this);
+
             this.game.rockGroupController = app.rockGroupController = new RockGroupController(this.view);
             this.game.rockGroupController.create();
             
@@ -186,6 +171,11 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
         update: function()
         {
             this.game.player.update();
+
+            if (this.game.time.advancedTiming)
+            {
+                app.debug.writeDebug([this.game.time.fps, this.game.time.fpsMin, this.game.time.msMax]);
+            }
         }
         //,
 
@@ -194,5 +184,27 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 //            if (this.mainMenuPopupView)
 //                this.mainMenuPopupView.destroy();
 //        }
+    }
+
+    function showNewGameScreen() {
+        if (!PopupView.active)
+        {
+            var mainMenuView = new MainMenuView(this.game);
+
+            var state = this.state;
+            mainMenuView.startGameCallback = function()
+            {
+                this.view.destroy();
+                this.view = null;
+                state.restart(true, false);
+            };
+            mainMenuView.startGameCallbackContext = this;
+
+            this.view.paused = true;
+            PopupView.show(this.game, mainMenuView, function()
+            {
+                this.view.paused = false;
+            }, this);
+        }
     }
 });

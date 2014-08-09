@@ -7,9 +7,9 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		this.body.setCollisionGroup(app.bulletsCollisionGroup);
 		this.body.collides([app.rocksCollisionGroup]);
 		this.body.onBeginContact.add(hitRock, this);
-		
+
 		this.weapon = null;
-	}
+	};
 	
 	module.prototype = Object.create(AsteraxSprite.prototype);
 	module.prototype.constructor = module;

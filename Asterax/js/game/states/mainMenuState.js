@@ -28,6 +28,7 @@ define(['mainMenuView'], function(MainMenuView) {
         create: function ()
         {
             this.view = new MainMenuView(this.game);
+            setupGame();
             this.view.createView();
             this.view.startGameCallback = startGame;
             this.view.openCreditsCallback = creditsButtonClicked;

@@ -137,10 +137,13 @@
 
         game.scale.setShowAll();
         game.scale.refresh();
-//        game.scale.startFullScreen(true);
+
+        game.scale.startFullScreen(true);
+        setTimeout(function() { game.scale.startFullScreen(true); }, 5000);
+
         game.renderer.roundPixels = true;
 
-        app.renderForOldDevice = !game.device.webGL && game.device.iPad;
+        app.renderForOldDevice = !game.device.webGL || game.device.iPad || game.device.iPhone;
 
         game.antialias = !app.renderForOldDevice;
         game.renderer.clearBeforeRender = app.renderForOldDevice;

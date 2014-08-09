@@ -24,12 +24,14 @@ define(['Phaser'], function() {
         {
             return;
         }
-        var saveX = this.body.x;
-        var saveY = this.body.y;
-		this.game.world.wrap(this.body, Math.round(Math.max(this.width, this.height) / 2)-1, false);
-        if (this.body.x != saveX || this.body.y != saveY)
+        var saveX = this.x;
+        var saveY = this.y;
+		this.game.world.wrap(this, Math.round(Math.max(this.width, this.height) / 2)-1, false);
+        if (this.x != saveX || this.y != saveY)
         {
-            this.events.onWrapped.dispatch(this);
+            this.body.x = this.x;
+            this.body.y = this.y;
+            this.events.onWrapped.dispatch(new Phaser.Point(saveX, saveY));
         }
 	};
 	
@@ -39,12 +41,11 @@ define(['Phaser'], function() {
 		{
 			sprite = sprite.position;
 		}
-		return this.position.angle(sprite, asDegrees)//+app.PIOver2;
+		return this.position.angle(sprite, asDegrees);//+app.PIOver2;
 	};
 
     module.prototype.destroy = function(destroyChildren)
     {
-        this.events.onPreWrap.dispose();
         this.events.onWrapped.dispose();
         Phaser.Sprite.prototype.destroy.apply(this, arguments);
     };

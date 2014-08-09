@@ -36,6 +36,7 @@ define(['AsteraxSprite', 'AutoDestroySprite'], function(AsteraxSprite, AutoDestr
 		this.body.angularDamping = 0;
 		this.body.damping = 0;
 		this.body.mass = this.stats.mass;
+        this.body.kinematic = true;
 		this.body.clearShapes();
 		this.body.addPhaserPolygon('rocks', this.name);
 

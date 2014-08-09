@@ -16,8 +16,6 @@ define(['view'], function(View) {
 
     module.prototype.createView = function()
     {
-        setupGame();
-
         this.add(this.game.add.text(50, 50, "Asterax", {font: "96px arial", fill: "#ffffff"}));
         this.add(this.game.add.text(50, 150, "2014", {font: "48px arial", fill: "#ffffff"}));
 

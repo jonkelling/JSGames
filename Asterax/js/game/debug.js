@@ -24,7 +24,7 @@ define(['Phaser'], function () {
 		writeDebug: function (texts) {
 			for (var i = 0; i < texts.length; i++) {
 				var y = i * 18;
-				game.debug.text(texts[i]+"", 20, 450 + y);
+				game.debug.text(texts[i]+"", 20, 150 + y);
 			}
 		}
 		,
