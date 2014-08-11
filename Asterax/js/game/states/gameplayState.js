@@ -1,5 +1,5 @@
 
-define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMenuView', 'gameplayView', 'hudView'], function (Player, Rock, RockGroupController, Loadout, PopupView, MainMenuView, GameplayView, HUDView) {
+define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMenuView', 'gameplayView', 'hudView','BinarySerpentsFilter','BlurXFilter','BlurYFilter','CausticLightFilter','CheckerWaveFilter','ColorBarsFilter','FireFilter','GrayFilter','HueRotateFilter','LightBeamFilter','MarbleFilter','PlasmaFilter','TunnelFilter'], function (Player, Rock, RockGroupController, Loadout, PopupView, MainMenuView, GameplayView, HUDView) {
 
     return {
         preload: function()
@@ -69,7 +69,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 
         init: function()
         {
-//            this.game.time.advancedTiming = true;
+            this.game.time.advancedTiming = true;
 //            setTimeout(function(){this.game.time.fpsMin = 100;},1000);
 
             setupGlobalKeys();
@@ -78,7 +78,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
             game.physics.startSystem(Phaser.Physics.P2JS);
 
             game.physics.p2.setImpactEvents(true);
-            //game.physics.p2.useElapsedTime = true;
+            game.physics.p2.useElapsedTime = app.renderForOldDevice;
 
             //  Make things a bit more bouncey
             game.physics.p2.defaultRestitution = 0.4;
@@ -165,12 +165,40 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
             this.game.rockGroupController.create();
             
             this.view.hud = this.view.add(new HUDView(this.game));
+//            var lb = new Phaser.Filter.CheckerWave(this.game);
+//            this.view.hud.filters = [lb];
+
+//            var fire = new Phaser.Filter.Tunnel(this.game);
+
+//            this.game.player.ship.filters = [new Phaser.Filter.Tunnel(this.game)];
+
+//            this.fireSprite = this.view.create(0, 0);
+//            this.view.sendToBack(this.fireSprite);
+//            this.view.moveUp(this.fireSprite);
+//            this.fireSprite.width = this.game.width;
+//            this.fireSprite.height = this.game.height;
+//            this.view.filters = [fire];
+//            this.fireSprite.filters[0].alpha = 0.1;
+
+            window.b = this.game.add.bitmapData(this.game.width, this.game.height);
+            this.view.create(0, 0, window.b);
+            window.c = window.b.context;
+            window.c.strokeStyle = Phaser.Color.createColor(255, 255, 255, 1).rgba;
+            window.c.lineWidth = 1;
+            window.c.strokeThickness = 1;
         }
         ,
 
         update: function()
         {
             this.game.player.update();
+//            this.view.filters[0].update();
+//            this.fireSprite.filters[0].update();
+
+            if (this.game.player.ship.filters)
+            {
+                this.game.player.ship.filters[0].update();
+            }
 
             if (this.game.time.advancedTiming)
             {

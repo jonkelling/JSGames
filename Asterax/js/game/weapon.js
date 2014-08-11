@@ -1,13 +1,15 @@
 
-define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'TailEmitterParticle'], function(Destroyable, AsteraxSprite, Loadout, Bullet, TailEmitter, TailEmitterParticle) {
+define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'TailEmitterParticle', 'BlurXFilter', 'BlurYFilter'], function(Destroyable, AsteraxSprite, Loadout, Bullet, TailEmitter, TailEmitterParticle) {
 
     var tailEmitterLifespan = 350;
     var tailEmitterEase = Phaser.Easing.Quadratic.In;
 
-    var tailPointLifespan = 2000;
-    var drawInterval = 50;
+    var tailPointLifespan = 200;
+    var drawInterval = 30;
     var cp1CaptureInterval = drawInterval / 3;
     var cp2CaptureInterval = drawInterval - cp1CaptureInterval;
+
+    var useMultipleSpritesForTail = false;
 
 	var module = function(parent, moduleName, spriteKey, tailSpriteKey)
 	{
@@ -231,8 +233,8 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 	function _bulletKilled(bullet)
 	{
 		this.bulletKilled(bullet);
-//        bullet.tailPoints = null;
-//        bullet.lastTailTime = null;
+        bullet.tailPoints = null;
+        bullet.lastTailTime = null;
 	}
 	
 	function setupNewBullet(bullet)
@@ -254,7 +256,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
     function BezierPoint(p, timeAdded)
     {
-        this.point = p.clone();
+        this.point = p;
         this.controlPoint = null;
         this.controlPoint2 = null;
         this.endPoint = false;
@@ -283,7 +285,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
                 var bz1 = this.tailPoints.add(new BezierPoint(lastPosition, this.game.time.now));
                 bz1.endPoint = true;
 
-                var bz2 = this.tailPoints.add(new BezierPoint(this.position, this.game.time.now));
+                var bz2 = this.tailPoints.add(new BezierPoint(this.position.clone(), this.game.time.now));
                 bz2.controlPoint = bz2.point;
                 bz2.controlPoint2 = bz2.point;
             }
@@ -323,7 +325,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
             {
                 if (deltaTime >= drawInterval)
                 {
-                    this.tailPoints.add(new BezierPoint(this.position, this.game.time.now));
+                    this.tailPoints.add(new BezierPoint(this.position.clone(), this.game.time.now));
                     this.lastTailTime = this.game.time.now;
                 }
             }
@@ -356,45 +358,43 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
         expireTail.call(this);
 
-        this.weapon.newTailBitmapData = this.weapon.newTailBitmapData || function()
+        if (!this.weapon.tailBitmapSpriteGroup && useMultipleSpritesForTail)
         {
-            var sprite = this.weapon.tailBitmapSpriteGroup.getFirstExists(false);
-
-            if (sprite && !sprite.exists && !sprite.alive)
-            {
-                sprite.key.clear();
-            }
-            else {
-                for (var i = 0; i < 1; i++)
-                {
-                    var bmd = this.game.add.bitmapData(60, 60);//this.game.width, this.game.height);
-//                    bmd.context.strokeStyle = Phaser.Color.createColor(255, 255, 255, 0.9).rgba;
-//                    bmd.context.lineWidth = 1;
-//                    bmd.context.strokeThickness = 1;
-                    sprite = this.weapon.tailBitmapSpriteGroup.create(0, 0, bmd, null, false);
-                    sprite.smoothed = !app.renderForOldDevice;
-                    sprite.bmd = bmd;
-                }
-            }
-            var ret = {sprite:sprite,bmd:sprite.bmd};
-            return ret;
-        };
-
-        if (!this.weapon.tailBitmapSpriteGroup)
-        {
-            this.weapon.tailBitmapSpriteGroup = this.game.add.group();
+            this.weapon.tailBitmapSpriteGroup = this.game.add.group(this.game.currentView);
             this.weapon.tailBitmapSpriteGroup.enableBody = false;
         }
 
-//        var bmd = this.weapon.tailBitmapData;
-//        if (!this.weapon.tailBitmapData)
-//        {
-//            bmd = app.bmd = this.weapon.tailBitmapData = this.weapon.tailBitmapData || this.game.add.bitmapData(this.game.width, this.game.height);
-//            bmd.context.strokeStyle = Phaser.Color.createColor(255, 255, 255, 0.9).rgba;
-//            bmd.context.lineWidth = 1;
-//            bmd.context.strokeThickness = 1;
-//            this.game.add.sprite(0, 0, bmd);
-//        }
+        var bmd = this.weapon.tailBitmapData;
+        if (!this.weapon.tailBitmapData)
+        {
+            bmd = this.weapon.tailBitmapData = {};
+            bmd.clear = function() { this.context.clear(); this.context.lineStyle(1, 0xffffffff, 1.0); };
+            bmd.context = this.game.add.graphics(0, 0, this.game.currentView);
+            bmd.context.lineStyle(1, 0xffffffff, 1.0);
+            bmd.context.beginPath = function() {  };
+            bmd.context.stroke = function() {};
+            return;
+
+            bmd = app.bmd = this.weapon.tailBitmapData = this.weapon.tailBitmapData || this.game.add.bitmapData(this.game.width, this.game.height);
+            bmd.context.strokeStyle = Phaser.Color.createColor(255, 255, 255, 0.9).rgba;
+            bmd.context.lineWidth = 3;
+            bmd.context.strokeThickness = 1;
+            var s = this.game.add.sprite(0, 0, bmd);
+            s.smoothed = !app.renderForOldDevice;
+//            s.filters = [new Phaser.Filter.BlurX(this.game), new Phaser.Filter.BlurY(this.game)];
+//            s.filters[0].blur *= 0.4;
+//            s.filters[1].blur *= 0.4;
+            s.destroy = function()
+            {
+                if (this.filters)
+                {
+                    this.filters[0].destroy();
+                    this.filters[1].destroy();
+                }
+                this.key.destroy();
+                Phaser.Sprite.prototype.destroy.call(this);
+            };
+        }
 
         this.tailPoints.callAll2(function(bz) {
             if (bz.sprite && bz.sprite.exists && bz.sprite.alive)
@@ -404,81 +404,89 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
             }
             else
             {
-                var x = this.weapon.newTailBitmapData.call(this);
-                var bmd = x.bmd;
-                bz.sprite = x.sprite;
+                if (useMultipleSpritesForTail)
+                {
+                    var x = newTailBitmapData.call(this);
+                    bmd = x.bmd;
+                    bz.sprite = x.sprite;
+                }
 
                 if (bz === this.tailPoints.first || bz.prev.endPoint === true)
                 {
+                    bmd.context.moveTo(bz.point.x, bz.point.y);
                 }
                 else {
-                    var tx1 = [Math.round(Math.min(bz.prev.point.x, bz.point.x, bz.prev.controlPoint.x, bz.prev.controlPoint2.x)), Math.round(Math.min(bz.prev.point.y, bz.point.y, bz.prev.controlPoint.y, bz.prev.controlPoint2.y))];
-                    var tx1m = [Math.round(Math.max(bz.prev.point.x, bz.point.x, bz.prev.controlPoint.x, bz.prev.controlPoint2.x)), Math.round(Math.max(bz.prev.point.y, bz.point.y, bz.prev.controlPoint.y, bz.prev.controlPoint2.y))];
+//                    var tx1 = [(Math.min(bz.prev.point.x, bz.point.x, bz.prev.controlPoint.x, bz.prev.controlPoint2.x)), (Math.min(bz.prev.point.y, bz.point.y, bz.prev.controlPoint.y, bz.prev.controlPoint2.y))];
+//                    var tx1m = [(Math.max(bz.prev.point.x, bz.point.x, bz.prev.controlPoint.x, bz.prev.controlPoint2.x)), (Math.max(bz.prev.point.y, bz.point.y, bz.prev.controlPoint.y, bz.prev.controlPoint2.y))];
 
                     var padding = 2;
 
-//                    bmd.clear();
-//                    bmd.refreshBuffer();
-//                    bmd.resize(Math.ceil(Math.max(0,1, tx1m[0]-tx1[0])), Math.ceil(Math.max(0,1, tx1m[1]-tx1[1])));
-//                    bmd.clear();
-                    setupTailBitmapData(bmd);
-//                    bz.sprite.width = bmd.width;
-//                    bz.sprite.height = bmd.height;
-//                    bz.sprite.reset(tx1[0], tx1[1]);
-                    bz.sprite.revive();
-                    bz.sprite.x = tx1[0] - padding;
-                    bz.sprite.y = tx1[1] - padding;
-//                    bz.sprite.loadTexture(bmd);
-//                    bmd.clear();
+                    if (useMultipleSpritesForTail)
+                    {
+//                      bmd.clear();
+//                      bmd.refreshBuffer();
+//                      bmd.resize(Math.ceil(Math.max(0,1, tx1m[0]-tx1[0])), Math.ceil(Math.max(0,1, tx1m[1]-tx1[1])));
+//                      bmd.clear();
+                        setupTailBitmapData(bmd);
+//                      bz.sprite.width = bmd.width;
+//                      bz.sprite.height = bmd.height;
+//                      bz.sprite.reset(tx1[0], tx1[1]);
+                        bz.sprite.revive();
+                        bz.sprite.x = tx1[0] - padding;
+                        bz.sprite.y = tx1[1] - padding;
+//                      bz.sprite.loadTexture(bmd);
+//                      bmd.clear();
+                    }
 
 //                    this.weapon.counter = this.weapon.counter || 1;
 //                    if (this.weapon.counter++ > 100)
 //                        return;
 
                     bmd.context.beginPath();
-                    bmd.context.translate(-tx1[0] + padding, -tx1[1] + padding);
-                    bmd.context.moveTo(bz.prev.point.x, bz.prev.point.y);
+                    if (useMultipleSpritesForTail)
+                        bmd.context.translate(-tx1[0] + padding, -tx1[1] + padding);
+//                    bmd.context.moveTo(bz.prev.point.x, bz.prev.point.y);
                     bmd.context.bezierCurveTo((bz.prev.controlPoint.x), (bz.prev.controlPoint.y), (bz.prev.controlPoint2.x), (bz.prev.controlPoint2.y), (bz.point.x), (bz.point.y));
-                    bmd.context.translate(tx1[0] - padding, tx1[1] - padding);
+                    if (useMultipleSpritesForTail)
+                        bmd.context.translate(tx1[0] - padding, tx1[1] - padding);
                     bmd.context.stroke();
 
-                    if (false && bz === this.tailPoints.last && this.exists)
+                    if (bz === this.tailPoints.last && this.exists && !useMultipleSpritesForTail)
                     {
-
                         if (!bz.controlPoint) {
-                            var tx = [Math.min(bz.point.x, this.x), Math.min(bz.point.y, this.y)];
-                            var txm = [Math.max(bz.point.x, this.x), Math.max(bz.point.y, this.y)];
-                            bmd.resize(Math.ceil(Math.max(1,txm[0]-tx[0])), Math.ceil(Math.max(1,txm[1]-tx[1])));
-                            bz.sprite.reset(tx[0], tx[1]);
-                            bz.sprite.loadTexture(bmd);
-                            setupTailBitmapData(bmd);
+//                            var tx = [Math.min(bz.point.x, this.x), Math.min(bz.point.y, this.y)];
+//                            var txm = [Math.max(bz.point.x, this.x), Math.max(bz.point.y, this.y)];
+//                            bmd.resize(Math.ceil(Math.max(1,txm[0]-tx[0])), Math.ceil(Math.max(1,txm[1]-tx[1])));
+//                            bz.sprite.reset(tx[0], tx[1]);
+//                            bz.sprite.loadTexture(bmd);
+//                            setupTailBitmapData(bmd);
                             bmd.context.beginPath();
-                            bmd.context.translate(-tx[0], -tx[1]);
-                            bmd.context.moveTo(bz.point.x, bz.point.y);
+//                            bmd.context.translate(-tx[0], -tx[1]);
+//                            bmd.context.moveTo(bz.point.x, bz.point.y);
                             bmd.context.lineTo(this.x, this.y);
                         }
                         else if (!bz.controlPoint2) {
-                            var tx = [Math.min(bz.point.x, bz.controlPoint.x, this.x), Math.min(bz.point.y, bz.controlPoint.y, this.y)];
-                            var txm = [Math.max(bz.point.x, bz.controlPoint.x, this.x), Math.max(bz.point.y, bz.controlPoint.y, this.y)];
-                            bmd.resize(Math.ceil(Math.max(1,txm[0]-tx[0])), Math.ceil(Math.max(1,txm[1]-tx[1])));
-                            bz.sprite.reset(tx[0], tx[1]);
-                            bz.sprite.loadTexture(bmd);
-                            setupTailBitmapData(bmd);
+//                            var tx = [Math.min(bz.point.x, bz.controlPoint.x, this.x), Math.min(bz.point.y, bz.controlPoint.y, this.y)];
+//                            var txm = [Math.max(bz.point.x, bz.controlPoint.x, this.x), Math.max(bz.point.y, bz.controlPoint.y, this.y)];
+//                            bmd.resize(Math.ceil(Math.max(1,txm[0]-tx[0])), Math.ceil(Math.max(1,txm[1]-tx[1])));
+//                            bz.sprite.reset(tx[0], tx[1]);
+//                            bz.sprite.loadTexture(bmd);
+//                            setupTailBitmapData(bmd);
                             bmd.context.beginPath();
-                            bmd.context.translate(-tx[0], -tx[1]);
-                            bmd.context.moveTo(bz.point.x, bz.point.y);
+//                            bmd.context.translate(-tx[0], -tx[1]);
+//                            bmd.context.moveTo(bz.point.x, bz.point.y);
                             bmd.context.quadraticCurveTo(bz.controlPoint.x, bz.controlPoint.y, this.x, this.y);
                         }
                         else {
-                            var tx = [Math.min(bz.point.x, bz.controlPoint.x, bz.controlPoint2.x, this.x), Math.min(bz.point.y, bz.controlPoint.y, bz.controlPoint2.y, this.y)];
-                            var txm = [Math.max(bz.point.x, bz.controlPoint.x, bz.controlPoint2.x, this.x), Math.max(bz.point.y, bz.controlPoint.y, bz.controlPoint2.y, this.y)];
-                            bmd.resize(Math.ceil(Math.max(1,txm[0]-tx[0])), Math.ceil(Math.max(1,txm[1]-tx[1])));
-                            bz.sprite.reset(tx[0], tx[1]);
-                            bz.sprite.loadTexture(bmd);
-                            setupTailBitmapData(bmd);
+//                            var tx = [Math.min(bz.point.x, bz.controlPoint.x, bz.controlPoint2.x, this.x), Math.min(bz.point.y, bz.controlPoint.y, bz.controlPoint2.y, this.y)];
+//                            var txm = [Math.max(bz.point.x, bz.controlPoint.x, bz.controlPoint2.x, this.x), Math.max(bz.point.y, bz.controlPoint.y, bz.controlPoint2.y, this.y)];
+//                            bmd.resize(Math.ceil(Math.max(1,txm[0]-tx[0])), Math.ceil(Math.max(1,txm[1]-tx[1])));
+//                            bz.sprite.reset(tx[0], tx[1]);
+//                            bz.sprite.loadTexture(bmd);
+//                            setupTailBitmapData(bmd);
                             bmd.context.beginPath();
-                            bmd.context.translate(-tx[0], -tx[1]);
-                            bmd.context.moveTo(bz.point.x, bz.point.y);
+//                            bmd.context.translate(-tx[0], -tx[1]);
+//                            bmd.context.moveTo(bz.point.x, bz.point.y);
                             bmd.context.bezierCurveTo(bz.controlPoint.x, bz.controlPoint.y, bz.controlPoint2.x, bz.controlPoint2.y, this.x, this.y);
                         }
 
@@ -494,6 +502,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
     function setupTailBitmapData(bmd)
     {
+        bmd.context.lineStyle(1, 0xffffff, 1.0);
         bmd.context.strokeStyle = Phaser.Color.createColor(255, 255, 255, 1).rgba;
 //        if (bmd.context.lineWidth)
 //            bmd.context.lineWidth += 0.1;
@@ -503,5 +512,39 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 //            bmd.context.strokeThickness += 0.1;
 //        else
             bmd.context.strokeThickness = 1;
+    }
+
+    function newTailBitmapData()
+    {
+        var sprite = this.weapon.tailBitmapSpriteGroup.getFirstExists(false);
+
+        if (sprite && !sprite.exists && !sprite.alive)
+        {
+            sprite.key.clear();
+        }
+        else {
+            for (var i = 0; i < 1; i++)
+            {
+                var bmd = this.game.add.bitmapData(60, 60);//this.game.width, this.game.height);
+//                    bmd.context.strokeStyle = Phaser.Color.createColor(255, 255, 255, 0.9).rgba;
+//                    bmd.context.lineWidth = 1;
+//                    bmd.context.strokeThickness = 1;
+                sprite = this.weapon.tailBitmapSpriteGroup.create(0, 0, bmd, null, false);
+                sprite.smoothed = !app.renderForOldDevice;
+                sprite.bmd = bmd;
+//                    sprite.filters = [new Phaser.Filter.BlurX(this.game), new Phaser.Filter.BlurY(this.game)];
+                sprite.destroy = function()
+                {
+                    if (this.filters)
+                    {
+                        this.filters[0].destroy();
+                        this.filters[1].destroy();
+                    }
+                    this.key.destroy();
+                    Phaser.Sprite.prototype.destroy.call(this);
+                };
+            }
+        }
+        return {sprite: sprite, bmd: sprite.bmd};
     }
 });

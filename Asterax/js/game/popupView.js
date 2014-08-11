@@ -45,8 +45,8 @@ define(['view'], function(View) {
         this.content.x = contentArea.x;
         this.content.y = contentArea.y;
 
-        this.content.width = contentArea.width;
-        this.content.height = contentArea.height;
+//        this.content.width = contentArea.width;
+//        this.content.height = contentArea.height;
     };
 
 

@@ -62,11 +62,41 @@
             gameplayState: 'game/states/gameplayState',
             creditsState:  'game/states/creditsState',
             debug:    'game/debug'
+
+           ,BinarySerpentsFilter: 'filters/BinarySerpents'
+           ,BlurXFilter:          'filters/BlurX'
+           ,BlurYFilter:          'filters/BlurY'
+           ,CausticLightFilter:   'filters/CausticLight'
+           ,CheckerWaveFilter:    'filters/CheckerWave'
+           ,ColorBarsFilter:      'filters/ColorBars'
+           ,FireFilter:           'filters/Fire'
+           ,GrayFilter:           'filters/Gray'
+           ,HueRotateFilter:      'filters/HueRotate'
+           ,LightBeamFilter:      'filters/LightBeam'
+           ,MarbleFilter:         'filters/Marble'
+           ,PlasmaFilter:         'filters/Plasma'
+           ,SampleFilter:         'filters/SampleFilter'
+           ,TunnelFilter:         'filters/Tunnel'
         },
         shim: {
             'Phaser': {
                 exports: 'Phaser'
             }
+
+            ,BinarySerpentsFilter: { deps: ['Phaser'] }
+            ,BlurXFilter:          { deps: ['Phaser'] }
+            ,BlurYFilter:          { deps: ['Phaser'] }
+            ,CausticLightFilter:   { deps: ['Phaser'] }
+            ,CheckerWaveFilter:    { deps: ['Phaser'] }
+            ,ColorBarsFilter:      { deps: ['Phaser'] }
+            ,FireFilter:           { deps: ['Phaser'] }
+            ,GrayFilter:           { deps: ['Phaser'] }
+            ,HueRotateFilter:      { deps: ['Phaser'] }
+            ,LightBeamFilter:      { deps: ['Phaser'] }
+            ,MarbleFilter:         { deps: ['Phaser'] }
+            ,PlasmaFilter:         { deps: ['Phaser'] }
+            ,SampleFilterFilter:   { deps: ['Phaser'] }
+            ,TunnelFilter:         { deps: ['Phaser'] }
         }
     });
 
@@ -143,7 +173,7 @@
 
         game.renderer.roundPixels = true;
 
-        app.renderForOldDevice = !game.device.webGL || game.device.iPad || game.device.iPhone;
+        app.renderForOldDevice = !game.device.webGL || game.device.iPad;// || game.device.iPhone;
 
         game.antialias = !app.renderForOldDevice;
         game.renderer.clearBeforeRender = app.renderForOldDevice;
