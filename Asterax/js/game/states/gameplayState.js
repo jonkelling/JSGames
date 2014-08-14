@@ -222,7 +222,8 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
             var state = this.state;
             mainMenuView.startGameCallback = function()
             {
-                this.view.destroy();
+                if (this.view)
+                    this.view.destroy();
                 this.view = null;
                 state.restart(true, false);
             };

@@ -120,6 +120,60 @@ define(['Phaser'], function(){
         return t;
     };
 
+    /**
+     * Removes the given element from this linked list if it exists.
+     *
+     * @method Phaser.LinkedList#remove
+     * @param {object} child - The child to be removed from the list.
+     */
+    Phaser.LinkedList.prototype.remove = function (child)
+    {
+        if (child.destroy)
+        {
+            child.destroy();
+        }
+
+        if (this.total === 1)
+        {
+            this.reset();
+            child.next = child.prev = null;
+            return;
+        }
+
+        if (child === this.first)
+        {
+            // It was 'first', make 'first' point to first.next
+            this.first = this.first.next;
+        }
+        else if (child === this.last)
+        {
+            // It was 'last', make 'last' point to last.prev
+            this.last = this.last.prev;
+        }
+
+        if (child.prev)
+        {
+            // make child.prev.next point to childs.next instead of child
+            child.prev.next = child.next;
+        }
+
+        if (child.next)
+        {
+            // make child.next.prev point to child.prev instead of child
+            child.next.prev = child.prev;
+        }
+
+        child.next = child.prev = null;
+
+        if (this.first === null)
+        {
+            this.last = null;
+        }
+
+        this.total--;
+
+    };
+
     Phaser.LinkedList.prototype.callAll2 = function (callback, callbackContext) {
 
         if (!this.first || !this.last)
@@ -235,6 +289,75 @@ define(['Phaser'], function(){
         }
 
     }
+
+    /**
+     * Calculate the points for a bezier curve.
+     *
+     * @method bezierCurveTo
+     * @param  {number}   cpX    Control point x
+     * @param  {number}   cpY    Control point y
+     * @param  {number}   cpX2   Second Control point x
+     * @param  {number}   cpY2   Second Control point y
+     * @param  {number}   toX    Destination point x
+     * @param  {number}   toY    Destination point y
+     * @return {PIXI.Graphics}
+     */
+    PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY, getLineStyleCallback, getLineStyleCallbackContext)
+    {
+        if( this.currentPath.points.length === 0)this.moveTo(0,0);
+
+        var n = 20,
+            dt,
+            dt2,
+            dt3,
+            t2,
+            t3,
+            points = this.currentPath.points;
+
+        var fromX = points[points.length-2];
+        var fromY = points[points.length-1];
+
+        var j = 0;
+
+        for (var i=1; i<n; i++)
+        {
+            j = i / n;
+
+            dt = (1 - j);
+            dt2 = dt * dt;
+            dt3 = dt2 * dt;
+
+            t2 = j * j;
+            t3 = t2 * j;
+
+            var x = dt3 * fromX + 3 * dt2 * j * cpX + 3 * dt * t2 * cpX2 + t3 * toX;
+            var y = dt3 * fromY + 3 * dt2 * j * cpY + 3 * dt * t2 * cpY2 + t3 * toY;
+
+            if (getLineStyleCallback)
+            {
+                var ret = getLineStyleCallback.call(getLineStyleCallbackContext, (i - 1) / (n - 1));
+
+                this.lineTo(x, y);
+                this.lineStyle(ret.lineWidth, ret.color, ret.alpha);
+                this.moveTo(x, y);
+
+//                this.currentPath.lineWidth = ret.lineWidth;
+//                this.currentPath.lineColor = ret.color;
+//                this.currentPath.lineAlpha = ret.alpha;
+//
+//                this.graphicsData.push(this.currentPath);
+            }
+            else
+            {
+                points.push(x, y);
+            }
+
+        }
+
+        this.dirty = true;
+
+        return this;
+    };
 
 
 });

@@ -50,8 +50,8 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 			       a >  b ?  1 : 0;
 		});
 
-		for (var i = 0; i < modIds.length; i++) {
-			mods.push(Loadout.getWeaponMod(modIds[i]));
+		for (var modIdsIndex = 0; modIdsIndex < modIds.length; modIdsIndex++) {
+			mods.push(Loadout.getWeaponMod(modIds[modIdsIndex]));
 		}
 
 		// var defaults = Loadout.getWeaponMod(1);
@@ -208,6 +208,31 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
             return app.player.ship;
         }
     });
+
+    function BezierPoint(game, p, timeAdded)
+    {
+        this.game = game;
+        this.point = p;
+        this.controlPoint = null;
+        this.controlPoint2 = null;
+        this.endPoint = false;
+        this.timeAdded = timeAdded;
+        this.sprite = null;
+    }
+
+//    BezierPoint.prototype = Object.create(Destroyable.prototype);
+//    BezierPoint.prototype.constructor = BezierPoint;
+
+    BezierPoint.prototype.destroy = function()
+    {
+        this.game = null;
+    };
+
+    Object.defineProperty(BezierPoint.prototype, "timeToLive", {
+        get: function() {
+            return (this.game.time.now - this.timeAdded);
+        }
+    });
 	
 	return module;
 	
@@ -253,16 +278,6 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
             bullet.tailEmitter.start(false, tailEmitterLifespan, 5);
         }
 	}
-
-    function BezierPoint(p, timeAdded)
-    {
-        this.point = p;
-        this.controlPoint = null;
-        this.controlPoint2 = null;
-        this.endPoint = false;
-        this.timeAdded = timeAdded;
-        this.sprite = null;
-    }
 
     function trackTail()
     {
@@ -368,14 +383,17 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
         if (!this.weapon.tailBitmapData)
         {
             bmd = this.weapon.tailBitmapData = {};
-            bmd.clear = function() { this.context.clear(); this.context.lineStyle(1, 0xffffffff, 1.0); };
+            bmd.clear = function() { this.context.clear(); this.context.lineStyle(2.2, 0xffffffff, 1.0); };
             bmd.context = this.game.add.graphics(0, 0, this.game.currentView);
-            bmd.context.lineStyle(1, 0xffffffff, 1.0);
+//            bmd.context.lineStyle(2.2, 0xffffffff, 1.0);
             bmd.context.beginPath = function() {  };
             bmd.context.stroke = function() {};
+//            bmd.context.filters = [new Phaser.Filter.BlurX(this.game), new Phaser.Filter.BlurY(this.game)];
+//            bmd.context.filters[0].blur *= 0.2;
+//            bmd.context.filters[1].blur *= 0.2;
             return;
 
-            bmd = app.bmd = this.weapon.tailBitmapData = this.weapon.tailBitmapData || this.game.add.bitmapData(this.game.width, this.game.height);
+            /*bmd = app.bmd = this.weapon.tailBitmapData = this.weapon.tailBitmapData || this.game.add.bitmapData(this.game.width, this.game.height);
             bmd.context.strokeStyle = Phaser.Color.createColor(255, 255, 255, 0.9).rgba;
             bmd.context.lineWidth = 3;
             bmd.context.strokeThickness = 1;
@@ -393,7 +411,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
                 }
                 this.key.destroy();
                 Phaser.Sprite.prototype.destroy.call(this);
-            };
+            };*/
         }
 
         this.tailPoints.callAll2(function(bz) {
@@ -442,14 +460,29 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 //                    if (this.weapon.counter++ > 100)
 //                        return;
 
-                    bmd.context.beginPath();
-                    if (useMultipleSpritesForTail)
-                        bmd.context.translate(-tx1[0] + padding, -tx1[1] + padding);
-//                    bmd.context.moveTo(bz.prev.point.x, bz.prev.point.y);
-                    bmd.context.bezierCurveTo((bz.prev.controlPoint.x), (bz.prev.controlPoint.y), (bz.prev.controlPoint2.x), (bz.prev.controlPoint2.y), (bz.point.x), (bz.point.y));
-                    if (useMultipleSpritesForTail)
-                        bmd.context.translate(tx1[0] - padding, tx1[1] - padding);
-                    bmd.context.stroke();
+                    if (bz.prev == this.tailPoints.first)
+                    {
+                        var getLineStyleCallback = function(f)
+                        {
+                            return {lineWidth:1, color:0xff0000, alpha:(f)};
+//                            bmd.context.lineStyle(1, 0xffffff, (1-f));
+                        };
+                        bmd.context.bezierCurveTo((bz.prev.controlPoint.x), (bz.prev.controlPoint.y),
+                                                  (bz.prev.controlPoint2.x), (bz.prev.controlPoint2.y),
+                                                  (bz.point.x), (bz.point.y),
+                                                  getLineStyleCallback, this);
+                    }
+                    else
+                    {
+                        bmd.context.beginPath();
+                        if (useMultipleSpritesForTail)
+                            bmd.context.translate(-tx1[0] + padding, -tx1[1] + padding);
+//                        bmd.context.moveTo(bz.prev.point.x, bz.prev.point.y);
+                        bmd.context.bezierCurveTo((bz.prev.controlPoint.x), (bz.prev.controlPoint.y), (bz.prev.controlPoint2.x), (bz.prev.controlPoint2.y), (bz.point.x), (bz.point.y));
+                        if (useMultipleSpritesForTail)
+                            bmd.context.translate(tx1[0] - padding, tx1[1] - padding);
+                        bmd.context.stroke();
+                    }
 
                     if (bz === this.tailPoints.last && this.exists && !useMultipleSpritesForTail)
                     {
