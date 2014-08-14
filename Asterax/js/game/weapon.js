@@ -209,14 +209,15 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
         }
     });
 
-    function BezierPoint(game, p, timeAdded)
+    function BezierPoint(game, p, lifespan)
     {
         this.game = game;
         this.point = p;
         this.controlPoint = null;
         this.controlPoint2 = null;
         this.endPoint = false;
-        this.timeAdded = timeAdded;
+        this.timeAdded = this.game.time.now;
+        this.lifespan = lifespan;
         this.sprite = null;
     }
 
@@ -230,7 +231,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
     Object.defineProperty(BezierPoint.prototype, "timeToLive", {
         get: function() {
-            return (this.game.time.now - this.timeAdded);
+            return this.lifespan - (this.game.time.now - this.timeAdded);
         }
     });
 	
@@ -297,10 +298,10 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
                     }
                 }
 
-                var bz1 = this.tailPoints.add(new BezierPoint(lastPosition, this.game.time.now));
+                var bz1 = this.tailPoints.add(new BezierPoint(this.game, lastPosition, tailPointLifespan));
                 bz1.endPoint = true;
 
-                var bz2 = this.tailPoints.add(new BezierPoint(this.position.clone(), this.game.time.now));
+                var bz2 = this.tailPoints.add(new BezierPoint(this.game, this.position.clone(), tailPointLifespan));
                 bz2.controlPoint = bz2.point;
                 bz2.controlPoint2 = bz2.point;
             }
@@ -313,7 +314,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
         if (this.tailPoints.last == null)
         {
-            this.tailPoints.add(new BezierPoint(this.position.clone(), this.game.time.now));
+            this.tailPoints.add(new BezierPoint(this.game, this.position.clone(), tailPointLifespan));
         }
         else
         {
@@ -340,7 +341,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
             {
                 if (deltaTime >= drawInterval)
                 {
-                    this.tailPoints.add(new BezierPoint(this.position.clone(), this.game.time.now));
+                    this.tailPoints.add(new BezierPoint(this.game, this.position.clone(), tailPointLifespan));
                     this.lastTailTime = this.game.time.now;
                 }
             }
@@ -349,7 +350,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
     function expireTail()
     {
-        while (this.tailPoints.first && (this.game.time.now - this.tailPoints.first.timeAdded) > tailPointLifespan)
+        while (this.tailPoints.first && this.tailPoints.first.timeToLive <= 0)
         {
             if (this.tailPoints.first.sprite)
             {
