@@ -23,6 +23,22 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 		// drawThrustDirectionLine(this);
 		this.body.rotation = saveRotation;
 	};
+
+    module.prototype.destroy = function(destroyChildren)
+    {
+        if (this.tailEmitter)
+        {
+            this.tailEmitter.destroy(true);
+            this.tailEmitter = null;
+        }
+        if (this.tailPoints)
+        {
+            this.tailPoints.destroy();
+            this.tailPoints = null;
+        }
+        this.weapon = null;
+        AsteraxSprite.prototype.destroy.apply(this, arguments);
+    };
 	
 	Object.defineProperty(module.prototype, "center", {
 		get: function() {

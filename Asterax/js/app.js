@@ -37,6 +37,7 @@
             AsteraxGame: 'game/asteraxGame',
             AsteraxSprite: 'game/asteraxSprite',
             AutoDestroySprite: 'game/autoDestroySprite',
+            LinkedList2: 'game/linkedList2',
             TailEmitter: 'game/tailEmitter',
             TailEmitterParticle: 'game/tailEmitterParticle',
             view:     'game/view',

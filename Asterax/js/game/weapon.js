@@ -1,5 +1,5 @@
 
-define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'TailEmitterParticle', 'BlurXFilter', 'BlurYFilter'], function(Destroyable, AsteraxSprite, Loadout, Bullet, TailEmitter, TailEmitterParticle) {
+define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'TailEmitterParticle', 'LinkedList2', 'BlurXFilter', 'BlurYFilter'], function(Destroyable, AsteraxSprite, Loadout, Bullet, TailEmitter, TailEmitterParticle, LinkedList2) {
 
     var tailEmitterLifespan = 350;
     var tailEmitterEase = Phaser.Easing.Quadratic.In;
@@ -16,29 +16,34 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 		Destroyable.call(this);
 
         this.config = Loadout.getWeaponByModuleName(moduleName);
-		
+
 		this.moduleName = moduleName;
 		this.spriteKey = spriteKey || this.config.spriteKey || 'bullet';
 		this.tailSpriteKey = tailSpriteKey || this.config.tailSpriteKey;
 		this.canFire = true;
 		this.skipOneShot = false;
-		
+
 //		this.ship = app.player.ship;
-		
+
 		this.group = game.add.group(parent);
-		
+
 		this.group.enableBody = true;
 		this.group.physicsBodyType = Phaser.Physics.P2JS;
 		this.group.classType = this.getBulletClass();
-		
-		this.loadWeaponMods([1]);
 
-		this.destroyables.push(this.group);
+		this.loadWeaponMods([1]);
 	};
-	
+
 	module.prototype = Object.create(Destroyable.prototype);
 	module.prototype.constructor = module;
-	
+
+    module.prototype.destroy = function ()
+    {
+        this.config = null;
+        this.group = null;
+        Destroyable.prototype.destroy.apply(this, arguments);
+    };
+
 	module.prototype.loadWeaponMods = function(modIds)
 	{
 		var mods = [];
@@ -55,7 +60,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 		}
 
 		// var defaults = Loadout.getWeaponMod(1);
-		// 
+		//
 		// this.safe = defaults.safe;
 		// this.mass = defaults.mass;
 		// this.fireRate = defaults.fireRate;
@@ -74,7 +79,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 			if (mod.lifespan != undefined) { this.lifespan = mod.lifespan; }
 			if (mod.automatic != undefined) { this.automatic = mod.automatic; }
 		}
-		
+
 		this.group.removeAll();
 		if (this.group.length == 0)
 		{
@@ -82,7 +87,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 			this.group.forEach(setupNewBullet, this);
 		}
 	};
-	
+
 	module.prototype.update = function()
 	{
         if (this.tailBitmapData)
@@ -91,16 +96,16 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
         }
 		this.group.forEach(_bulletUpdate, this);
 	};
-	
+
 	module.prototype.createSprites = function()
 	{
 		this.group.createMultiple(this.maxLiveBullets, this.spriteKey);
 	};
-	
+
 	module.prototype.fire = function(force)
 	{
 		var nextBullet = this.group.getFirstDead();
-		
+
 		if (!nextBullet)
 		{
 			this.skipOneShot = true;
@@ -135,7 +140,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
         return nextBullet;
 	};
-	
+
 	module.prototype.setupNextBullet = function(nextBullet)
 	{
 		nextBullet.lifespan = this.lifespan;
@@ -143,7 +148,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 		nextBullet.body.damping = 0;
 		nextBullet.body.angularDamping = 0;
 		nextBullet.body.mass = this.mass;
-		
+
 		nextBullet.body.angle = this.ship.body.angle;
 		nextBullet.body.moveForward(this.speed);
 		nextBullet.body.data.velocity[0] += this.ship.body.data.velocity[0];
@@ -153,50 +158,50 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 	module.prototype.beforeFire = function(bullet)
 	{
 	};
-	
+
 	module.prototype.afterFire = function(bullet)
 	{
 		bullet.fireTime = game.time.now;
 		bullet.firePosition = bullet.position.clone();
 	};
-	
+
 	module.prototype.bulletUpdate = function(bullet)
 	{
 	};
-	
+
 	module.prototype.aliveBulletUpdate = function(bullet)
 	{
 		var timeDiff = game.time.now - bullet.fireTime;
 		app.debug.writeDebug3(timeDiff + ": " + bullet.firePosition.distance(bullet.position));
 		app.debug.writeDebug4(bullet.speed);
 	};
-	
+
 	module.prototype.deadBulletUpdate = function(bullet)
 	{
 	};
-	
+
 	module.prototype.beforeHitRock = function(bullet, rock)
 	{
 	};
-	
+
 	module.prototype.afterHitRock = function(bullet, rock)
 	{
 	};
-	
+
 	module.prototype.getBulletClass = function()
 	{
 		return Bullet;
 	};
-	
+
 	module.prototype.bulletKilled = function(bullet)
 	{
 	};
-	
+
 	Object.defineProperty(module.prototype, "prop", {
 		get: function() { return null; },
 		set: function(value) { }
 	});
-	
+
 	Object.defineProperty(module.prototype, "pxm", {
 		get: function() {
 			return game.physics.p2.pxm(this.speed);
@@ -219,7 +224,15 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
         this.timeAdded = this.game.time.now;
         this.lifespan = lifespan;
         this.sprite = null;
+//        this.lifeTimer = this.game.time.events.add(this.lifespan, killBezierPoint, this);
+//        this.alive = true;
     }
+
+//    function killBezierPoint()
+//    {
+//        this.alive = false;
+//        this.lifeTimer.pendingDelete = true;
+//    }
 
 //    BezierPoint.prototype = Object.create(Destroyable.prototype);
 //    BezierPoint.prototype.constructor = BezierPoint;
@@ -227,6 +240,12 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
     BezierPoint.prototype.destroy = function()
     {
         this.game = null;
+
+//        if (this.lifeTimer)
+//        {
+//            this.lifeTimer.pendingDelete = true;
+//            this.lifeTimer = null;
+//        }
     };
 
     Object.defineProperty(BezierPoint.prototype, "timeToLive", {
@@ -234,14 +253,14 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
             return this.lifespan - (this.game.time.now - this.timeAdded);
         }
     });
-	
+
 	return module;
-	
+
 	function setCanFire()
 	{
 		this.canFire = true;
 	}
-	
+
 	function _bulletUpdate(bullet)
 	{
 		this.bulletUpdate(bullet);
@@ -255,14 +274,14 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
             drawTail.call(bullet);
         }
 	}
-	
+
 	function _bulletKilled(bullet)
 	{
 		this.bulletKilled(bullet);
         bullet.tailPoints = null;
         bullet.lastTailTime = null;
 	}
-	
+
 	function setupNewBullet(bullet)
 	{
 		bullet.weapon = this;
@@ -307,7 +326,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
             }
         }, this);
 
-        this.tailPoints = this.tailPoints || new Phaser.LinkedList();
+        this.tailPoints = this.tailPoints || new LinkedList2();
         this.lastTailTime = (this.tailPoints.last && this.tailPoints.last.timeAdded) ? this.tailPoints.last.timeAdded : this.game.time.now;
 
         var deltaTime = this.game.time.now - this.lastTailTime;
@@ -351,6 +370,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
     function expireTail()
     {
         while (this.tailPoints.first && this.tailPoints.first.timeToLive <= 0)
+//        while (this.tailPoints.first && !this.tailPoints.first.alive)
         {
             if (this.tailPoints.first.sprite)
             {
