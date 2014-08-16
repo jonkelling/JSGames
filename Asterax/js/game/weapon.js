@@ -4,8 +4,8 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
     var tailEmitterLifespan = 350;
     var tailEmitterEase = Phaser.Easing.Quadratic.In;
 
-    var tailPointLifespan = 200;
-    var drawInterval = 30;
+    var tailPointLifespan = 1000;
+    var drawInterval = 150;
     var cp1CaptureInterval = drawInterval / 3;
     var cp2CaptureInterval = drawInterval - cp1CaptureInterval;
 
@@ -278,7 +278,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 	function _bulletKilled(bullet)
 	{
 		this.bulletKilled(bullet);
-        bullet.tailPoints = null;
+        bullet.tailPoints.reset();
         bullet.lastTailTime = null;
 	}
 
@@ -452,9 +452,14 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
                 if (bz === this.tailPoints.first || bz.prev.endPoint === true)
                 {
+                    if (this.tailPoints.total == 1)
+                        bmd.context.lineStyle(1, 0xff0000, 1);
+                    else
+                        bmd.context.lineStyle(1, 0, 0);
                     bmd.context.moveTo(bz.point.x, bz.point.y);
                 }
-                else {
+                else
+                {
 //                    var tx1 = [(Math.min(bz.prev.point.x, bz.point.x, bz.prev.controlPoint.x, bz.prev.controlPoint2.x)), (Math.min(bz.prev.point.y, bz.point.y, bz.prev.controlPoint.y, bz.prev.controlPoint2.y))];
 //                    var tx1m = [(Math.max(bz.prev.point.x, bz.point.x, bz.prev.controlPoint.x, bz.prev.controlPoint2.x)), (Math.max(bz.prev.point.y, bz.point.y, bz.prev.controlPoint.y, bz.prev.controlPoint2.y))];
 
@@ -485,13 +490,15 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
                     {
                         var getLineStyleCallback = function(f)
                         {
-                            return {lineWidth:1, color:0xff0000, alpha:(f)};
+                            var ttlRatio = 1 - (this.timeToLive / this.lifespan);
+                            return {lineWidth:1, color:0xff0000, alpha:f};
+//                            return {lineWidth:1, color:0xff0000, alpha:(Math.max(0, f - ttlRatio))};
 //                            bmd.context.lineStyle(1, 0xffffff, (1-f));
                         };
                         bmd.context.bezierCurveTo((bz.prev.controlPoint.x), (bz.prev.controlPoint.y),
                                                   (bz.prev.controlPoint2.x), (bz.prev.controlPoint2.y),
                                                   (bz.point.x), (bz.point.y),
-                                                  getLineStyleCallback, this);
+                                                  getLineStyleCallback, bz);
                     }
                     else
                     {
@@ -504,51 +511,53 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
                             bmd.context.translate(tx1[0] - padding, tx1[1] - padding);
                         bmd.context.stroke();
                     }
+                }
 
-                    if (bz === this.tailPoints.last && this.exists && !useMultipleSpritesForTail)
-                    {
-                        if (!bz.controlPoint) {
+                if (bz === this.tailPoints.last && this.exists && !useMultipleSpritesForTail)
+                {
+//                    bmd.context.lineStyle(3, 0xff0000, 1);
+//                    bmd.context.moveTo(bz.point.x, bz.point.y);
+                    if (!bz.controlPoint) {
 //                            var tx = [Math.min(bz.point.x, this.x), Math.min(bz.point.y, this.y)];
 //                            var txm = [Math.max(bz.point.x, this.x), Math.max(bz.point.y, this.y)];
 //                            bmd.resize(Math.ceil(Math.max(1,txm[0]-tx[0])), Math.ceil(Math.max(1,txm[1]-tx[1])));
 //                            bz.sprite.reset(tx[0], tx[1]);
 //                            bz.sprite.loadTexture(bmd);
 //                            setupTailBitmapData(bmd);
-                            bmd.context.beginPath();
+                        bmd.context.beginPath();
 //                            bmd.context.translate(-tx[0], -tx[1]);
 //                            bmd.context.moveTo(bz.point.x, bz.point.y);
-                            bmd.context.lineTo(this.x, this.y);
-                        }
-                        else if (!bz.controlPoint2) {
+                        bmd.context.lineTo(this.x, this.y);
+                    }
+                    else if (!bz.controlPoint2) {
 //                            var tx = [Math.min(bz.point.x, bz.controlPoint.x, this.x), Math.min(bz.point.y, bz.controlPoint.y, this.y)];
 //                            var txm = [Math.max(bz.point.x, bz.controlPoint.x, this.x), Math.max(bz.point.y, bz.controlPoint.y, this.y)];
 //                            bmd.resize(Math.ceil(Math.max(1,txm[0]-tx[0])), Math.ceil(Math.max(1,txm[1]-tx[1])));
 //                            bz.sprite.reset(tx[0], tx[1]);
 //                            bz.sprite.loadTexture(bmd);
 //                            setupTailBitmapData(bmd);
-                            bmd.context.beginPath();
+                        bmd.context.beginPath();
 //                            bmd.context.translate(-tx[0], -tx[1]);
 //                            bmd.context.moveTo(bz.point.x, bz.point.y);
-                            bmd.context.quadraticCurveTo(bz.controlPoint.x, bz.controlPoint.y, this.x, this.y);
-                        }
-                        else {
+                        bmd.context.quadraticCurveTo(bz.controlPoint.x, bz.controlPoint.y, this.x, this.y);
+                    }
+                    else {
 //                            var tx = [Math.min(bz.point.x, bz.controlPoint.x, bz.controlPoint2.x, this.x), Math.min(bz.point.y, bz.controlPoint.y, bz.controlPoint2.y, this.y)];
 //                            var txm = [Math.max(bz.point.x, bz.controlPoint.x, bz.controlPoint2.x, this.x), Math.max(bz.point.y, bz.controlPoint.y, bz.controlPoint2.y, this.y)];
 //                            bmd.resize(Math.ceil(Math.max(1,txm[0]-tx[0])), Math.ceil(Math.max(1,txm[1]-tx[1])));
 //                            bz.sprite.reset(tx[0], tx[1]);
 //                            bz.sprite.loadTexture(bmd);
 //                            setupTailBitmapData(bmd);
-                            bmd.context.beginPath();
+                        bmd.context.beginPath();
 //                            bmd.context.translate(-tx[0], -tx[1]);
 //                            bmd.context.moveTo(bz.point.x, bz.point.y);
-                            bmd.context.bezierCurveTo(bz.controlPoint.x, bz.controlPoint.y, bz.controlPoint2.x, bz.controlPoint2.y, this.x, this.y);
-                        }
-
-                        bmd.context.stroke();
+                        bmd.context.bezierCurveTo(bz.controlPoint.x, bz.controlPoint.y, bz.controlPoint2.x, bz.controlPoint2.y, this.x, this.y);
                     }
 
-                    bmd.dirty = true;
+                    bmd.context.stroke();
                 }
+
+                bmd.dirty = true;
             }
         }, this);
 //        bmd.dirty = true;

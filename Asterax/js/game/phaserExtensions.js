@@ -233,11 +233,11 @@ define(['Phaser'], function(){
             dt2,
             dt3,
             t2,
-            t3,
-            points = this.currentPath.points;
+            t3;
+//            points = this.currentPath.points;
 
-        var fromX = points[points.length-2];
-        var fromY = points[points.length-1];
+        var fromX = this.currentPath.points[this.currentPath.points.length-2];
+        var fromY = this.currentPath.points[this.currentPath.points.length-1];
 
         var j = 0;
 
@@ -257,27 +257,26 @@ define(['Phaser'], function(){
 
             if (getLineStyleCallback)
             {
-                var ret = getLineStyleCallback.call(getLineStyleCallbackContext, (i - 1) / (n - 1));
+                var f = (i - 1) / (n - 2);
+                var ret = getLineStyleCallback.call(getLineStyleCallbackContext, f);
+
+                var debugColor = Phaser.Color.HSLtoRGB(f, 0.5, 0.5);
+//                this.game.debug.geom(new Phaser.Point(x, y), debugColor.rgba);
 
                 if (this.lineWidth != ret.lineWidth || this.lineColor != ret.color || this.lineAlpha != ret.alpha)
                 {
-                    this.lineTo(x, y);
+                    this.currentPath.points.push(x, y);
                     this.lineStyle(ret.lineWidth, ret.color, ret.alpha);
-                    this.moveTo(x, y);
+                    this.currentPath.points.push(x, y);
                 }
                 else
                 {
-                    points.push(x, y);
+                    this.currentPath.points.push(x, y);
                 }
-//                this.currentPath.lineWidth = ret.lineWidth;
-//                this.currentPath.lineColor = ret.color;
-//                this.currentPath.lineAlpha = ret.alpha;
-//
-//                this.graphicsData.push(this.currentPath);
             }
             else
             {
-                points.push(x, y);
+                this.currentPath.points.push(x, y);
             }
 
         }
