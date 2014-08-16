@@ -337,10 +337,16 @@ define(['Phaser'], function(){
             {
                 var ret = getLineStyleCallback.call(getLineStyleCallbackContext, (i - 1) / (n - 1));
 
-                this.lineTo(x, y);
-                this.lineStyle(ret.lineWidth, ret.color, ret.alpha);
-                this.moveTo(x, y);
-
+                if (this.lineWidth != ret.lineWidth || this.lineColor != ret.color || this.lineAlpha != ret.alpha)
+                {
+                    this.lineTo(x, y);
+                    this.lineStyle(ret.lineWidth, ret.color, ret.alpha);
+                    this.moveTo(x, y);
+                }
+                else
+                {
+                    points.push(x, y);
+                }
 //                this.currentPath.lineWidth = ret.lineWidth;
 //                this.currentPath.lineColor = ret.color;
 //                this.currentPath.lineAlpha = ret.alpha;
