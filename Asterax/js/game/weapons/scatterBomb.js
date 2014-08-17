@@ -1,13 +1,13 @@
 
 define(['weapon', 'homingShot', 'bullet'], function(Weapon, HomingShot, Bullet) {
 
-    var numberOfBulletsPerScatter = 10;
+    var numberOfBulletsPerScatter = 4;
 
 	var module = function(parent)
 	{
 		Weapon.call(this, parent, "scatterBomb");
 
-        this.scatterBomb = new HomingShot(parent, "bullet-white", "bullet-white-tail");
+        this.scatterBomb = new HomingShot(parent, "bullet-white");
         this.scatterBomb.maxLiveBullets = 100;
         this.scatterBomb.loadWeaponMods([6]);
 

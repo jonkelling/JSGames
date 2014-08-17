@@ -280,8 +280,12 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 	function _bulletKilled(bullet)
 	{
 		this.bulletKilled(bullet);
-        bullet.tailPoints.reset();
-        bullet.lastTailTime = null;
+
+        if (bullet.tailPoints)
+        {
+            bullet.tailPoints.reset();
+            bullet.lastTailTime = null;
+        }
 	}
 
 	function setupNewBullet(bullet)

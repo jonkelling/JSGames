@@ -24,15 +24,36 @@ define(['weapon'], function(Weapon) {
 	
 	module.prototype = Object.create(Weapon.prototype);
 	module.prototype.constructor = module;
+
+    module.prototype.destroy = function ()
+    {
+        this.group.forEach(function(bullet) {
+            if (bullet.closestRock)
+                if (bullet.closestRock.targetingBullets)
+                    bullet.closestRock.targetingBullets.reset();
+            bullet.closestRock.targetingBullets =null;
+            bullet.closestRock = null;
+        });
+        Weapon.prototype.destroy.call(this);
+    };
 	
 	module.prototype.setupNextBullet = function(bullet)
 	{
 		var savedSpeed = this.speed;
-		// this.speed = this.speed * 0.8;
+//		this.speed = this.speed * 2.8;
 		Weapon.prototype.setupNextBullet.apply(this, arguments);
 		this.speed = savedSpeed;
 	};
-	
+
+    module.prototype.bulletKilled = function (bullet)
+    {
+        if (bullet.closestRock)
+        {
+            getTargetingBullets(bullet.closestRock).remove(bullet);
+        }
+        bullet.closestRock = null;
+    };
+
 	module.prototype.afterFire = function(bullet)
 	{
 		updateTargetRock(bullet);
@@ -136,7 +157,7 @@ define(['weapon'], function(Weapon) {
 	function updateTargetRock(bullet)
 	{
         if (bullet.closestRock)
-            bullet.closestRock.targetingBullet = null;
+            getTargetingBullets(bullet.closestRock).remove(bullet);
         bullet.closestRock = null;
 
 		var rocks = app.rockGroupController.rocks;
@@ -144,21 +165,20 @@ define(['weapon'], function(Weapon) {
 		
 		if (closestRock)
 		{
-
-			var closestDistance = 9999999;
+			var closestDistance = Number.MAX_VALUE;
 			
 			rocks.forEachAlive(function(rock) {
 				var rockDistance = rock.position.distance(bullet.position);
-                if (!rock.targetingBullet || !rock.targetingBullet.alive || rock.targetingBullet === bullet)
-				if (rockDistance < closestDistance || rock.targetingBullet === bullet)
+
+				if (rockDistance < closestDistance && getBulletCanTargetRock(bullet, rock))
 				{
 					closestRock = rock;
 					closestDistance = rockDistance;
 				}
 			});
-			
+
 			bullet.closestRock = closestRock;
-			bullet.closestRock.targetingBullet = bullet;
+            getTargetingBullets(bullet.closestRock).add(bullet);
 		}
 	}
 	
@@ -258,7 +278,6 @@ define(['weapon'], function(Weapon) {
 //        var wobbleDistance = wobbleSpeed * Math.sin((game.time.now - app.startTime)/50);
 
 //        this.wobbleVelocity.rotate(0, 0, this.lastRotation, false, wobbleDistance);
-
     }
 
     function moveForwardWithRotation(speed, rotation)
@@ -267,6 +286,35 @@ define(['weapon'], function(Weapon) {
         this.body.rotation = rotation;
         this.body.setMagnitude(speed);
         this.body.rotation = savedRotation;
+    }
+
+    function getTargetingBullets(rock)
+    {
+        if (!rock.targetingBullets)
+        {
+            rock.targetingBullets = new Phaser.ArrayList();
+        }
+        return rock.targetingBullets;
+    }
+
+    function getTargetingBulletsMax(rock)
+    {
+        return rock.rockSize === app.rockSize.SMALL ? 1 :
+               rock.rockSize === app.rockSize.MEDIUM ? 3 :
+               rock.rockSize === app.rockSize.LARGE ? 6 :
+               1;
+    }
+
+    function getBulletCanTargetRock(bullet, rock)
+    {
+        var targetingBullets = getTargetingBullets(rock);
+        var targetingBulletsMax = getTargetingBulletsMax(rock);
+
+        if (targetingBullets.exists(bullet))
+        {
+            return true;
+        }
+        return targetingBullets.total < targetingBulletsMax;
     }
 
 });
