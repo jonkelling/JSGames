@@ -234,7 +234,7 @@ define(['Phaser'], function(){
             dt3,
             t2,
             t3;
-//            points = this.currentPath.points;
+//        var points = this.currentPath.points;
 
         var fromX = this.currentPath.points[this.currentPath.points.length-2];
         var fromY = this.currentPath.points[this.currentPath.points.length-1];
@@ -265,6 +265,9 @@ define(['Phaser'], function(){
 
                 if (this.lineWidth != ret.lineWidth || this.lineColor != ret.color || this.lineAlpha != ret.alpha)
                 {
+//                    this.currentPath.lineColor = ret.lineWidth;
+//                    this.currentPath.lineColor = ret.color;
+//                    this.currentPath.lineColor = ret.alpha;
                     this.currentPath.points.push(x, y);
                     this.lineStyle(ret.lineWidth, ret.color, ret.alpha);
                     this.currentPath.points.push(x, y);
@@ -286,5 +289,46 @@ define(['Phaser'], function(){
         return this;
     };
 
+    /**
+     * Calculate the points for a quadratic bezier curve.
+     * Based on : https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
+     *
+     * @method quadraticCurveTo
+     * @param  {number}   cpX   Control point x
+     * @param  {number}   cpY   Control point y
+     * @param  {number}   toX   Destination point x
+     * @param  {number}   toY   Destination point y
+     * @return {PIXI.Graphics}
+     */
+    PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY, getLineStyleCallback, getLineStyleCallbackContext)
+    {
+        if( this.currentPath.points.length === 0)this.moveTo(0,0);
+
+        var xa,
+            ya,
+            n = 20;
+//            points = this.currentPath.points;
+        if(this.currentPath.points.length === 0)this.moveTo(0, 0);
+
+        var fromX = this.currentPath.points[this.currentPath.points.length-2];
+        var fromY = this.currentPath.points[this.currentPath.points.length-1];
+
+        var j = 0;
+        for (var i = 1; i <= n; i++ )
+        {
+            j = i / n;
+
+            xa = fromX + ( (cpX - fromX) * j );
+            ya = fromY + ( (cpY - fromY) * j );
+
+            this.currentPath.points.push( xa + ( ((cpX + ( (toX - cpX) * j )) - xa) * j ),
+                    ya + ( ((cpY + ( (toY - cpY) * j )) - ya) * j ) );
+        }
+
+
+        this.dirty = true;
+
+        return this;
+    };
 
 });

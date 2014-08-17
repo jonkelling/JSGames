@@ -4,10 +4,12 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
     var tailEmitterLifespan = 350;
     var tailEmitterEase = Phaser.Easing.Quadratic.In;
 
-    var tailPointLifespan = 1000;
-    var drawInterval = 150;
+    var tailPointLifespan = 500;
+    var drawInterval = 100;
     var cp1CaptureInterval = drawInterval / 3;
     var cp2CaptureInterval = drawInterval - cp1CaptureInterval;
+
+    var tailStyle = { width: 1, color: 0xff0000, alpha: 1 };
 
     var useMultipleSpritesForTail = false;
 
@@ -452,10 +454,10 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
                 if (bz === this.tailPoints.first || bz.prev.endPoint === true)
                 {
-                    if (this.tailPoints.total == 1)
-                        bmd.context.lineStyle(1, 0xff0000, 1);
+                    if (this.tailPoints.total === 1)
+                        bmd.context.lineStyle(tailStyle.width, tailStyle.color, tailStyle.alpha);
                     else
-                        bmd.context.lineStyle(1, 0, 0);
+                        bmd.context.lineStyle(tailStyle.width, 0, 0);
                     bmd.context.moveTo(bz.point.x, bz.point.y);
                 }
                 else
@@ -488,25 +490,27 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
                     if (bz.prev == this.tailPoints.first)
                     {
-                        var getLineStyleCallback = function(f)
-                        {
-                            var ttlRatio = 1 - (this.timeToLive / this.lifespan);
-                            return {lineWidth:1, color:0xff0000, alpha:f};
-//                            return {lineWidth:1, color:0xff0000, alpha:(Math.max(0, f - ttlRatio))};
-//                            bmd.context.lineStyle(1, 0xffffff, (1-f));
-                        };
                         bmd.context.bezierCurveTo((bz.prev.controlPoint.x), (bz.prev.controlPoint.y),
                                                   (bz.prev.controlPoint2.x), (bz.prev.controlPoint2.y),
                                                   (bz.point.x), (bz.point.y),
                                                   getLineStyleCallback, bz);
+//                        bmd.context.lineTo((bz.point.x), (bz.point.y));
+//                        bmd.context.lineStyle(1, 0xff0000, 1);
+//                        bmd.context.lineTo((bz.point.x), (bz.point.y));
                     }
                     else
                     {
+//                        bmd.context.lineTo((bz.prev.point.x), (bz.prev.point.y));
+//                        bmd.context.lineStyle(1, 0xff0000, 1);
+//                        bmd.context.lineTo((bz.prev.point.x), (bz.prev.point.y));
                         bmd.context.beginPath();
                         if (useMultipleSpritesForTail)
                             bmd.context.translate(-tx1[0] + padding, -tx1[1] + padding);
 //                        bmd.context.moveTo(bz.prev.point.x, bz.prev.point.y);
-                        bmd.context.bezierCurveTo((bz.prev.controlPoint.x), (bz.prev.controlPoint.y), (bz.prev.controlPoint2.x), (bz.prev.controlPoint2.y), (bz.point.x), (bz.point.y));
+                        bmd.context.bezierCurveTo((bz.prev.controlPoint.x), (bz.prev.controlPoint.y),
+                                                  (bz.prev.controlPoint2.x), (bz.prev.controlPoint2.y),
+                                                  (bz.point.x), (bz.point.y),
+                                                  getLineStyleCallback, bz);
                         if (useMultipleSpritesForTail)
                             bmd.context.translate(tx1[0] - padding, tx1[1] - padding);
                         bmd.context.stroke();
@@ -565,7 +569,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
     function setupTailBitmapData(bmd)
     {
-        bmd.context.lineStyle(1, 0xffffff, 1.0);
+//        bmd.context.lineStyle(1, 0xffffff, 1.0);
         bmd.context.strokeStyle = Phaser.Color.createColor(255, 255, 255, 1).rgba;
 //        if (bmd.context.lineWidth)
 //            bmd.context.lineWidth += 0.1;
@@ -609,5 +613,25 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
             }
         }
         return {sprite: sprite, bmd: sprite.bmd};
+    }
+
+    function getLineStyleCallback(f)
+    {
+        var ttlRatio = this.timeToLive / this.lifespan;
+        var bottomAlpha = ttlRatio;
+        var topAlpha = (this.next && this.next.timeToLive)
+            ? this.next.timeToLive / this.next.lifespan
+            : 1;
+
+        bottomAlpha *= tailStyle.alpha;
+        topAlpha *= tailStyle.alpha;
+
+//        bottomAlpha = Phaser.Easing.Quadratic.Out(bottomAlpha);
+//        topAlpha = Phaser.Easing.Quadratic.Out(topAlpha);
+
+        var alpha = Phaser.Easing.Exponential.In((topAlpha - bottomAlpha) * f + bottomAlpha);
+        var width = Phaser.Easing.Elastic.Out(ttlRatio) * tailStyle.width;
+
+        return {lineWidth:1, color:tailStyle.color, alpha:(Math.min(1, Math.max(0, alpha)))};
     }
 });
