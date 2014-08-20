@@ -136,7 +136,9 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 
 				this.setupNextBullet(nextBullet);
 				this.currentBullet = nextBullet;
-				this.afterFire(nextBullet);
+                this.currentBullet.fireTime = game.time.now;
+                this.currentBullet.firePosition = this.currentBullet.position.clone();
+				this.afterFire(this.currentBullet);
 			}
 		}
 
@@ -161,11 +163,9 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 	{
 	};
 
-	module.prototype.afterFire = function(bullet)
-	{
-		bullet.fireTime = game.time.now;
-		bullet.firePosition = bullet.position.clone();
-	};
+    module.prototype.afterFire = function(bullet)
+    {
+    };
 
 	module.prototype.bulletUpdate = function(bullet)
 	{
@@ -174,8 +174,8 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 	module.prototype.aliveBulletUpdate = function(bullet)
 	{
 		var timeDiff = game.time.now - bullet.fireTime;
-		app.debug.writeDebug3(timeDiff + ": " + bullet.firePosition.distance(bullet.position));
-		app.debug.writeDebug4(bullet.speed);
+//		app.debug.writeDebug3(timeDiff + ": " + bullet.firePosition.distance(bullet.position));
+//		app.debug.writeDebug4(bullet.speed);
 	};
 
 	module.prototype.deadBulletUpdate = function(bullet)
@@ -633,7 +633,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 //        bottomAlpha = Phaser.Easing.Quadratic.Out(bottomAlpha);
 //        topAlpha = Phaser.Easing.Quadratic.Out(topAlpha);
 
-        var alpha = Phaser.Easing.Exponential.In((topAlpha - bottomAlpha) * f + bottomAlpha);
+        var alpha = Phaser.Easing.Linear.None((topAlpha - bottomAlpha) * f + bottomAlpha);
         var width = Phaser.Easing.Elastic.Out(ttlRatio) * tailStyle.width;
 
         return {lineWidth:1, color:tailStyle.color, alpha:(Math.min(1, Math.max(0, alpha)))};
