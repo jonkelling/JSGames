@@ -633,7 +633,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 //        bottomAlpha = Phaser.Easing.Quadratic.Out(bottomAlpha);
 //        topAlpha = Phaser.Easing.Quadratic.Out(topAlpha);
 
-        var alpha = Phaser.Easing.Linear.None((topAlpha - bottomAlpha) * f + bottomAlpha);
+        var alpha = Phaser.Easing.Exponential.In((topAlpha - bottomAlpha) * f + bottomAlpha);
         var width = Phaser.Easing.Elastic.Out(ttlRatio) * tailStyle.width;
 
         return {lineWidth:1, color:tailStyle.color, alpha:(Math.min(1, Math.max(0, alpha)))};

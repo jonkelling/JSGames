@@ -74,6 +74,15 @@
             "shield":2,
             "engine":3
         }
+        ,
+        {
+            "id":5,
+            "name":"C-Ship",
+            "weapon1":6,
+            "weaponMods":[1,15,6,7,13],
+            "shield":2,
+            "engine":3
+        }
 	]
 	,
 	"shields": [
@@ -114,5 +123,7 @@
         ,{ "id":11, "name":"Faster Shot"  , "speed":600, "fireRate":90, "lifespan":1000 }
         ,{ "id":12, "name":"Long Shot"  , "lifespan":2000 }
         ,{ "id":13, "name":"Short Lived", "lifespan":500 }
+        ,{ "id":14, "name":"Slow Shot"  , "fireRate":750 }
+        ,{ "id":15, "name":"2-Shooter"  , "maxLiveBullets":2 }
 	]
 }
