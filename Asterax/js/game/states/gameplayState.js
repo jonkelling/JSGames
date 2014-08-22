@@ -215,6 +215,9 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
         ,
         shutdown: function ()
         {
+            if (this.view)
+                this.view.destroy();
+            this.view = null;
         }
     };
 
@@ -226,10 +229,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
             var state = this.state;
             mainMenuView.startGameCallback = function()
             {
-                if (this.view)
-                    this.view.destroy();
-                this.view = null;
-                state.restart(true, false);
+                this.game.startNewGame();
             };
             mainMenuView.startGameCallbackContext = this;
 

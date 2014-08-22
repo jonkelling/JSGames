@@ -1,5 +1,5 @@
 
-define(['Phaser'], function() {
+define(['gameSession', 'Phaser'], function(GameSession) {
 
     var module = function()
     {
@@ -8,6 +8,14 @@ define(['Phaser'], function() {
 
     module.prototype = Object.create(Phaser.Game.prototype);
     module.constructor = module;
+
+    module.prototype.startNewGame = function ()
+    {
+        this.session = new GameSession();
+        this.state.start('Gameplay');
+    };
+
+    Object.defineProperty(module.prototype, "session", { writable: true });
 
     Object.defineProperty(module.prototype, "currentState", {
         get: function() { return this.state.getCurrentState(); }

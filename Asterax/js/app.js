@@ -42,6 +42,7 @@
             TailEmitterParticle: 'game/tailEmitterParticle',
             view:     'game/view',
             popupView: 'game/popupView',
+            gameSession: 'game/gameSession',
             mainMenuView: 'game/mainMenuView',
             gameplayView: 'game/gameplayView',
             hudView:  'game/hudView',

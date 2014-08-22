@@ -1,5 +1,5 @@
 
-define(['weapon', 'homingShot', 'bullet'], function(Weapon, HomingShot, Bullet) {
+define(['weapon', 'homingShot', 'peaShooter'], function(Weapon, HomingShot) {
 
     var numberOfBulletsPerScatter = 4;
 

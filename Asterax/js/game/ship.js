@@ -22,7 +22,7 @@ define(['require', 'AsteraxSprite', 'shield', 'loadout', 'peaShooter', 'twinShot
 	
 	module.prototype.create = function()
 	{
-		this.loadConfig(5);
+		this.loadConfig(2);
 		
 		this.body.data.immuneToRocks = [];
 		
