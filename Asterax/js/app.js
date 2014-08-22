@@ -64,7 +64,7 @@
             creditsState:  'game/states/creditsState',
             debug:    'game/debug'
 
-           ,BinarySerpentsFilter: 'filters/BinarySerpents'
+           /*,BinarySerpentsFilter: 'filters/BinarySerpents'
            ,BlurXFilter:          'filters/BlurX'
            ,BlurYFilter:          'filters/BlurY'
            ,CausticLightFilter:   'filters/CausticLight'
@@ -77,14 +77,14 @@
            ,MarbleFilter:         'filters/Marble'
            ,PlasmaFilter:         'filters/Plasma'
            ,SampleFilter:         'filters/SampleFilter'
-           ,TunnelFilter:         'filters/Tunnel'
+           ,TunnelFilter:         'filters/Tunnel'*/
         },
         shim: {
             'Phaser': {
                 exports: 'Phaser'
             }
 
-            ,BinarySerpentsFilter: { deps: ['Phaser'] }
+            /*,BinarySerpentsFilter: { deps: ['Phaser'] }
             ,BlurXFilter:          { deps: ['Phaser'] }
             ,BlurYFilter:          { deps: ['Phaser'] }
             ,CausticLightFilter:   { deps: ['Phaser'] }
@@ -97,7 +97,7 @@
             ,MarbleFilter:         { deps: ['Phaser'] }
             ,PlasmaFilter:         { deps: ['Phaser'] }
             ,SampleFilterFilter:   { deps: ['Phaser'] }
-            ,TunnelFilter:         { deps: ['Phaser'] }
+            ,TunnelFilter:         { deps: ['Phaser'] }*/
         }
     });
 

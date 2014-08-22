@@ -28,8 +28,10 @@
 	}
 	, 
 	"game": {
-		"width2": 1440,
-		"height2": 900,
+        "width3": 1440,
+        "height3": 900,
+        "width2": 1024,
+        "height2": 640,
 		"width": 960,
 		"height": 640
 	}
@@ -72,7 +74,7 @@
             "weapon1":6,
             "weaponMods":[1,3,6,13],
             "shield":2,
-            "engine":3
+            "engine":4
         }
         ,
         {

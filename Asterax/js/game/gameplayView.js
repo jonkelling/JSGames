@@ -8,5 +8,10 @@ define(['view'], function(View) {
     module.prototype = Object.create(View.prototype);
     module.prototype.constructor = module;
 
+    module.prototype.createView = function ()
+    {
+
+    };
+
     return module;
 });

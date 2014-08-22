@@ -1,8 +1,8 @@
 
-define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMenuView', 'gameplayView', 'hudView','BinarySerpentsFilter','BlurXFilter','BlurYFilter','CausticLightFilter','CheckerWaveFilter','ColorBarsFilter','FireFilter','GrayFilter','HueRotateFilter','LightBeamFilter','MarbleFilter','PlasmaFilter','TunnelFilter'], function (Player, Rock, RockGroupController, Loadout, PopupView, MainMenuView, GameplayView, HUDView) {
+define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMenuView', 'gameplayView', 'hudView'], function (Player, Rock, RockGroupController, Loadout, PopupView, MainMenuView, GameplayView, HUDView) {
 
     return {
-        preload: function()
+        preload: function ()
         {
             game.load.image('blueButton', 'images/blue-button.png');
             game.load.image('grayButton', 'images/gray-button.png');
@@ -64,10 +64,9 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 
             game.load.json('rockpositions', 'assets/rockSpritePositions.json');
             game.load.json('config', 'assets/config.json');
-        }
-        ,
+        },
 
-        init: function()
+        init: function ()
         {
             this.game.time.advancedTiming = true;
 //            setTimeout(function(){this.game.time.fpsMin = 100;},1000);
@@ -96,7 +95,8 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
             app.testButton2 = game.input.keyboard.addKey(Phaser.Keyboard.G);
 
             // game.enableStep();
-            app.testButton.onDown.add(function() {
+            app.testButton.onDown.add(function ()
+            {
 //                this.view.paused = !this.view.paused;
 //                return;
 
@@ -116,7 +116,8 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
                 // app.disableStepTimeout = window.setTimeout(function() {game.disableStep();}, 5000);
             }, this);
 
-            app.testButton2.onDown.add(function() {
+            app.testButton2.onDown.add(function ()
+            {
                 game.disableStep();
             });
 
@@ -137,10 +138,9 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
                 // $('#engine2button').click(function() { acceleration = 400; });
                 // $('#engine3button').click(function() { acceleration = 800; });
             }
-        }
-        ,
+        },
 
-        create: function()
+        create: function ()
         {
             if (this.view)
             {
@@ -163,7 +163,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 
             this.game.rockGroupController = app.rockGroupController = new RockGroupController(this.view);
             this.game.rockGroupController.create();
-            
+
             this.view.hud = this.view.add(new HUDView(this.game));
 //            var lb = new Phaser.Filter.CheckerWave(this.game);
 //            this.view.hud.filters = [lb];
@@ -186,10 +186,9 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
             window.c.strokeStyle = Phaser.Color.createColor(255, 255, 255, 1).rgba;
             window.c.lineWidth = 1;
             window.c.strokeThickness = 1;
-        }
-        ,
+        },
 
-        update: function()
+        update: function ()
         {
             this.game.player.update();
 //            this.view.filters[0].update();
@@ -212,7 +211,12 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 //            if (this.mainMenuPopupView)
 //                this.mainMenuPopupView.destroy();
 //        }
-    }
+
+        ,
+        shutdown: function ()
+        {
+        }
+    };
 
     function showNewGameScreen() {
         if (!PopupView.active)

@@ -45,6 +45,10 @@ define(['mainMenuView'], function(MainMenuView) {
         {
 
         }
+        ,
+        shutdown: function ()
+        {
+        }
     };
 
     return module;

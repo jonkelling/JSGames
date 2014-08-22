@@ -29,13 +29,7 @@ define(['TailEmitterParticle'], function(TailEmitterParticle) {
         get: function() { return this.tailedSprite && this.tailedSprite.exists; }
     });
 
-    Object.defineProperty(module.prototype, "tailedSprite", {
-        get: function () { return this._tailedSprite; },
-        set: function(value) {
-            this._tailedSprite = value;
-//            this.position = value.position;
-        }
-    });
+    Object.defineProperty(module.prototype, "tailedSprite", { writable: true });
 
     return module;
 });

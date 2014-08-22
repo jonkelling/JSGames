@@ -71,10 +71,7 @@ define(['bullet', 'peaShooter', 'twinShot', 'tripleShot', 'homingShot', 'explodi
 		this.canFire = true;
 	}
 	
-	Object.defineProperty(module.prototype, "maxLiveBullets", {
-		get: function() { return this.data.maxLiveBullets; },
-		set: function(value) { this.data.maxLiveBullets = value; }
-	});
+	Object.defineProperty(module.prototype, "maxLiveBullets", { writable: true });
 	
 	return module;
 	

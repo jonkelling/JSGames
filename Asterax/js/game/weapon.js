@@ -1,5 +1,5 @@
 
-define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'TailEmitterParticle', 'LinkedList2', 'BlurXFilter', 'BlurYFilter'], function(Destroyable, AsteraxSprite, Loadout, Bullet, TailEmitter, TailEmitterParticle, LinkedList2) {
+define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'TailEmitterParticle', 'LinkedList2'], function(Destroyable, AsteraxSprite, Loadout, Bullet, TailEmitter, TailEmitterParticle, LinkedList2) {
 
     var tailEmitterLifespan = 350;
     var tailEmitterEase = Phaser.Easing.Quadratic.In;
@@ -198,11 +198,6 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 	module.prototype.bulletKilled = function(bullet)
 	{
 	};
-
-	Object.defineProperty(module.prototype, "prop", {
-		get: function() { return null; },
-		set: function(value) { }
-	});
 
 	Object.defineProperty(module.prototype, "pxm", {
 		get: function() {
