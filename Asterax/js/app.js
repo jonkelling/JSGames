@@ -43,6 +43,7 @@
             view:     'game/view',
             popupView: 'game/popupView',
             gameSession: 'game/gameSession',
+            gameStageRecord: 'game/gameStageRecord',
             mainMenuView: 'game/mainMenuView',
             gameplayView: 'game/gameplayView',
             hudView:  'game/hudView',
