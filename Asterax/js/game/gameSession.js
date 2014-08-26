@@ -17,9 +17,9 @@ define(['gameStageRecord'], function(GameStageRecord) {
 
     module.prototype.constructor = module;
 
-    module.prototype.createNewStageAndMakeItCurrentStage = function ()
+    module.prototype.createNewStageRecordAndMakeItCurrentStageRecord = function ()
     {
-        this.currentStageRecord = new GameStageRecord();
+        this.currentStageRecord = new GameStageRecord(this.currentStage, this.game.time.now);
         this.stageRecords.add(this.currentStageRecord);
     };
 

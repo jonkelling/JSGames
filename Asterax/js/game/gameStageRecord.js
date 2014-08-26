@@ -2,11 +2,11 @@
 define(function ()
 {
 
-    var module = function ()
+    var module = function (stageNumber, timeStarted)
     {
-        this.stageNumber = 0;
+        this.stageNumber = stageNumber || 0;
         this.points = 0;
-        this.timeStarted = 0;
+        this.timeStarted = timeStarted || 0;
         this.timeCompleted = 0;
         this.timeToComplete = 0;
         this.numberOfRocks = 0;

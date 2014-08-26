@@ -12,11 +12,9 @@ define(['gameSession', 'Phaser'], function(GameSession) {
     module.prototype.startNewGame = function ()
     {
         this.session = new GameSession();
-        this.session.createNewStageAndMakeItCurrentStage();
-        this.state.start('Gameplay');
+        this.session.createNewStageRecordAndMakeItCurrentStageRecord();
+        this.state.start('Gameplay', true, false, this.session);
     };
-
-    Object.defineProperty(module.prototype, "session", { writable: true });
 
     Object.defineProperty(module.prototype, "currentState", {
         get: function() { return this.state.getCurrentState(); }
