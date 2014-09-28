@@ -176,7 +176,7 @@
 
         game.renderer.roundPixels = true;
 
-        app.renderForOldDevice = true || !game.device.webGL || game.device.iPad;// || game.device.iPhone;
+        app.renderForOldDevice = !game.device.webGL || game.device.iPad;// || game.device.iPhone;
 
         game.antialias = !app.renderForOldDevice;
         game.renderer.clearBeforeRender = app.renderForOldDevice;
