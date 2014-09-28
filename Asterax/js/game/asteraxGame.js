@@ -11,7 +11,7 @@ define(['gameSession', 'Phaser'], function(GameSession) {
 
     module.prototype.startNewGame = function ()
     {
-        this.session = new GameSession();
+        this.session = new GameSession(this);
         this.session.createNewStageRecordAndMakeItCurrentStageRecord();
         this.state.start('Gameplay', true, false, this.session);
     };

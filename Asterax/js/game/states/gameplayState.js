@@ -75,11 +75,6 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 
     module.prototype.init = function ()
     {
-        if (!this.gameSession)
-        {
-            throw "No game session!";
-        }
-
         this.game.time.advancedTiming = true;
 //            setTimeout(function(){this.game.time.fpsMin = 100;},1000);
 
@@ -154,11 +149,6 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 
     module.prototype.create = function ()
     {
-        if (!this.gameSession)
-        {
-            throw "No game session! 2";
-        }
-
         if (this.view)
         {
             this.game.world.add(this.view);
@@ -181,7 +171,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
         this.game.rockGroupController = app.rockGroupController = new RockGroupController(this.view);
         this.game.rockGroupController.create();
 
-        this.view.hud = this.view.add(new HUDView(this.game));
+        //this.view.hud = this.view.add(new HUDView(this.game));
 //            var lb = new Phaser.Filter.CheckerWave(this.game);
 //            this.view.hud.filters = [lb];
 
@@ -218,7 +208,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 
         if (this.game.time.advancedTiming)
         {
-            app.debug.writeDebug([this.game.time.fps, this.game.time.fpsMin, this.game.time.msMax]);
+            app.debug.writeDebug3([this.game.time.fps/*, this.game.time.fpsMin, this.game.time.msMax*/]);
         }
     };
         //,

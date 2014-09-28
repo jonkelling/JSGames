@@ -1,5 +1,5 @@
 
-define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'TailEmitterParticle', 'LinkedList2'], function(Destroyable, AsteraxSprite, Loadout, Bullet, TailEmitter, TailEmitterParticle, LinkedList2) {
+define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'TailEmitterParticle', 'LinkedList2', 'BlurXFilter', 'BlurYFilter'], function(Destroyable, AsteraxSprite, Loadout, Bullet, TailEmitter, TailEmitterParticle, LinkedList2) {
 
     var tailEmitterLifespan = 350;
     var tailEmitterEase = Phaser.Easing.Quadratic.In;
@@ -410,6 +410,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 //            bmd.context.lineStyle(2.2, 0xffffffff, 1.0);
             bmd.context.beginPath = function() {  };
             bmd.context.stroke = function() {};
+//            bmd.context.filters = [new Phaser.Filter.BlurX(game, 5), new Phaser.Filter.BlurY(game, 5)];
 //            bmd.context.filters = [new Phaser.Filter.BlurX(this.game), new Phaser.Filter.BlurY(this.game)];
 //            bmd.context.filters[0].blur *= 0.2;
 //            bmd.context.filters[1].blur *= 0.2;
