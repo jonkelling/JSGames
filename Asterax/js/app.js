@@ -66,10 +66,10 @@
             creditsState:  'game/states/creditsState',
             debug:    'game/debug'
 
-           ,BinarySerpentsFilter: 'filters/BinarySerpents'
+            /*,BinarySerpentsFilter: 'filters/BinarySerpents'
            ,BlurXFilter:          'filters/BlurX'
            ,BlurYFilter:          'filters/BlurY'
-            /*,CausticLightFilter:   'filters/CausticLight'
+           ,CausticLightFilter:   'filters/CausticLight'
            ,CheckerWaveFilter:    'filters/CheckerWave'
            ,ColorBarsFilter:      'filters/ColorBars'
            ,FireFilter:           'filters/Fire'
@@ -86,10 +86,10 @@
                 exports: 'Phaser'
             }
 
-            ,BinarySerpentsFilter: { deps: ['Phaser'] }
+            /*,BinarySerpentsFilter: { deps: ['Phaser'] }
             ,BlurXFilter:          { deps: ['Phaser'] }
             ,BlurYFilter:          { deps: ['Phaser'] }
-             /*,CausticLightFilter:   { deps: ['Phaser'] }
+            ,CausticLightFilter:   { deps: ['Phaser'] }
             ,CheckerWaveFilter:    { deps: ['Phaser'] }
             ,ColorBarsFilter:      { deps: ['Phaser'] }
             ,FireFilter:           { deps: ['Phaser'] }
@@ -120,21 +120,28 @@
                     game.state.add('Gameplay', require('gameplayState'));
                     game.state.add('Credits', require('creditsState'));
                 };
-                
-                //  The Google WebFont Loader will look for this object, so create it before loading the script.
-                window.WebFontConfig = {
-                    //  'active' means all requested fonts have finished loading
-                    //  We set a 1 second delay before calling 'createText'.
-                    //  For some reason if we don't the browser cannot render the text the first time it's created.
-                    active: function() { game.time.events.add(Phaser.Timer.SECOND, continueLoading, this); },
-                
-                    //  The Google Fonts we want to load (specify as many as you like in the array)
-                    google: {
-                      families: ['Audiowide']
-                    }
-                };
-                
-                game.load.script('webfont', 'js/lib/webfont.js');
+
+                if (!game.device.iPhone)
+                {
+                    //  The Google WebFont Loader will look for this object, so create it before loading the script.
+                    window.WebFontConfig = {
+                        //  'active' means all requested fonts have finished loading
+                        //  We set a 1 second delay before calling 'createText'.
+                        //  For some reason if we don't the browser cannot render the text the first time it's created.
+                        active: function() { game.time.events.add(Phaser.Timer.SECOND, continueLoading, this); },
+
+                        //  The Google Fonts we want to load (specify as many as you like in the array)
+                        google: {
+                            families: ['Audiowide']
+                        }
+                    };
+                    game.load.script('webfont', 'js/lib/webfont.js');
+                }
+                else
+                {
+                    continueLoading();
+                }
+
             } });
             
         });
@@ -176,7 +183,7 @@
 
         game.renderer.roundPixels = true;
 
-        app.renderForOldDevice = !game.device.webGL || game.device.iPad;// || game.device.iPhone;
+        app.renderForOldDevice = !game.device.webGL;// || game.device.iPad;// || game.device.iPhone;
 
         game.antialias = !app.renderForOldDevice;
         game.renderer.clearBeforeRender = app.renderForOldDevice;

@@ -84,7 +84,7 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
         game.physics.startSystem(Phaser.Physics.P2JS);
 
         game.physics.p2.setImpactEvents(true);
-        game.physics.p2.useElapsedTime = app.renderForOldDevice;
+        game.physics.p2.useElapsedTime = game.device.iPad;
 
         //  Make things a bit more bouncey
         game.physics.p2.defaultRestitution = 0.4;
@@ -132,14 +132,14 @@ define(['player', 'rock', 'rockGroupController', 'loadout', 'popupView', 'mainMe
 
         if ($('#debugdivs').length == 0)
         {
-            $('body').append('<div id="debugdivs" style="position: absolute; left: ' + (game.canvas.offsetWidth + 10) + 'px; top: 20px; width:200px;">' +
-                // '<input id="engine1button" type="button" value="engine 1"/><br/>' +
-                // '<input id="engine2button" type="button" value="engine 2"/><br/>' +
-                // '<input id="engine3button" type="button" value="engine 3"/>' +
-                '<div id="debugdiv3"></div>' +
-                '<div id="debugdiv4"></div>' +
-                '<div id="debugdiv5"></div>' +
-                '</div>');
+//            $('body').append('<div id="debugdivs" style="position: absolute; left: ' + (game.canvas.offsetWidth + 10) + 'px; top: 20px; width:200px;">' +
+//                // '<input id="engine1button" type="button" value="engine 1"/><br/>' +
+//                // '<input id="engine2button" type="button" value="engine 2"/><br/>' +
+//                // '<input id="engine3button" type="button" value="engine 3"/>' +
+//                '<div id="debugdiv3"></div>' +
+//                '<div id="debugdiv4"></div>' +
+//                '<div id="debugdiv5"></div>' +
+//                '</div>');
             //
             // $('#engine1button').click(function() { acceleration = 100; });
             // $('#engine2button').click(function() { acceleration = 400; });

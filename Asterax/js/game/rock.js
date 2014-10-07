@@ -94,7 +94,7 @@ define(['AsteraxSprite', 'AutoDestroySprite'], function(AsteraxSprite, AutoDestr
 		// 	});
 		runNewExplosionEmitter.call(this, ['fire1',], {scale:0.4, minAlpha:0.0});
 		
-		if (game.device.webGL)
+		if (!app.renderForOldDevice)
 		{
 			runNewExplosionEmitter2.call(this);
 		}

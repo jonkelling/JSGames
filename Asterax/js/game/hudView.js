@@ -24,9 +24,9 @@ define(['Phaser'], function() {
    {
        this.shieldBarWidth = 60;
        //gets called once to setup everything up.
-       this.statusText1 = this.add(this.game.add.text(50, 10, "..." + this.game.rocks.length, {font: "18px Audiowide", fill: "#ffffff"}));
-       this.statusText2 = this.add(this.game.add.text(250, 10, "..." + this.game.rocks.length, {font: "18px Audiowide", fill: "#ffffff"}));
-       this.statusText3 = this.add(this.game.add.text(450, 10, "..." + this.game.rocks.length, {font: "18px Audiowide", fill: "#ffffff"}));
+       this.statusText1 = this.add(this.game.add.text(50, 10, "..." + this.game.rocks.length, {font: "18px Audiowide Arial", fill: "#ffffff"}));
+       this.statusText2 = this.add(this.game.add.text(250, 10, "..." + this.game.rocks.length, {font: "18px Audiowide Arial", fill: "#ffffff"}));
+       this.statusText3 = this.add(this.game.add.text(450, 10, "..." + this.game.rocks.length, {font: "18px Audiowide Arial", fill: "#ffffff"}));
        
        
        var bmd = game.add.bitmapData(this.game.width, this.game.height);
