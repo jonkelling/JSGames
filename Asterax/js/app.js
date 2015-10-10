@@ -2,7 +2,7 @@
     'use strict';
 
     window.app = {
-		showPolygons: false,
+		showPolygons: true,
 		backgroundSpeed: 0.005,
 		defaultMaxLiveBullets: 6,
 		defaultFireRate: 50,
@@ -121,7 +121,7 @@
                     game.state.add('Credits', require('creditsState'));
                 };
 
-                if (!game.device.iPhone)
+                if (!game.device.iPhone && false)
                 {
                     //  The Google WebFont Loader will look for this object, so create it before loading the script.
                     window.WebFontConfig = {
