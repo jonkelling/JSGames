@@ -1,7 +1,7 @@
 
 define(['weapon'], function(Weapon) {
 	
-	var showDebugLines = false;
+	var showDebugLines = true;
 	var greenLineColor = "rgba(0,255,0,0.1)";
 	var triModMax = 12;
 	var homingThrustCut = 1;
