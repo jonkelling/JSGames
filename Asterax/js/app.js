@@ -2,7 +2,7 @@
     'use strict';
 
     window.app = {
-		showPolygons: true,
+		showPolygons: false,
 		backgroundSpeed: 0.005,
 		defaultMaxLiveBullets: 6,
 		defaultFireRate: 50,

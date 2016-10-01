@@ -38265,8 +38265,8 @@ Phaser.RequestAnimationFrame.prototype = {
 
             this._timeOutID = window.requestAnimationFrame(this._onLoop);
         }
-
     },
+
 
     /**
     * The update method for the requestAnimationFrame

@@ -6,14 +6,21 @@ define(['weapon'], function(Weapon) {
 	var triModMax = 12;
 	var homingThrustCut = 1;
     var wobbleSpeed = 90;
-    var wobbleInterval = Phaser.Timer.SECOND / 6;
+    var wobbleInterval = Phaser.Timer.SECOND / 5;
     var wobbleDirection;
+    var wobbleAngle = 110;
+    var wobbleCutbackDistance = 200;
+    var wobbleOn = false;
+
+
+    var spiralRadius = 8;
+    var spiralSpeed = 40;
 	
 	var module = function(parent, spriteKey, tailSpriteKey)
 	{
 		Weapon.call(this, parent, "homingShot", spriteKey, tailSpriteKey);
 
-        wobbleDirection = game.math.degToRad(60);
+        wobbleDirection = game.math.degToRad(wobbleAngle);
 		
 		this.timer = game.time.create(false);
 		this.timer.loop(150, updateTargetRocks, this);
@@ -86,7 +93,9 @@ define(['weapon'], function(Weapon) {
 			// app.debug.writeDebug4(bullet.positionHistory);
 		}
 
-        //wobbleBullet.call(bullet);
+        if (wobbleOn) {
+            wobbleBullet.call(bullet);
+        }
 
 		if (bullet.closestRock)
 		{
@@ -260,7 +269,7 @@ define(['weapon'], function(Weapon) {
         this.wobbleStartTime = this.wobbleStartTime || game.time.now;
         this.wobbleDirection = this.wobbleDirection || wobbleDirection;
 
-        app.debug.writeDebug([game.time.now, this.wobbleStartTime, wobbleInterval]);
+//        app.debug.writeDebug([game.time.now, this.wobbleStartTime, wobbleInterval]);
 
         if ((game.time.now - this.wobbleStartTime) > wobbleInterval)
         {
@@ -270,13 +279,22 @@ define(['weapon'], function(Weapon) {
             this.wobbleStartTime = game.time.now;
         }
 
-//        this.thrust(wobbleSpeed, this.rawVelocity.rotation90 + this.wobbleDirection);
+        var wobbleSpeedActual = wobbleSpeed;
+        var wobbleDirectionActual = this.wobbleDirection;
+
+        if (this.distanceToTarget < wobbleCutbackDistance)
+        {
+            wobbleSpeedActual *= Phaser.Easing.Quadratic.In(this.distanceToTarget / wobbleCutbackDistance);
+            wobbleDirectionActual *= this.distanceToTarget / wobbleCutbackDistance;
+        }
+
+        this.thrust(wobbleSpeedActual, this.rotationPerp + wobbleDirectionActual);
 
 //        var rotationDelta = this.body.rotation - (this.lastRotation || this.body.rotation);
 //        this.lastRotation = this.body.rotation;
 //        this.wobbleVelocity = this.wobbleVelocity || new Phaser.Point();
 //        var wobbleDistance = wobbleSpeed * Math.sin((game.time.now - app.startTime)/50);
-
+//
 //        this.wobbleVelocity.rotate(0, 0, this.lastRotation, false, wobbleDistance);
     }
 

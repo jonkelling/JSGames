@@ -44,7 +44,7 @@
 		{
 			"id":1,
 			"name":"A-Ship",
-			"weapon1":3,
+			"weapon1":1,
 			"weaponMods":[1,4,6],
 			"shield":2,
 			"engine":2
@@ -80,7 +80,7 @@
         {
             "id":5,
             "name":"C-Ship",
-            "weapon1":6,
+            "weapon1":4,
             "weaponMods":[1,15,6,7,13],
             "shield":2,
             "engine":3

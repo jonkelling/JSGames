@@ -567,7 +567,7 @@ define(['destroyable', 'AsteraxSprite', 'loadout', 'bullet', 'TailEmitter', 'Tai
 //        bmd.dirty = true;
     }
 
-    function setupTailBitmapData(bmd)
+    functionsetupTailBitmapData(bmd)
     {
 //        bmd.context.lineStyle(1, 0xffffff, 1.0);
         bmd.context.strokeStyle = Phaser.Color.createColor(255, 255, 255, 1).rgba;

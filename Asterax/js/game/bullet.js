@@ -46,6 +46,16 @@ define(['AsteraxSprite'], function(AsteraxSprite) {
 			return this.position.clone().subtract(this.body.data.velocity[0]*mod, this.body.data.velocity[1]*mod);
 		}
 	});
+
+    Object.defineProperty(module.prototype, "distanceToTarget", {
+        get: function ()
+        {
+            if (this.closestRock)
+                return this.position.distance(this.closestRock.position);
+            else
+                return 0;
+        }
+    });
 	
 	return module;
 	
